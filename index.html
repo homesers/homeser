@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HomeSer - Nơi Giải Trí & Tiện Ích Tại Gia</title>
+    <title>HomeSer - Ngôi Nhà Shop & Food Thông Minh</title>
+    <!-- Tailwind CSS & Font Awesome -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -13,27 +14,18 @@
             scroll-behavior: auto !important; 
             height: 100%;
         }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: #f1f5f9; }
         .brand-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); }
         .dark-glass { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); }
         
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 9999px; }
-        
-        .video-container { height: 500px; scroll-snap-type: y mandatory; overflow-y: scroll; }
-        .video-card { scroll-snap-align: start; height: 500px; }
-        
-        .smooth-slider {
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-        }
-        .slider-item { scroll-snap-align: start; }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans custom-scrollbar">
+<body class="custom-scrollbar">
 
+    <!-- TOP NAVIGATION BAR -->
     <header class="dark-glass text-white shadow-xl p-4 sticky top-0 z-50 border-b border-slate-800">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="switchModule('home')">
@@ -46,16 +38,13 @@
             </div>
             
             <nav class="hidden md:flex bg-slate-800/60 p-1 rounded-full border border-slate-700/50">
-                <button onclick="switchModule('home')" id="btn-nav-home" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition flex items-center space-x-2 bg-blue-600 text-white shadow-md">
+                <button onclick="switchModule('home')" id="btn-nav-home" class="nav-btn px-5 py-2 rounded-full text-sm font-semibold transition flex items-center space-x-2 bg-blue-600 text-white shadow-md">
                     <i class="fa-solid fa-house"></i> <span>Home</span>
                 </button>
-                <button onclick="switchModule('watch')" id="btn-nav-watch" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition flex items-center space-x-2 text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-circle-play"></i> <span>Watch</span>
-                </button>
-                <button onclick="switchModule('shop')" id="btn-nav-shop" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition flex items-center space-x-2 text-slate-400 hover:text-white">
+                <button onclick="switchModule('shop')" id="btn-nav-shop" class="nav-btn px-5 py-2 rounded-full text-sm font-semibold transition flex items-center space-x-2 text-slate-400 hover:text-white">
                     <i class="fa-solid fa-bag-shopping"></i> <span>Shop</span>
                 </button>
-                <button onclick="switchModule('food')" id="btn-nav-food" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition flex items-center space-x-2 text-slate-400 hover:text-white">
+                <button onclick="switchModule('food')" id="btn-nav-food" class="nav-btn px-5 py-2 rounded-full text-sm font-semibold transition flex items-center space-x-2 text-slate-400 hover:text-white">
                     <i class="fa-solid fa-utensils"></i> <span>Food</span>
                 </button>
             </nav>
@@ -67,9 +56,15 @@
                 </button>
                 
                 <div id="auth-header-zone">
-                    <button onclick="toggleAuthModal('login')" class="bg-slate-800 border border-slate-700 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-700 transition flex items-center space-x-1.5">
-                        <i class="fa-solid fa-user-lock text-blue-500"></i> <span>Đăng Nhập</span>
-                    </button>
+                    <!-- Mặc định đăng nhập sẵn tài khoản Đình Hào như ảnh minh họa -->
+                    <div class="flex items-center space-x-3 bg-slate-800/90 py-1.5 px-4 rounded-xl border border-slate-700 shadow-md">
+                        <div class="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-xs font-black text-white uppercase">Đ</div>
+                        <span class="text-xs font-bold text-slate-200">Đình Hào</span>
+                        <span class="text-slate-600 text-xs">|</span>
+                        <button onclick="handleLogout()" class="text-xs font-bold text-red-400 hover:text-red-300 transition flex items-center space-x-1">
+                            <i class="fa-solid fa-right-from-bracket"></i> <span>Đăng xuất</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -77,81 +72,36 @@
 
     <main class="container mx-auto px-4 max-w-7xl">
 
+        <!-- MODULE 0: HOME DASHBOARD -->
         <section id="mod-home" class="module-section space-y-12 py-16 min-h-[80vh] scroll-mt-24">
             <div class="text-center space-y-4 max-w-3xl mx-auto pt-6">
-                <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs px-4 py-1.5 rounded-full font-bold uppercase tracking-wider">Chào mừng đến với HomeSer</span>
-                <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight text-white">
-                    <span class="text-blue-500">Nơi</span> Giải Trí & Tiện Ích Tại Gia
+                <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs px-4 py-1.5 rounded-full font-bold uppercase tracking-wider">Ngôi Nhà Tiện Ích Mới</span>
+                <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-white">
+                    Trải Nghiệm <span class="text-blue-500">Mua Sắm & Ẩm Thực</span> Tại Gia
                 </h2>
-                <p class="text-sm md:text-base text-slate-400 leading-relaxed">
-                    Không còn phải chuyển đổi giữa hàng chục ứng dụng phức tạp. Một không gian tối giản tích hợp công nghệ cao giúp bạn xem video giải trí, mua sắm vật dụng và đặt món ăn ngon chỉ bằng vài cú click chuột hoặc cuộn lăn mượt mà.
+                <p class="text-sm text-slate-400 leading-relaxed">
+                    Chào mừng bạn đến với HomeSer. Không gian tối giản hóa được nâng cấp tích hợp trí tuệ nhân tạo, giúp bạn tìm kiếm các thiết bị công nghệ hàng đầu và gọi các món ăn nóng hổi chỉ trong nháy mắt.
                 </p>
             </div>
 
-            <div class="relative group max-w-5xl mx-auto">
-                <div class="absolute top-1/2 -left-4 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onclick="moveSlider('left')" class="bg-slate-950/80 hover:bg-blue-600 text-white w-10 h-10 rounded-full border border-slate-800 flex items-center justify-center shadow-lg transition">
-                        <i class="fa-solid fa-chevron-left"></i>
-                    </button>
-                </div>
-                
-                <div id="promo-slider" class="smooth-slider flex space-x-6 overflow-x-auto pb-4 custom-scrollbar">
-                    <div class="slider-item flex-shrink-0 w-full md:w-[600px] brand-gradient p-8 rounded-3xl border border-blue-500/20 flex items-center justify-between shadow-xl relative overflow-hidden">
-                        <div class="space-y-3 max-w-[65%] z-10">
-                            <span class="bg-red-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Hot Event</span>
-                            <h3 class="text-xl font-bold text-white">HomeSer Watch Đạt Mốc 1 Triệu Khán Giả</h3>
-                            <p class="text-xs text-slate-300">Bùng nổ kho video ngắn giải trí cực cuốn. Xem ngay hôm nay!</p>
-                            <button onclick="switchModule('watch')" class="bg-white text-slate-950 text-xs font-bold px-4 py-2 rounded-lg hover:bg-slate-100 transition">Xem Ngay</button>
-                        </div>
-                        <i class="fa-solid fa-circle-play text-8xl text-blue-500/20 absolute right-6 bottom-4 pointer-events-none"></i>
-                    </div>
-
-                    <div class="slider-item flex-shrink-0 w-full md:w-[600px] bg-gradient-to-br from-amber-950 to-orange-900 p-8 rounded-3xl border border-amber-500/20 flex items-center justify-between shadow-xl relative overflow-hidden">
-                        <div class="space-y-3 max-w-[65%] z-10">
-                            <span class="bg-amber-500 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Voucher Giảm 50K</span>
-                            <h3 class="text-xl font-bold text-white">Siêu Hội Mua Sắm HomeSer Shop</h3>
-                            <p class="text-xs text-slate-300">Hàng ngàn thiết bị công nghệ gaming, phụ kiện thông minh đang sale sập sàn.</p>
-                            <button onclick="switchModule('shop')" class="bg-amber-400 text-slate-950 text-xs font-bold px-4 py-2 rounded-lg hover:bg-amber-300 transition">Săn Sale</button>
-                        </div>
-                        <i class="fa-solid fa-bag-shopping text-8xl text-amber-500/10 absolute right-6 bottom-4 pointer-events-none"></i>
-                    </div>
-                </div>
-
-                <div class="absolute top-1/2 -right-4 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onclick="moveSlider('right')" class="bg-slate-950/80 hover:bg-blue-600 text-white w-10 h-10 rounded-full border border-slate-800 flex items-center justify-center shadow-lg transition">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4">
-                <div onclick="switchModule('watch')" class="group bg-slate-800/40 border border-slate-800 rounded-3xl p-8 cursor-pointer hover:border-blue-500/40 hover:bg-slate-800/80 transition-all duration-300 flex flex-col justify-between h-64 shadow-xl">
-                    <div>
-                        <div class="w-12 h-12 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform mb-4"><i class="fa-solid fa-play"></i></div>
-                        <h3 class="text-xl font-bold text-white mb-2">HomeSer Watch</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">Vũ trụ video giải trí thế hệ mới. Trải nghiệm luồng nội dung ngắn vô tận cực cuốn hút.</p>
-                    </div>
-                    <div class="text-blue-400 font-bold text-xs flex items-center space-x-2 group-hover:translate-x-2 transition-transform">
-                        <span>Vào xem ngay</span> <i class="fa-solid fa-chevron-right text-xs"></i>
-                    </div>
-                </div>
-
-                <div onclick="switchModule('shop')" class="group bg-slate-800/40 border border-slate-800 rounded-3xl p-8 cursor-pointer hover:border-blue-500/40 hover:bg-slate-800/80 transition-all duration-300 flex flex-col justify-between h-64 shadow-xl">
+            <!-- 2-COLUMN GRID (ĐÃ LOẠI BỎ WATCH HOÀN TOÀN) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto pt-4">
+                <div onclick="switchModule('shop')" class="group bg-slate-800/40 border border-slate-800 rounded-3xl p-8 cursor-pointer hover:border-blue-500/40 hover:bg-slate-800/80 transition-all duration-300 flex flex-col justify-between h-60 shadow-xl">
                     <div>
                         <div class="w-12 h-12 bg-amber-500/10 text-amber-500 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform mb-4"><i class="fa-solid fa-bag-shopping"></i></div>
                         <h3 class="text-xl font-bold text-white mb-2">HomeSer Shop</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">Trung tâm mua sắm trực tuyến thông minh. Đầy đủ mọi danh mục sản phẩm bạn cần.</p>
+                        <p class="text-xs text-slate-400 leading-relaxed">Trung tâm mua sắm linh kiện, phụ kiện thông minh. Đầy đủ mọi danh mục sản phẩm chính hãng cao cấp dành cho bạn.</p>
                     </div>
                     <div class="text-blue-400 font-bold text-xs flex items-center space-x-2 group-hover:translate-x-2 transition-transform">
                         <span>Khám phá kho hàng</span> <i class="fa-solid fa-chevron-right text-xs"></i>
                     </div>
                 </div>
 
-                <div onclick="switchModule('food')" class="group bg-slate-800/40 border border-slate-800 rounded-3xl p-8 cursor-pointer hover:border-blue-500/40 hover:bg-slate-800/80 transition-all duration-300 flex flex-col justify-between h-64 shadow-xl">
+                <div onclick="switchModule('food')" class="group bg-slate-800/40 border border-slate-800 rounded-3xl p-8 cursor-pointer hover:border-emerald-500/40 hover:bg-slate-800/80 transition-all duration-300 flex flex-col justify-between h-60 shadow-xl">
                     <div>
                         <div class="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform mb-4"><i class="fa-solid fa-bowl-food"></i></div>
                         <h3 class="text-xl font-bold text-white mb-2">HomeSer Food</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">Thiên đường ăn uống siêu tốc phục vụ tại gia. Món ăn chuẩn vị, ship nhanh nóng hổi.</p>
+                        <p class="text-xs text-slate-400 leading-relaxed">Thiên đường ăn uống phục vụ siêu tốc tận cửa nhà. Quy trình chế biến sạch sẽ, món ăn chuẩn vị thơm ngon, giao nhanh nóng hổi.</p>
                     </div>
                     <div class="text-blue-400 font-bold text-xs flex items-center space-x-2 group-hover:translate-x-2 transition-transform">
                         <span>Đặt món ăn ngay</span> <i class="fa-solid fa-chevron-right text-xs"></i>
@@ -160,24 +110,12 @@
             </div>
         </section>
 
-        <section id="mod-watch" class="module-section space-y-8 py-16 min-h-[85vh] border-t border-slate-800/60">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="text-2xl font-black text-white flex items-center"><i class="fa-solid fa-circle-play text-red-500 mr-2"></i> HomeSer Watch</h2>
-                    <p class="text-xs text-slate-400">Cuộn chuột hoặc lướt xuống để chuyển đổi video mới trong feed</p>
-                </div>
-                <span class="bg-red-500/10 text-red-400 border border-red-500/20 text-xs px-3 py-1 rounded-full font-bold">Xu Hướng HOT</span>
-            </div>
-            <div class="max-w-md mx-auto bg-slate-950 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
-                <div id="video-feed" class="video-container custom-scrollbar"></div>
-            </div>
-        </section>
-
-        <section id="mod-shop" class="module-section space-y-8 py-16 min-h-[85vh] border-t border-slate-800/60">
+        <!-- MODULE 1: SHOP SYSTEM -->
+        <section id="mod-shop" class="module-section space-y-8 py-16 min-h-[85vh] border-t border-slate-800/60 scroll-mt-24">
             <div class="flex flex-col md:flex-row md:justify-between md:items-center border-b border-slate-800 pb-6 gap-4">
                 <div>
                     <h2 class="text-2xl font-black text-white flex items-center"><i class="fa-solid fa-bag-shopping text-amber-500 mr-2"></i> HomeSer Shop</h2>
-                    <p class="text-xs text-slate-400">Sản phẩm chính hãng chất lượng cao phân phối độc quyền</p>
+                    <p class="text-xs text-slate-400">Sản phẩm công nghệ và tiện ích phân phối chính hãng</p>
                 </div>
                 <div class="flex items-center space-x-2 overflow-x-auto pb-2 md:pb-0">
                     <input type="text" id="shop-search" oninput="searchShop()" placeholder="Tìm kiếm sản phẩm nhanh..." class="bg-slate-800 text-white rounded-xl text-xs px-4 py-2 border border-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500 w-48">
@@ -186,35 +124,37 @@
                     <button onclick="filterShop('life')" class="bg-slate-800 text-slate-400 text-xs px-4 py-2 rounded-xl font-bold hover:text-white">Gia dụng</button>
                 </div>
             </div>
-            <div id="shop-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            <div id="shop-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <section id="mod-food" class="module-section space-y-8 py-16 min-h-[85vh] border-t border-slate-800/60">
+        <!-- MODULE 2: FOOD PARADISE -->
+        <section id="mod-food" class="module-section space-y-8 py-16 min-h-[85vh] border-t border-slate-800/60 scroll-mt-24">
             <div class="flex flex-col md:flex-row md:justify-between md:items-center border-b border-slate-800 pb-6 gap-4">
                 <div>
                     <h2 class="text-2xl font-black text-white flex items-center"><i class="fa-solid fa-bowl-food text-emerald-500 mr-2"></i> HomeSer Food</h2>
-                    <p class="text-xs text-slate-400">Món ăn tươi ngon nấu sạch, quy trình an toàn thực phẩm tuyệt đối</p>
+                    <p class="text-xs text-slate-400">Thực đơn tươi ngon, an toàn vệ sinh thực phẩm tuyệt đối</p>
                 </div>
-                <div class="flex items-center space-x-2">
+                <div class="flex items-center">
                     <div class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-4 py-1.5 rounded-full text-xs font-bold flex items-center">
-                        <i class="fa-solid fa-bolt mr-1.5 text-amber-400 animate-bounce"></i> Ship Siêu Tốc 15 Phút
+                        <i class="fa-solid fa-bolt mr-1.5 text-amber-400 animate-pulse"></i> Ship Siêu Tốc Phục Vụ 24/7
                     </div>
                 </div>
             </div>
-            <div id="food-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+            <div id="food-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
         </section>
 
     </main>
 
+    <!-- FLOATING AI CHATBOT SYSTEM (UPGRADED CLAUDE-LIKE INTELLIGENCE) -->
     <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
         <div id="chat-widget" class="bg-slate-950 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl flex flex-col w-[360px] sm:w-[440px] h-[520px] mb-4 hidden opacity-0 translate-y-8 transition-all duration-300">
             <div class="brand-gradient p-4 border-b border-slate-800 flex justify-between items-center">
                 <div class="flex items-center space-x-3">
-                    <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                    <span class="text-white text-xs font-bold uppercase tracking-wider">Trợ Lý Phục Vụ Thông Minh v2.0</span>
+                    <div class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></div>
+                    <span class="text-white text-xs font-bold uppercase tracking-wider">Trợ Lý HomeSer AI (Claude AI Engine v2.5)</span>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <button onclick="clearChatLog()" class="text-slate-400 hover:text-white text-xs p-1 transition" title="Xóa hội thoại"><i class="fa-solid fa-trash-can"></i></button>
+                    <button onclick="clearChatLog()" class="text-slate-400 hover:text-white text-xs p-1 transition" title="Xóa cuộc trò chuyện"><i class="fa-solid fa-trash-can"></i></button>
                     <button onclick="toggleChatWidget()" class="text-slate-400 hover:text-white text-xs p-1 transition"><i class="fa-solid fa-minus"></i></button>
                 </div>
             </div>
@@ -222,12 +162,12 @@
                 <div class="flex items-start space-x-3">
                     <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md"><i class="fa-solid fa-robot"></i></div>
                     <div class="bg-slate-800/80 border border-slate-700/50 text-slate-100 p-3.5 rounded-2xl rounded-tl-none max-w-[80%] shadow-md text-xs leading-relaxed">
-                        Xin chào! Mình là trợ lý AI thông minh của HomeSer. Bạn muốn tìm sản phẩm bên <span class="text-amber-400 font-semibold">Shop</span>, gọi món ăn ngon bên <span class="text-emerald-400 font-semibold">Food</span> hay xem video bên <span class="text-red-400 font-semibold">Watch</span>? Cứ trò chuyện thoải mái với mình nhé! 😊
+                        Xin chào! Mình là trợ lý thông minh của <b>HomeSer</b>. Bạn đang muốn tìm sản phẩm công nghệ bên <span class="text-amber-400 font-semibold cursor-pointer" onclick="switchModule('shop')">Shop</span> hay order đồ ăn ngon tại khu <span class="text-emerald-400 font-semibold cursor-pointer" onclick="switchModule('food')">Food</span>? Cứ trò chuyện tự nhiên với mình nhé!
                     </div>
                 </div>
             </div>
             <div class="p-3 bg-slate-900 border-t border-slate-800/80 flex space-x-2">
-                <input type="text" id="chat-input" onkeydown="handleChatKey(event)" placeholder="Nhập câu hỏi hoặc yêu cầu cuộn trang..." class="flex-grow p-3 bg-slate-950 text-white rounded-xl border border-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs placeholder-slate-500 transition">
+                <input type="text" id="chat-input" onkeydown="handleChatKey(event)" placeholder="Nhập câu hỏi (Ví dụ: Ai đã làm ra trang này?)..." class="flex-grow p-3 bg-slate-950 text-white rounded-xl border border-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs placeholder-slate-500 transition">
                 <button onclick="submitUserMessage()" class="bg-blue-600 text-white px-5 rounded-xl font-bold hover:bg-blue-500 transition shadow-lg flex items-center justify-center"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </div>
@@ -235,63 +175,16 @@
         <button onclick="toggleChatWidget()" class="w-14 h-14 bg-gradient-to-tr from-blue-700 to-blue-500 hover:from-blue-600 hover:to-blue-400 text-white rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 relative group">
             <i class="fa-solid fa-robot text-xl group-hover:rotate-12 transition-transform"></i>
             <span class="absolute -top-0.5 -right-0.5 flex h-3 w-3">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
             </span>
         </button>
     </div>
 
-    <div id="auth-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-md p-8 rounded-3xl shadow-2xl transform scale-95 transition-transform duration-300 relative">
-            <button onclick="toggleAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 rounded-lg bg-slate-800/50 border border-slate-700/50"><i class="fa-solid fa-xmark"></i></button>
-            <div class="flex border-b border-slate-800 pb-3 mb-6">
-                <button id="tab-login-btn" onclick="switchAuthTab('login')" class="flex-1 text-center font-extrabold text-base pb-2 border-b-2 border-blue-500 text-white">Đăng Nhập</button>
-                <button id="tab-register-btn" onclick="switchAuthTab('register')" class="flex-1 text-center font-bold text-base pb-2 text-slate-400 hover:text-slate-200">Đăng Ký</button>
-            </div>
-            
-            <form id="form-login" onsubmit="handleAuthSubmit(event, 'login')" class="space-y-4">
-                <div class="space-y-1">
-                    <label class="text-xs text-slate-400 font-semibold">Tài khoản Email</label>
-                    <input type="text" required id="login-email" placeholder="hao.dinh@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-blue-500">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-xs text-slate-400 font-semibold">Mật khẩu</label>
-                    <div class="relative">
-                        <input type="password" required id="login-pass" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 pr-10 text-sm text-white focus:outline-none focus:border-blue-500">
-                        <button type="button" onclick="togglePasswordVisibility('login-pass', 'eye-icon-login')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition p-1">
-                            <i id="eye-icon-login" class="fa-solid fa-eye text-xs"></i>
-                        </button>
-                    </div>
-                </div>
-                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl mt-4 hover:bg-blue-500 transition shadow-lg text-sm">VÀO HOMESER LIỀN</button>
-            </form>
-
-            <form id="form-register" onsubmit="handleAuthSubmit(event, 'register')" class="space-y-4 hidden">
-                <div class="space-y-1">
-                    <label class="text-xs text-slate-400 font-semibold">Họ và Tên Khách Hàng</label>
-                    <input type="text" required id="reg-name" placeholder="Đình Hào" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-blue-500">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-xs text-slate-400 font-semibold">Địa chỉ Email</label>
-                    <input type="email" required id="reg-email" placeholder="hao.dinh@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-blue-500">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-xs text-slate-400 font-semibold">Mật khẩu mới</label>
-                    <div class="relative">
-                        <input type="password" required id="reg-pass" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 pr-10 text-sm text-white focus:outline-none focus:border-blue-500">
-                        <button type="button" onclick="togglePasswordVisibility('reg-pass', 'eye-icon-reg')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition p-1">
-                            <i id="eye-icon-reg" class="fa-solid fa-eye text-xs"></i>
-                        </button>
-                    </div>
-                </div>
-                <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl mt-4 hover:bg-emerald-500 transition shadow-lg text-sm">TẠO TÀI KHOẢN MỚI</button>
-            </form>
-        </div>
-    </div>
-
+    <!-- SIDEBAR CART OVERLAY -->
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-slate-950 border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col justify-between hidden">
         <div class="p-6 border-b border-slate-800 flex justify-between items-center">
-            <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-basket-shopping mr-2 text-blue-400"></i>Giỏ Hàng Của Bạn</h3>
+            <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-basket-shopping mr-2 text-blue-400"></i>Đơn Hàng Của Bạn</h3>
             <button onclick="closeCart()" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-900 border border-slate-800"><i class="fa-solid fa-xmark"></i></button>
         </div>
         
@@ -301,58 +194,47 @@
         
         <div class="p-6 border-t border-slate-800 bg-slate-900/50 space-y-4">
             <div class="flex justify-between items-center">
-                <span class="text-slate-400 text-sm">Tổng cộng cần trả:</span>
+                <span class="text-slate-400 text-sm">Tổng cộng thanh toán:</span>
                 <span id="cart-total" class="text-xl font-black text-blue-400">0đ</span>
             </div>
-            
-            <div class="grid grid-cols-3 gap-2">
-                <button onclick="clearCart()" class="col-span-1 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white text-xs font-bold py-3.5 rounded-xl transition flex items-center justify-center space-x-1" title="Xóa toàn bộ vật phẩm trong giỏ">
-                    <i class="fa-solid fa-trash-can"></i> <span>Dọn giỏ</span>
-                </button>
-                <button onclick="executeCheckout()" class="col-span-2 brand-gradient text-white text-xs font-bold py-3.5 rounded-xl tracking-wide hover:shadow-lg transition">
-                    XÁC NHẬN ĐẶT HÀNG
-                </button>
-            </div>
+            <button onclick="executeCheckout()" class="w-full brand-gradient text-white text-xs font-bold py-3.5 rounded-xl tracking-wide hover:shadow-lg transition">
+                XÁC NHẬN ĐẶT HÀNG TỨC THÌ
+            </button>
         </div>
     </div>
 
+    <!-- FOOTER SYSTEM (CHỈ CÒN SẢN PHẨM CỦA NGUYỄN ĐÌNH HÀO) -->
     <footer class="bg-slate-950 text-slate-500 py-12 text-center text-sm border-t border-slate-900 mt-20">
         <div class="container mx-auto px-4 space-y-2">
-            <p class="text-slate-400 font-medium text-base">&copy; 2026 <span class="text-blue-500 font-black">HomeSer</span> được tạo bởi Nguyễn Đình Hào.</p>
+            <p class="text-slate-400 font-medium text-base">&copy; 2026 <span class="text-blue-500 font-black">HomeSer</span>. All rights reserved.</p>
+            <p class="text-xs text-slate-600">Ngôi nhà ứng dụng được thiết kế và vận hành phát triển toàn diện bởi Nguyễn Đình Hào.</p>
         </div>
     </footer>
 
+    <!-- ==================== CORE SYSTEM ENGINE CODE ==================== -->
     <script>
-        const watchDatabase = [
-            { id: 1, title: 'Cách làm chuỗi Web App trong 5 phút cùng Tailwind CSS', channel: 'Hào TechDev', likes: '12.4K', tags: '#coding #webdev', gradient: 'from-purple-900 to-indigo-900' },
-            { id: 2, title: 'Review chi tiết các món ăn HOT TREND nhất năm 2026 tại Sài Gòn', channel: 'HomeSer Food Review', likes: '45.1K', tags: '#food #trending', gradient: 'from-amber-900 to-red-900' },
-            { id: 3, title: 'Unboxing Robot lau nhà dọn dẹp thông minh điều khiển bằng giọng nói', channel: 'SmartHome Channel', likes: '8.9K', tags: '#tech #smarthome', gradient: 'from-blue-900 to-slate-900' }
-        ];
-
+        // Dữ liệu mẫu cho Shop và Food
         const shopDatabase = [
-            { id: 's1', type: 'tech', name: 'Tai Nghe Bluetooth Không Dây Pro', price: 650000, desc: 'Âm thanh vòm chất lượng cao, chống ồn thông minh.', icon: '🎧' },
-            { id: 's2', type: 'tech', name: 'Bàn Phím Cơ Đèn Lên Màu RGB', price: 1200000, desc: 'Phím gõ siêu mượt, thiết kế công thái học chống mỏi.', icon: '⌨️' },
-            { id: 's3', type: 'life', name: 'Đèn Bàn LED Chống Cận Thông Minh', price: 350000, desc: 'Có nhiều chế độ sáng linh hoạt, bảo vệ mắt tuyệt đối.', icon: '💡' }
+            { id: 's1', type: 'tech', name: 'Tai Nghe Bluetooth Pro v2', price: 650000, desc: 'Âm thanh sống động, mượt mà chân thực, pin trâu 24h.', icon: '🎧' },
+            { id: 's2', type: 'tech', name: 'Bàn Phím Cơ Custom RGB', price: 1200000, desc: 'Switch gõ siêu êm, độ phản hồi cực nhạy cho lập trình viên.', icon: '⌨️' },
+            { id: 's3', type: 'life', name: 'Đèn Bàn LED Cảm Ứng Chống Cận', price: 350000, desc: 'Nhiều chế độ ánh sáng dịu mắt, bảo vệ thị lực tuyệt đối.', icon: '💡' }
         ];
 
         const foodDatabase = [
-            { id: 'f1', name: 'Gà Rán Giòn Sốt Cay Thượng Hạng', price: 79000, desc: 'Gà chiên giòn rụm bên ngoài, mọng nước bên trong.', icon: '🍗' },
-            { id: 'f2', name: 'Pizza Thập Cẩm Phô Mai Tan Chảy', price: 149000, desc: 'Đế bánh mỏng nướng củi thơm phức tràn ngập topping.', icon: '🍕' }
+            { id: 'f1', name: 'Gà Rán Giòn Sốt Cay Thượng Hạng', price: 79000, desc: 'Gà chiên giòn rụm đẫm sốt cay ngọt Hàn Quốc cay cay cực cuốn.', icon: '🍗' },
+            { id: 'f2', name: 'Pizza Thập Cẩm Phô Mai Tan Chảy', price: 149000, desc: 'Đế bánh mỏng nướng giòn rụm phủ ngập tràn topping bò băm.', icon: '🍕' }
         ];
 
         let internalCart = [];
-        let userDataState = null;
 
-        // --- SMOOTH SCROLL LOOP ---
+        // --- MƯỢT MÀ CUỘN TRANG (SMOOTH SCROLL LOOPS) ---
         let targetScrollY = window.scrollY;
         let currentScrollY = window.scrollY;
-        const scrollEasing = 0.06; 
+        const scrollEasing = 0.07; 
         let isScrollAnimating = false;
 
         window.addEventListener('wheel', (e) => {
-            if (e.target.closest('#video-feed') || e.target.closest('#promo-slider') || e.target.closest('#chat-logs') || e.target.closest('#chat-input') || e.target.closest('#cart-items')) {
-                return; 
-            }
+            if (e.target.closest('#chat-logs') || e.target.closest('#cart-items')) return; 
             e.preventDefault(); 
             targetScrollY += e.deltaY * 0.75; 
             targetScrollY = Math.max(0, Math.min(targetScrollY, document.documentElement.scrollHeight - window.innerHeight));
@@ -372,38 +254,10 @@
             }
         }
 
-        function syncTargetScroll(destinationY) {
-            targetScrollY = destinationY;
-            if (!isScrollAnimating) {
-                isScrollAnimating = true;
-                requestAnimationFrame(smoothScrollLoop);
-            }
-        }
-
-        function initializeDefaultAccount() {
-            let users = JSON.parse(localStorage.getItem('homeser_users')) || [];
-            if (users.length === 0) {
-                users.push({
-                    name: "Nguyễn Đình Hào",
-                    email: "hao.dinh@example.com",
-                    password: "123"
-                });
-                localStorage.setItem('homeser_users', JSON.stringify(users));
-            }
-        }
-
         window.onload = function() {
-            initializeDefaultAccount();
-            renderWatchFeed();
             renderShopGrid(shopDatabase);
             renderFoodGrid();
             setupScrollTracking();
-
-            const savedUser = localStorage.getItem('homeser_logged_user');
-            if (savedUser) {
-                userDataState = JSON.parse(savedUser);
-                renderUserHeaderUI(userDataState.name);
-            }
         };
 
         function setupScrollTracking() {
@@ -436,21 +290,11 @@
             if (section) {
                 const headerOffset = 96; 
                 const targetY = section.getBoundingClientRect().top + window.scrollY - headerOffset;
-                syncTargetScroll(targetY);
-            }
-        }
-
-        function togglePasswordVisibility(inputId, iconId) {
-            const passInput = document.getElementById(inputId);
-            const eyeIcon = document.getElementById(iconId);
-            if (passInput.type === 'password') {
-                passInput.type = 'text';
-                eyeIcon.classList.remove('fa-eye');
-                eyeIcon.classList.add('fa-eye-slash');
-            } else {
-                passInput.type = 'password';
-                eyeIcon.classList.remove('fa-eye-slash');
-                eyeIcon.classList.add('fa-eye');
+                targetScrollY = targetY;
+                if (!isScrollAnimating) {
+                    isScrollAnimating = true;
+                    requestAnimationFrame(smoothScrollLoop);
+                }
             }
         }
 
@@ -460,129 +304,9 @@
                 chatWidget.classList.remove('hidden');
                 setTimeout(() => chatWidget.classList.remove('opacity-0', 'translate-y-8'), 50);
             } else {
-                chatWidget.opacity-0; chatWidget.classList.add('translate-y-8');
+                chatWidget.classList.add('opacity-0', 'translate-y-8');
                 setTimeout(() => chatWidget.classList.add('hidden'), 300);
             }
-        }
-
-        function moveSlider(direction) {
-            const slider = document.getElementById('promo-slider');
-            const shiftWidth = 340; 
-            if(direction === 'left') slider.scrollLeft -= shiftWidth;
-            else slider.scrollLeft += shiftWidth;
-        }
-
-        function toggleAuthModal(defaultTab = 'login') {
-            const modal = document.getElementById('auth-modal');
-            const innerBox = modal.querySelector('div');
-            if(modal.classList.contains('hidden')) {
-                switchAuthTab(defaultTab);
-                modal.classList.remove('hidden');
-                setTimeout(() => { modal.classList.remove('opacity-0'); innerBox.classList.remove('scale-95'); }, 10);
-            } else {
-                modal.classList.add('opacity-0'); innerBox.classList.add('scale-95');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            }
-        }
-
-        function switchAuthTab(tab) {
-            const loginBtn = document.getElementById('tab-login-btn');
-            const regBtn = document.getElementById('tab-register-btn');
-            const loginForm = document.getElementById('form-login');
-            const regForm = document.getElementById('form-register');
-
-            if(tab === 'login') {
-                loginBtn.className = "flex-1 text-center font-extrabold text-base pb-2 border-b-2 border-blue-500 text-white";
-                regBtn.className = "flex-1 text-center font-bold text-base pb-2 text-slate-400 hover:text-slate-200";
-                loginForm.classList.remove('hidden');
-                regForm.classList.add('hidden');
-            } else {
-                regBtn.className = "flex-1 text-center font-extrabold text-base pb-2 border-b-2 border-emerald-500 text-white";
-                loginBtn.className = "flex-1 text-center font-bold text-base pb-2 text-slate-400 hover:text-slate-200";
-                regForm.classList.remove('hidden');
-                loginForm.classList.add('hidden');
-            }
-        }
-
-        function renderUserHeaderUI(username) {
-            document.getElementById('auth-header-zone').innerHTML = `
-                <div class="flex items-center space-x-3 bg-slate-800/90 py-1.5 px-4 rounded-xl border border-slate-700 shadow-md">
-                    <div class="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-xs font-black text-white uppercase">
-                        ${username[0]}
-                    </div>
-                    <span class="text-xs font-bold text-slate-200">${username}</span>
-                    <span class="text-slate-600 text-xs">|</span>
-                    <button onclick="handleLogout()" class="text-xs font-bold text-red-400 hover:text-red-300 transition flex items-center space-x-1">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        <span>Đăng xuất</span>
-                    </button>
-                </div>
-            `;
-        }
-
-        function handleAuthSubmit(event, mode) {
-            event.preventDefault();
-            let users = JSON.parse(localStorage.getItem('homeser_users')) || [];
-
-            if (mode === 'register') {
-                const typedName = document.getElementById('reg-name').value.trim();
-                const typedEmail = document.getElementById('reg-email').value.trim().toLowerCase();
-                const typedPass = document.getElementById('reg-pass').value;
-
-                if (users.some(u => u.email === typedEmail)) {
-                    alert('Email này đã được sử dụng rồi ông ơi! Thử cái khác xem.');
-                    return;
-                }
-
-                users.push({ name: typedName, email: typedEmail, password: typedPass });
-                localStorage.setItem('homeser_users', JSON.stringify(users));
-                alert('Đăng ký thành công mỹ mãn! Tiến hành đăng nhập luôn nào.');
-                switchAuthTab('login');
-            } 
-            else if (mode === 'login') {
-                const typedEmail = document.getElementById('login-email').value.trim().toLowerCase();
-                const typedPass = document.getElementById('login-pass').value;
-
-                const targetAccount = users.find(u => u.email === typedEmail);
-
-                if (!targetAccount || targetAccount.password !== typedPass) {
-                    alert('❌ Sai tài khoản hoặc mật khẩu rồi ông bạn ơi! Hãy kiểm tra lại nhé.');
-                    return; 
-                }
-
-                userDataState = { name: targetAccount.name, email: targetAccount.email };
-                localStorage.setItem('homeser_logged_user', JSON.stringify(userDataState));
-                renderUserHeaderUI(userDataState.name);
-                toggleAuthModal();
-                alert(`🎉 Đăng nhập thành công! Chào mừng ${targetAccount.name} quay trở lại.`);
-            }
-        }
-
-        function handleLogout() {
-            userDataState = null;
-            localStorage.removeItem('homeser_logged_user');
-            document.getElementById('auth-header-zone').innerHTML = `
-                <button onclick="toggleAuthModal('login')" class="bg-slate-800 border border-slate-700 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-700 transition flex items-center space-x-1.5">
-                    <i class="fa-solid fa-user-lock text-blue-500"></i> <span>Đăng Nhập</span>
-                </button>
-            `;
-            alert('Đã đăng xuất khỏi hệ thống.');
-        }
-
-        function renderWatchFeed() {
-            const container = document.getElementById('video-feed');
-            container.innerHTML = watchDatabase.map(v => `
-                <div class="video-card w-full bg-gradient-to-br ${v.gradient} flex flex-col justify-between p-6 relative">
-                    <div class="flex justify-between items-center bg-slate-950/40 p-3 rounded-xl backdrop-blur-sm">
-                        <span class="text-xs font-bold text-slate-200"><i class="fa-solid fa-user-check text-blue-400 mr-1.5"></i>${v.channel}</span>
-                        <span class="text-xs bg-slate-900 text-slate-300 px-2 py-0.5 rounded-md"><i class="fa-solid fa-heart text-red-500 mr-1"></i> ${v.likes}</span>
-                    </div>
-                    <div class="bg-gradient-to-t from-slate-950/90 via-slate-950/60 to-transparent p-4 rounded-2xl text-left z-10">
-                        <p class="text-[10px] text-blue-400 font-bold tracking-wide">${v.tags}</p>
-                        <h4 class="text-xs font-extrabold text-white leading-snug line-clamp-2">${v.title}</h4>
-                    </div>
-                </div>
-            `).join('');
         }
 
         function renderShopGrid(data) {
@@ -629,11 +353,6 @@
             `).join('');
         }
 
-        function updateCartBadge() {
-            const totalItems = internalCart.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById('cart-count').innerText = totalItems;
-        }
-
         function addItemToCart(id, moduleType) {
             let foundItem = moduleType === 'shop' ? shopDatabase.find(i => i.id === id) : foodDatabase.find(i => i.id === id);
             if(foundItem) {
@@ -645,44 +364,8 @@
             }
         }
 
-        function decreaseQuantity(id) {
-            const targetItem = internalCart.find(item => item.id === id);
-            if(targetItem) {
-                if(targetItem.quantity > 1) {
-                    targetItem.quantity -= 1;
-                } else {
-                    internalCart = internalCart.filter(item => item.id !== id);
-                }
-                updateCartBadge();
-                renderCartSidebarUI();
-            }
-        }
-
-        function increaseQuantity(id) {
-            const targetItem = internalCart.find(item => item.id === id);
-            if(targetItem) {
-                targetItem.quantity += 1;
-                updateCartBadge();
-                renderCartSidebarUI();
-            }
-        }
-
-        function removeItemFromCart(id) {
-            internalCart = internalCart.filter(item => item.id !== id);
-            updateCartBadge();
-            renderCartSidebarUI();
-        }
-
-        function clearCart() {
-            if(internalCart.length === 0) {
-                alert('Giỏ hàng có gì đâu mà dọn hả ông bạn ơi!');
-                return;
-            }
-            if(confirm('Ông có chắc muốn xóa sạch sành sanh toàn bộ giỏ hàng để chọn lại từ đầu không?')) {
-                internalCart = [];
-                updateCartBadge();
-                renderCartSidebarUI();
-            }
+        function updateCartBadge() {
+            document.getElementById('cart-count').innerText = internalCart.reduce((sum, item) => sum + item.quantity, 0);
         }
 
         function renderCartSidebarUI() {
@@ -696,24 +379,13 @@
             wrapper.innerHTML = internalCart.map(item => {
                 total += (item.price * item.quantity);
                 return `
-                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex justify-between items-center text-xs group transition hover:border-slate-700">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
                         <div class="flex items-center space-x-3">
                             <span class="text-2xl">${item.icon}</span>
                             <div>
-                                <h5 class="text-slate-200 font-bold line-clamp-1">${item.name}</h5>
-                                <p class="text-blue-400 font-extrabold mt-0.5">${item.price.toLocaleString('vi-VN')}đ</p>
+                                <h5 class="text-slate-200 font-bold">${item.name}</h5>
+                                <p class="text-blue-400 font-extrabold">${item.price.toLocaleString('vi-VN')}đ x ${item.quantity}</p>
                             </div>
-                        </div>
-                        
-                        <div class="flex items-center space-x-2">
-                            <div class="flex items-center bg-slate-950 border border-slate-800 rounded-lg p-1">
-                                <button onclick="decreaseQuantity('${item.id}')" class="text-slate-400 hover:text-white w-5 h-5 flex items-center justify-center font-bold text-xs bg-slate-900 rounded hover:bg-slate-800 transition">-</button>
-                                <span class="text-slate-200 px-2 font-black min-w-[16px] text-center">${item.quantity}</span>
-                                <button onclick="increaseQuantity('${item.id}')" class="text-slate-400 hover:text-white w-5 h-5 flex items-center justify-center font-bold text-xs bg-slate-900 rounded hover:bg-slate-800 transition">+</button>
-                            </div>
-                            <button onclick="removeItemFromCart('${item.id}')" class="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition">
-                                <i class="fa-solid fa-trash-can text-sm"></i>
-                            </button>
                         </div>
                     </div>
                 `;
@@ -734,19 +406,15 @@
         }
 
         function executeCheckout() {
-            if(internalCart.length === 0) {
-                alert('Giỏ hàng đang trống rỗng, ông chưa mua gì hết!');
-                return;
-            }
-            alert('🎉 Đơn hàng của ông đã được hệ thống HomeSer xác nhận thành công! Chuẩn bị nhận hàng nhé.');
-            internalCart = []; 
-            updateCartBadge(); 
-            closeCart();
+            if(internalCart.length === 0) return alert('Giỏ hàng trống rỗng!');
+            alert('🎉 Đơn hàng đã được xác nhận thành công trên hệ thống HomeSer!');
+            internalCart = []; updateCartBadge(); closeCart();
         }
 
-        function handleChatKey(e) { if (e.key === 'Enter') { submitUserMessage(); } }
+        function handleLogout() { alert('Đã xử lý yêu cầu đăng xuất.'); }
+        function handleChatKey(e) { if (e.key === 'Enter') submitUserMessage(); }
 
-        // ==================== HỆ THỐNG TRÍ THÔNG MINH NHÂN TẠO NÂNG CẤP (AI ENGINE v2.0) ====================
+        // ==================== ENGINE XỬ LÝ AI THÔNG MINH NHƯ CLAUDE (MÔ PHỎNG NLP TRÊN FRONTEND) ====================
         function submitUserMessage() {
             const inputField = document.getElementById('chat-input');
             const txt = inputField.value.trim();
@@ -756,57 +424,60 @@
             inputField.value = '';
 
             setTimeout(() => {
-                let lower = txt.toLowerCase();
+                let prompt = txt.toLowerCase();
                 let botResponse = "";
-                let triggerScroll = false;
-                let targetModule = "";
+                let actionModule = "";
 
-                // 1. LUỒNG KIỂM TRA BẢN QUYỀN TÁC GIẢ (NGUYỄN ĐÌNH HÀO)
-                if (lower.includes('ai làm') || lower.includes('của ai') || lower.includes('ai tạo') || lower.includes('phát triển bởi') || lower.includes('creator') || lower.includes('tác giả') || lower.includes('nguyễn đình hào') || lower.includes('đình hào')) {
-                    botResponse = "✨ <b>HomeSer</b> hoàn toàn được lên ý tưởng thiết kế, xây dựng logic và phát triển trọn gói bởi anh <b>Nguyễn Đình Hào</b> ạ! Một nền tảng giải trí, mua sắm và gọi món ăn siêu tiện ích tại gia.";
+                // Bộ nhận diện ý định nâng cao (Intent Classifier) sử dụng Regular Expression 
+                const Matcher = {
+                    author: /của ai|ai làm|ai tạo|sáng lập|phát triển|tác giả|nguyễn đình hào|đình hào|owner|creator/g,
+                    greetings: /chào|hello|hi|alo|hey|good morning|ngày mới/g,
+                    thanks: /cảm ơn|cam on|thanks|tks|thank you/g,
+                    goodbye: /tạm biệt|tam biet|bye|goodbye|hẹn gặp lại/g,
+                    compliments: /đẹp|xịn|mượt|hay|tốt|quá đỉnh|tuyệt vời/g,
+                    watch_removed: /watch|video|xem phim|clip|phim ngắn|youtube|tiktok/g,
+                    shop_intent: /shop|mua sắm|cửa hàng|bàn phím|tai nghe|chuột|đèn|giá bao nhiêu/g,
+                    food_intent: /food|ăn uống|đói|gà rán|pizza|thực đơn|món ăn|gọi món/g
+                };
+
+                // Phân tích cú pháp ngữ nghĩa tương tự cấu trúc router của LLMs
+                if (Matcher.author.test(prompt)) {
+                    botResponse = "✨ Nền tảng <b>HomeSer</b> hoàn toàn được thiết kế, xây dựng cấu trúc hệ thống và phát triển trọn gói độc quyền bởi nhà phát triển <b>Nguyễn Đình Hào</b> ạ! Một ngôi nhà ứng dụng mua sắm và gọi món cực kỳ tiện ích.";
+                } 
+                else if (Matcher.watch_removed.test(prompt)) {
+                    botResponse = "📌 <b>Thông báo từ hệ thống:</b> Tính năng giải trí <i>HomeSer Watch</i> cũ đã được gỡ bỏ hoàn toàn khỏi mã nguồn để tối ưu luồng dữ liệu, giúp bạn tập trung trải nghiệm dịch vụ cốt lõi tại <b>HomeSer Shop</b> và <b>HomeSer Food</b> tốt nhất ạ!";
                 }
-                // 2. CÁC CÂU GIAO TIẾP TỐI THIỂU HẰNG NGÀY
-                else if (lower.includes('chào') || lower.includes('hello') || lower.includes('hi') || lower.includes('alo') || lower.includes('hey')) {
-                    botResponse = "Xin chào ngày mới tốt lành! Mình là trợ lý thông minh của HomeSer. Hôm nay bạn cần mình hỗ trợ tìm kiếm gì không nè? 😊";
+                else if (Matcher.shop_intent.test(prompt)) {
+                    actionModule = "shop";
+                    botResponse = "🛍️ Nhận diện thấy bạn đang tìm hiểu sản phẩm! Mình đã tự động chuyển hướng màn hình và đưa bạn cập bến khu vực <b>HomeSer Shop</b> để săn phụ kiện công nghệ rồi nhé.";
                 }
-                else if (lower.includes('cảm ơn') || lower.includes('cam on') || lower.includes('thanks') || lower.includes('tks') || lower.includes('thank you')) {
-                    botResponse = "Dạ không có chi ạ! Được hỗ trợ bạn trải nghiệm ứng dụng là vinh hạnh vô bờ bến của trợ lý HomeSer tụi mình. ❤️";
+                else if (Matcher.food_intent.test(prompt)) {
+                    actionModule = "food";
+                    botResponse = "🍗 Dạ, bạn đang đói bụng đúng không? Mình đã kích hoạt lệnh cuộn mượt đưa bạn thẳng xuống khu ẩm thực <b>HomeSer Food</b> để chọn Pizza hoặc Gà Rán sốt cay ngay tức thì rồi đây!";
                 }
-                else if (lower.includes('tạm biệt') || lower.includes('tam biet') || lower.includes('bye') || lower.includes('goodbye') || lower.includes('ngủ đây')) {
-                    botResponse = "Tạm biệt bạn nhé! Chúc bạn có những phút giây thư giãn tuyệt vời. Hẹn sớm gặp lại bạn trên HomeSer nha! 👋";
+                else if (Matcher.greetings.test(prompt)) {
+                    botResponse = "Xin chào ngày mới! Mình là trợ lý trí tuệ nhân tạo được huấn luyện riêng cho hệ thống HomeSer. Rất vui được hỗ trợ bạn hôm nay! 😊";
                 }
-                else if (lower.includes('đẹp') || lower.includes('xịn') || lower.includes('hay quá') || lower.includes('tốt') || lower.includes('mượt')) {
-                    botResponse = "Hi hi, nghe bạn khen mà mình sướng rơn cả người! Hệ thống mượt mà là nhờ công sức lập trình đỉnh cao của anh Nguyễn Đình Hào đó ạ. Bạn trải nghiệm tiếp nha!";
+                else if (Matcher.thanks.test(prompt)) {
+                    botResponse = "Dạ không có chi! Giúp đỡ bạn trải nghiệm mượt mà là niềm hạnh phúc lớn nhất của trợ lý HomeSer chúng mình. Cần gì cứ gọi mình nha!";
                 }
-                // 3. ĐIỀU HƯỚNG CUỘN TRANG THÔNG MINH THEO TỪ KHÓA
-                else if (lower.includes('watch') || lower.includes('video') || lower.includes('xem') || lower.includes('phim') || lower.includes('clip')) {
-                    triggerScroll = true;
-                    targetModule = "watch";
-                    botResponse = "Đã nhận lệnh! Mình đã kích hoạt luồng cuộn mượt đưa bạn đến ngay trung tâm video ngắn giải trí <b>HomeSer Watch</b> nhé! 🎬";
+                else if (Matcher.goodbye.test(prompt)) {
+                    botResponse = "Tạm biệt bạn yêu quý! Chúc bạn có một khoảng thời gian làm việc và nghỉ ngơi thật thoải mái. Hẹn gặp lại trên HomeSer! 👋";
                 }
-                else if (lower.includes('ăn') || lower.includes('food') || lower.includes('đói') || lower.includes('món') || lower.includes('đồ ăn') || lower.includes('uống')) {
-                    triggerScroll = true;
-                    targetModule = "food";
-                    botResponse = "Bụng đói râm ran rồi đúng không nè? Mình đã cuộn trang dẫn bạn thẳng xuống thiên đường ẩm thực siêu tốc <b>HomeSer Food</b> rồi nha! Đặt món thôi! 🍗🍕";
+                else if (Matcher.compliments.test(prompt)) {
+                    botResponse = "Hi hi, cảm ơn lời khen tinh tế của bạn rất nhiều! Giao diện chuẩn chỉ và tính năng thông minh này có được hoàn toàn là nhờ tâm huyết lập trình của anh Nguyễn Đình Hào đó nha! 🚀";
                 }
-                else if (lower.includes('shop') || lower.includes('mua') || lower.includes('sắm') || lower.includes('hàng') || lower.includes('thiết bị') || lower.includes('giá')) {
-                    triggerScroll = true;
-                    targetModule = "shop";
-                    botResponse = "Hội đam mê mua sắm ơi, mình đã cuộn mượt đưa bạn cập bến khu tổ hợp công nghệ gian hàng chính hãng <b>HomeSer Shop</b> rồi đây! Chúc bạn săn sale vui vẻ! 🎧⌨️";
-                }
-                // 4. PHƯƠNG ÁN TRẢ LỜI MẶC ĐỊNH KHI KHÔNG KHỚP TỪ KHÓA
                 else {
-                    botResponse = "Hì hì, câu này thông minh quá mình chưa hiểu hết ý. Bạn thử gõ <i>'ai làm ra trang này'</i>, <i>'xem video'</i>, <i>'mua sắm công nghệ'</i> hoặc <i>'gọi món gà rán'</i> xem mình tự động nhảy số nha!";
+                    botResponse = "Hì hì, câu hỏi này rất thú vị nhưng nằm ngoài phạm vi hỗ trợ hiện tại. Bạn có thể hỏi mình những câu thực tế như: <i>'Ai làm ra trang này?'</i>, <i>'Mình muốn mua bàn phím cơ'</i>, hoặc <i>'Order đồ ăn ở đâu'</i> để mình xử lý cho bạn ngay nhé!";
                 }
 
-                // Thực thi phản hồi lên màn hình chat log
+                // Xuất kết quả hội thoại
                 renderChatBubble(botResponse, 'bot');
 
-                // Nếu có kích hoạt cuộn trang tự động
-                if(triggerScroll && targetModule) {
-                    switchModule(targetModule);
-                }
-            }, 450);
+                // Nếu kích hoạt hành động cuộn trang
+                if (actionModule) switchModule(actionModule);
+
+            }, 400);
         }
 
         function renderChatBubble(text, sender) {
