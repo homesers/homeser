@@ -9,7 +9,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
         
-        /* Tắt scroll-behavior mặc định để nhường chỗ cho Engine Lerp tự xử lý */
         html, body { 
             scroll-behavior: auto !important; 
             height: 100%;
@@ -18,7 +17,6 @@
         .brand-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); }
         .dark-glass { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); }
         
-        /* Tối ưu hóa thanh cuộn */
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 9999px; }
@@ -253,7 +251,7 @@
             
             <form id="form-login" onsubmit="handleAuthSubmit(event, 'login')" class="space-y-4">
                 <div class="space-y-1">
-                    <label class="text-xs text-slate-400 font-semibold">Tài khoản hoặc Email</label>
+                    <label class="text-xs text-slate-400 font-semibold">Tài khoản Email</label>
                     <input type="text" required id="login-email" placeholder="hao.dinh@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-blue-500">
                 </div>
                 <div class="space-y-1">
@@ -293,23 +291,29 @@
 
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-slate-950 border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col justify-between hidden">
         <div class="p-6 border-b border-slate-800 flex justify-between items-center">
-            <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-basket-shopping mr-2 text-blue-400"></i>Đơn Hàng Của Bạn</h3>
-            <div class="flex items-center space-x-2">
-                <button onclick="clearCart()" class="text-[11px] text-red-400 hover:text-red-300 transition px-2.5 py-1.5 rounded-xl bg-red-500/10 border border-red-500/20 font-bold" title="Xóa toàn bộ giỏ hàng">
-                    <i class="fa-solid fa-trash-can mr-1"></i> Dọn giỏ
-                </button>
-                <button onclick="closeCart()" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-900 border border-slate-800"><i class="fa-solid fa-xmark"></i></button>
-            </div>
+            <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-basket-shopping mr-2 text-blue-400"></i>Giỏ Hàng Của Bạn</h3>
+            <button onclick="closeCart()" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-900 border border-slate-800"><i class="fa-solid fa-xmark"></i></button>
         </div>
+        
         <div id="cart-items" class="flex-grow p-6 space-y-4 overflow-y-auto custom-scrollbar">
-            <p class="text-sm text-slate-500 text-center py-12">Chưa có hàng.</p>
+            <p class="text-sm text-slate-500 text-center py-12">Chưa có sản phẩm nào.</p>
         </div>
+        
         <div class="p-6 border-t border-slate-800 bg-slate-900/50 space-y-4">
             <div class="flex justify-between items-center">
-                <span class="text-slate-400 text-sm">Tổng cộng thanh toán:</span>
+                <span class="text-slate-400 text-sm">Tổng cộng cần trả:</span>
                 <span id="cart-total" class="text-xl font-black text-blue-400">0đ</span>
             </div>
-            <button onclick="executeCheckout()" class="w-full brand-gradient text-white py-3.5 rounded-xl font-bold text-sm tracking-wide hover:shadow-lg transition">XÁC NHẬN ĐẶT HÀNG TỨC THÌ</button>
+            
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="clearCart()" class="col-span-1 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white text-xs font-bold py-3.5 rounded-xl transition flex items-center justify-center space-x-1" title="Xóa toàn bộ vật phẩm trong giỏ">
+                    <i class="fa-solid fa-trash-can"></i> <span>Dọn giỏ</span>
+                </button>
+                
+                <button onclick="executeCheckout()" class="col-span-2 brand-gradient text-white text-xs font-bold py-3.5 rounded-xl tracking-wide hover:shadow-lg transition">
+                    XÁC NHẬN ĐẶT HÀNG
+                </button>
+            </div>
         </div>
     </div>
 
@@ -340,7 +344,7 @@
         let internalCart = [];
         let userDataState = null;
 
-        // --- LERP SMOOTH SCROLL ---
+        // --- SMOOTH SCROLL LOOP ---
         let targetScrollY = window.scrollY;
         let currentScrollY = window.scrollY;
         const scrollEasing = 0.06; 
@@ -377,7 +381,20 @@
             }
         }
 
+        function initializeDefaultAccount() {
+            let users = JSON.parse(localStorage.getItem('homeser_users')) || [];
+            if (users.length === 0) {
+                users.push({
+                    name: "Nguyễn Đình Hào",
+                    email: "hao.dinh@example.com",
+                    password: "123"
+                });
+                localStorage.setItem('homeser_users', JSON.stringify(users));
+            }
+        }
+
         window.onload = function() {
+            initializeDefaultAccount();
             renderWatchFeed();
             renderShopGrid(shopDatabase);
             renderFoodGrid();
@@ -506,20 +523,41 @@
 
         function handleAuthSubmit(event, mode) {
             event.preventDefault();
-            let finalUserName = "Đình Hào"; 
+            let users = JSON.parse(localStorage.getItem('homeser_users')) || [];
 
             if (mode === 'register') {
                 const typedName = document.getElementById('reg-name').value.trim();
-                if(typedName) finalUserName = typedName;
-            } else {
-                const typedEmail = document.getElementById('login-email').value.trim();
-                if(typedEmail && !typedEmail.includes('@')) finalUserName = typedEmail;
-            }
+                const typedEmail = document.getElementById('reg-email').value.trim().toLowerCase();
+                const typedPass = document.getElementById('reg-pass').value;
 
-            userDataState = { name: finalUserName };
-            localStorage.setItem('homeser_logged_user', JSON.stringify(userDataState));
-            renderUserHeaderUI(userDataState.name);
-            toggleAuthModal();
+                if (users.some(u => u.email === typedEmail)) {
+                    alert('Email này đã được sử dụng rồi ông ơi! Thử cái khác xem.');
+                    return;
+                }
+
+                users.push({ name: typedName, email: typedEmail, password: typedPass });
+                localStorage.setItem('homeser_users', JSON.stringify(users));
+                alert('Đăng ký thành công mỹ mãn! Tiến hành đăng nhập luôn nào.');
+                switchAuthTab('login');
+            } 
+            else if (mode === 'login') {
+                const typedEmail = document.getElementById('login-email').value.trim().toLowerCase();
+                const typedPass = document.getElementById('login-pass').value;
+
+                const targetAccount = users.find(u => u.email === typedEmail);
+
+                // KIỂM TRA MẬT KHẨU KHÔNG KHỚP -> CHẶN NGAY LẬP TỨC
+                if (!targetAccount || targetAccount.password !== typedPass) {
+                    alert('❌ Sai tài khoản hoặc mật khẩu rồi ông bạn ơi! Hãy kiểm tra lại nhé.');
+                    return; 
+                }
+
+                userDataState = { name: targetAccount.name, email: targetAccount.email };
+                localStorage.setItem('homeser_logged_user', JSON.stringify(userDataState));
+                renderUserHeaderUI(userDataState.name);
+                toggleAuthModal();
+                alert(`🎉 Đăng nhập thành công! Chào mừng ${targetAccount.name} quay trở lại.`);
+            }
         }
 
         function handleLogout() {
@@ -530,7 +568,7 @@
                     <i class="fa-solid fa-user-lock text-blue-500"></i> <span>Đăng Nhập</span>
                 </button>
             `;
-            alert('Đã đăng xuất khỏi tài khoản hệ thống.');
+            alert('Đã đăng xuất khỏi hệ thống.');
         }
 
         function renderWatchFeed() {
@@ -593,7 +631,6 @@
             `).join('');
         }
 
-        // CẬP NHẬT SỐ LƯỢNG BADGE TRÊN HEADER
         function updateCartBadge() {
             const totalItems = internalCart.reduce((sum, item) => sum + item.quantity, 0);
             document.getElementById('cart-count').innerText = totalItems;
@@ -610,28 +647,57 @@
             }
         }
 
-        // TÍNH NĂNG 1: XÓA MÓN HÀNG KHỎI GIỎ HÀNG
+        // ==================== HỆ THỐNG ĐIỀU KHIỂN CHI TIẾT GIỎ HÀNG (MỚI NÂNG CẤP) ====================
+        
+        // 1. Hàm Bỏ bớt số lượng từng món (-)
+        function decreaseQuantity(id) {
+            const targetItem = internalCart.find(item => item.id === id);
+            if(targetItem) {
+                if(targetItem.quantity > 1) {
+                    targetItem.quantity -= 1; // Giảm đi 1 đơn vị
+                } else {
+                    internalCart = internalCart.filter(item => item.id !== id); // Nếu bằng 1 thì gạt tên xóa luôn
+                }
+                updateCartBadge();
+                renderCartSidebarUI();
+            }
+        }
+
+        // 2. Hàm tăng thêm số lượng từ trong giỏ (+)
+        function increaseQuantity(id) {
+            const targetItem = internalCart.find(item => item.id === id);
+            if(targetItem) {
+                targetItem.quantity += 1;
+                updateCartBadge();
+                renderCartSidebarUI();
+            }
+        }
+
+        // 3. Hàm xóa hoàn toàn một món ra khỏi giỏ (Nút thùng rác)
         function removeItemFromCart(id) {
             internalCart = internalCart.filter(item => item.id !== id);
             updateCartBadge();
             renderCartSidebarUI();
         }
 
-        // TÍNH NĂNG 2: DỌN SẠCH TOÀN BỘ GIỎ HÀNG
+        // 4. Hàm DỌN SẠCH TOÀN BỘ GIỎ HÀNG
         function clearCart() {
-            if(internalCart.length === 0) return;
-            if(confirm('Ông có chắc muốn xóa sạch sành sanh giỏ hàng không?')) {
+            if(internalCart.length === 0) {
+                alert('Giỏ hàng có gì đâu mà dọn hả ông bạn ơi!');
+                return;
+            }
+            if(confirm('Ông có chắc muốn xóa sạch sành sanh toàn bộ giỏ hàng để chọn lại từ đầu không?')) {
                 internalCart = [];
                 updateCartBadge();
                 renderCartSidebarUI();
             }
         }
 
-        // RENDER GIỎ HÀNG THAY ĐỔI THEO THỜI GIAN THỰC (CÓ NÚT XÓA THÙNG RÁC)
+        // Hàm render lại giao diện sidebar của giỏ hàng
         function renderCartSidebarUI() {
             const wrapper = document.getElementById('cart-items');
             if(internalCart.length === 0) {
-                wrapper.innerHTML = `<p class="text-sm text-slate-500 text-center py-12">Chưa có hàng.</p>`;
+                wrapper.innerHTML = `<p class="text-sm text-slate-500 text-center py-12">Giỏ hàng đang trống rỗng.</p>`;
                 document.getElementById('cart-total').innerText = '0đ';
                 return;
             }
@@ -639,17 +705,26 @@
             wrapper.innerHTML = internalCart.map(item => {
                 total += (item.price * item.quantity);
                 return `
-                    <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 flex justify-between items-center text-xs group transition hover:border-slate-700">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex justify-between items-center text-xs group transition hover:border-slate-700">
                         <div class="flex items-center space-x-3">
                             <span class="text-2xl">${item.icon}</span>
                             <div>
                                 <h5 class="text-slate-200 font-bold line-clamp-1">${item.name}</h5>
-                                <p class="text-slate-500 mt-0.5">${item.price.toLocaleString('vi-VN')}đ x ${item.quantity}</p>
+                                <p class="text-blue-400 font-extrabold mt-0.5">${item.price.toLocaleString('vi-VN')}đ</p>
                             </div>
                         </div>
-                        <button onclick="removeItemFromCart('${item.id}')" class="text-slate-500 hover:text-red-400 p-2 rounded-lg hover:bg-red-500/10 transition" title="Xóa món này">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
+                        
+                        <div class="flex items-center space-x-2">
+                            <div class="flex items-center bg-slate-950 border border-slate-800 rounded-lg p-1">
+                                <button onclick="decreaseQuantity('${item.id}')" class="text-slate-400 hover:text-white w-5 h-5 flex items-center justify-center font-bold text-xs bg-slate-900 rounded hover:bg-slate-800 transition" title="Bỏ bớt 1 số lượng">-</button>
+                                <span class="text-slate-200 px-2 font-black min-w-[16px] text-center">${item.quantity}</span>
+                                <button onclick="increaseQuantity('${item.id}')" class="text-slate-400 hover:text-white w-5 h-5 flex items-center justify-center font-bold text-xs bg-slate-900 rounded hover:bg-slate-800 transition" title="Thêm 1 số lượng">+</button>
+                            </div>
+                            
+                            <button onclick="removeItemFromCart('${item.id}')" class="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition" title="Xóa món này khỏi giỏ">
+                                <i class="fa-solid fa-trash-can text-sm"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -673,7 +748,7 @@
                 alert('Giỏ hàng đang trống rỗng, ông chưa mua gì hết!');
                 return;
             }
-            alert('Đơn hàng thành công!');
+            alert('🎉 Đơn hàng của ông đã được hệ thống HomeSer xác nhận thành công! Chuẩn bị nhận hàng nhé.');
             internalCart = []; 
             updateCartBadge(); 
             closeCart();
