@@ -72,7 +72,7 @@
                     <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-md scale-90">0</span>
                 </button>
                 
-                <!-- Khu vực hiển thị Auth (Sẽ thay đổi động khi đăng nhập) -->
+                <!-- Khu vực hiển thị Auth (Sẽ giữ nguyên trạng thái khi reload trang) -->
                 <div id="auth-header-zone">
                     <button onclick="toggleAuthModal('login')" class="bg-slate-800 border border-slate-700 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-700 transition flex items-center space-x-1.5">
                         <i class="fa-solid fa-user-lock text-blue-500"></i> <span>Đăng Nhập</span>
@@ -325,10 +325,10 @@
         </div>
     </div>
 
-    <!-- FOOTER -->
+    <!-- FOOTER (Đã cập nhật theo yêu cầu của ông) -->
     <footer class="bg-slate-950 text-slate-500 py-12 text-center text-sm border-t border-slate-900 mt-20">
         <div class="container mx-auto px-4 space-y-2">
-            <p class="text-slate-400 font-medium text-base">&copy; 2026 <span class="text-blue-500 font-black">HomeSer</span> Ecosystem.</p>
+            <p class="text-slate-400 font-medium text-base">&copy; 2026 <span class="text-blue-500 font-black">HomeSer</span> được tạo bởi Nguyễn Đình Hào.</p>
         </div>
     </footer>
 
@@ -391,11 +391,19 @@
             }
         }
 
+        // TỰ ĐỘNG KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP KHI TẢI LẠI TRANG (REFRESH)
         window.onload = function() {
             renderWatchFeed();
             renderShopGrid(shopDatabase);
             renderFoodGrid();
             setupScrollTracking();
+
+            // Khôi phục phiên làm việc từ localStorage
+            const savedUser = localStorage.getItem('homeser_logged_user');
+            if (savedUser) {
+                userDataState = JSON.parse(savedUser);
+                renderUserHeaderUI(userDataState.name);
+            }
         };
 
         // THEO DÕI THANH CUỘN ĐỂ TỰ ĐỘNG ĐỔI TRẠNG THÁI MENU TAB
@@ -498,7 +506,24 @@
             }
         }
 
-        // XỬ LÝ ĐĂNG NHẬP HIỆN TÊN NGƯỜI DÙNG + NÚT ĐĂNG XUẤT RÕ RÀNG
+        // TÁCH RIÊNG HÀM RENDER HEADER KHI ĐÃ ĐĂNG NHẬP THÀNH CÔNG
+        function renderUserHeaderUI(username) {
+            document.getElementById('auth-header-zone').innerHTML = `
+                <div class="flex items-center space-x-3 bg-slate-800/90 py-1.5 px-4 rounded-xl border border-slate-700 shadow-md">
+                    <div class="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-xs font-black text-white uppercase">
+                        ${username[0]}
+                    </div>
+                    <span class="text-xs font-bold text-slate-200">${username}</span>
+                    <span class="text-slate-600 text-xs">|</span>
+                    <button onclick="handleLogout()" class="text-xs font-bold text-red-400 hover:text-red-300 transition flex items-center space-x-1">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Đăng xuất</span>
+                    </button>
+                </div>
+            `;
+        }
+
+        // XỬ LÝ ĐĂNG NHẬP + LƯU TRỮ VÀO LOCALSTORAGE TRÁNH MẤT DỮ LIỆU KHI REFRESH
         function handleAuthSubmit(event, mode) {
             event.preventDefault();
             let finalUserName = "Đình Hào"; 
@@ -513,26 +538,20 @@
 
             userDataState = { name: finalUserName };
             
-            // Render giao diện thông tin thành viên chuyên nghiệp ở Header
-            document.getElementById('auth-header-zone').innerHTML = `
-                <div class="flex items-center space-x-3 bg-slate-800/90 py-1.5 px-4 rounded-xl border border-slate-700 shadow-md">
-                    <div class="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-xs font-black text-white uppercase">
-                        ${userDataState.name[0]}
-                    </div>
-                    <span class="text-xs font-bold text-slate-200">${userDataState.name}</span>
-                    <span class="text-slate-600 text-xs">|</span>
-                    <button onclick="handleLogout()" class="text-xs font-bold text-red-400 hover:text-red-300 transition flex items-center space-x-1">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        <span>Đăng xuất</span>
-                    </button>
-                </div>
-            `;
+            // Lưu dữ liệu vào localStorage để khi F5 không bị mất
+            localStorage.setItem('homeser_logged_user', JSON.stringify(userDataState));
+            
+            // Cập nhật giao diện thanh điều hướng
+            renderUserHeaderUI(userDataState.name);
             toggleAuthModal();
         }
 
-        // HÀM ĐĂNG XUẤT XỬ LÝ TRIỆT ĐỂ
+        // HÀM ĐĂNG XUẤT XỬ LÝ TRIỆT ĐỂ (XÓA CẢ BỘ NHỚ LOCALSTORAGE)
         function handleLogout() {
             userDataState = null;
+            // Xóa khóa lưu trữ phiên đăng nhập
+            localStorage.removeItem('homeser_logged_user');
+            
             document.getElementById('auth-header-zone').innerHTML = `
                 <button onclick="toggleAuthModal('login')" class="bg-slate-800 border border-slate-700 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-700 transition flex items-center space-x-1.5">
                     <i class="fa-solid fa-user-lock text-blue-500"></i> <span>Đăng Nhập</span>
@@ -680,4 +699,4 @@
         function clearChatLog() { document.getElementById('chat-logs').innerHTML = ''; }
     </script>
 </body>
-</html>
+</html>m
