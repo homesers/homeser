@@ -24,9 +24,20 @@
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #0b0f19; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 9999px; }
+
+        /* Animation cho thông báo Toast hiện ra mượt mà */
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .animate-toast {
+            animation: slideIn 0.3s ease-out forwards;
+        }
     </style>
 </head>
-<body class="custom-scrollbar">
+<body class="custom-scrollbar relative">
+
+    <div id="toast-container" class="fixed top-24 right-6 z-[60] space-y-3 pointer-events-none"></div>
 
     <header class="dark-glass text-white shadow-xl p-4 sticky top-0 z-50 border-b border-slate-800/80">
         <div class="container mx-auto flex justify-between items-center">
@@ -271,23 +282,18 @@
             { id: 's10', type: 'audio', name: 'AirPods Pro 2nd Gen', price: 6290000, desc: 'Tai nghe nhét tai thông minh, âm thanh không gian cá nhân hóa sống động.', icon: '🎧' }
         ];
 
-        // Database Food - ĐÃ CẬP NHẬT ĐẦY ĐỦ 15 MÓN THEO FILE BẠN GỬI
+        // Database Food
         const foodDatabase = [
-            // Cơm Gia Đình Hàng Ngày (family)
             { id: 'f1', type: 'family', name: 'Thực đơn 1: Mâm Cơm Đầm Ấm', price: 125000, desc: 'Gà xào chua ngọt đậm đà, trứng hấp mềm mịn, kèm tô canh chua tôm rau muống thanh mát.', icon: '🍱' },
             { id: 'f2', type: 'family', name: 'Thực đơn 2: Đậm Đà Quê Hương', price: 110000, desc: 'Cá lóc kho tiêu cay nồng chuẩn vị Nam Bộ, canh hến nấu chua ngọt nước và dưa leo ăn kèm.', icon: '🍲' },
             { id: 'f3', type: 'family', name: 'Thực đơn 3: Thực Đơn Bổ Dưỡng', price: 135000, desc: 'Cà tím nhồi thịt hấp mỡ hành thơm béo, gà chiên nước mắm mặn ngọt đưa cơm và cải thìa luộc bùi vị.', icon: '🥗' },
             { id: 'f4', type: 'family', name: 'Thực đơn 4: Hương Vị Truyền Thống', price: 115000, desc: 'Thịt băm chưng trứng muối bùi ngậy, su su xào tỏi giòn ngọt, kèm canh nấm kim châm thanh nhẹ.', icon: '🍳' },
             { id: 'f5', type: 'family', name: 'Thực đơn 5: Cơm Trưa Đậm Vị', price: 120000, desc: 'Cá basa kho dứa chua ngọt đậm đà, canh bí đỏ thịt bằm bổ dưỡng và rau diếp cá ăn kèm.', icon: '🥘' },
-            
-            // Món Ngon Cuối Tuần / Đãi Tiệc (party)
             { id: 'f6', type: 'party', name: 'Đùi Gà Om Coca Đặc Biệt', price: 89000, desc: 'Thịt đùi gà mềm rụm được om quyện nước sốt coca độc đáo béo ngọt, màu sắc cánh gián bắt mắt.', icon: '🍗' },
             { id: 'f7', type: 'party', name: 'Lẩu Gà Lá É Phú Yên', price: 289000, desc: 'Nước lẩu gà ngọt lịm kết hợp vị cay nồng đặc trưng của lá é và ớt xiêm xanh.', icon: '🍲' },
             { id: 'f8', type: 'party', name: 'Lẩu Hải Sản Thập Cẩm', price: 349000, desc: 'Sự kết hợp hoàn hảo của tôm, mực, cá viên hòa cùng nước lẩu chua cay đậm vị biển cả.', icon: '🍤' },
             { id: 'f9', type: 'party', name: 'Bún Đậu Mắm Tôm Phố Cổ', price: 65000, desc: 'Mẹt bún đậu đầy đủ nem chua rán, chả cốm, thịt chân giò luộc cùng mắm tôm pha chanh đường đánh sủi bọt.', icon: '🥢' },
             { id: 'f10', type: 'party', name: 'Bò Nhúng Giấm Hà Nội', price: 299000, desc: 'Thịt bò tươi thái mỏng nhúng trong nước giấm sả chua thanh, cuốn bánh tráng rau sống tuyệt đỉnh.', icon: '🥩' },
-
-            // Menu Ăn Chay Thanh Đạm (vegan)
             { id: 'f11', type: 'vegan', name: 'Đậu Hũ Sốt Cà Chua Chay', price: 35000, desc: 'Đậu hũ chiên vàng ươm, om trong nước sốt cà chua tươi đậm đà thanh đạm.', icon: '🍅' },
             { id: 'f12', type: 'vegan', name: 'Nấm Đùi Gà Kho Tiêu Chay', price: 45000, desc: 'Nấm đùi gà dai giòn sần sật, kho tiêu đen cay ấm cực kỳ bắt cơm.', icon: '🍄' },
             { id: 'f13', type: 'vegan', name: 'Canh Kiểm / Canh Rau Củ Thập Cẩm', price: 50000, desc: 'Món canh chay Nam Bộ nấu từ các loại củ quả, nước dùng ngọt tự nhiên.', icon: '🥣' },
@@ -303,7 +309,7 @@
         let isScrollAnimating = false;
 
         window.addEventListener('wheel', (e) => {
-            if (e.target.closest('#chat-logs') || e.target.closest('#cart-items')) return; 
+            if (e.target.closest('#chat-logs') || e.target.closest('#cart-items') || e.target.closest('#toast-container')) return; 
             e.preventDefault(); 
             targetScrollY += e.deltaY * 0.75; 
             targetScrollY = Math.max(0, Math.min(targetScrollY, document.documentElement.scrollHeight - window.innerHeight));
@@ -398,7 +404,6 @@
             renderShopGrid(shopDatabase.filter(i => i.name.toLowerCase().includes(val)));
         }
 
-        // HÀM HIỂN THỊ MENU THỨC ĂN
         function renderFoodGrid(data) {
             const container = document.getElementById('food-grid');
             container.innerHTML = data.map(food => `
@@ -416,20 +421,62 @@
             `).join('');
         }
 
-        // BỘ LỌC DANH MỤC THỨC ĂN MỚI THÊM
         function filterFood(category) {
             if(category === 'all') renderFoodGrid(foodDatabase);
             else renderFoodGrid(foodDatabase.filter(f => f.type === category));
         }
 
+        // HÀM HIỂN THỊ THÔNG BÁO TOAST TỰ ĐỘNG ẨN (MỚI THÊM)
+        function showToastNotification(itemName, currentQuantity) {
+            const container = document.getElementById('toast-container');
+            
+            // Tạo element toast mới
+            const toast = document.createElement('div');
+            toast.className = "bg-slate-900 border border-emerald-500/30 shadow-2xl p-3 rounded-xl flex items-center space-x-3 text-xs w-72 pointer-events-auto animate-toast border-l-4 border-l-emerald-500";
+            toast.innerHTML = `
+                <div class="w-7 h-7 bg-emerald-500/20 text-emerald-400 rounded-lg flex items-center justify-center flex-shrink-0 text-sm">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div class="flex-grow">
+                    <p class="text-white font-bold line-clamp-1">${itemName}</p>
+                    <p class="text-slate-400 text-[11px]">Đã tăng số lượng trong giỏ: <span class="text-emerald-400 font-bold">x${currentQuantity}</span></p>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Tự động xóa thông báo sau 2.5 giây
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(50px)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+
+        // ĐÃ NÂNG CẤP: THÊM LÀ TỰ HIỆN GIỎ HÀNG VÀ CHẠY THÔNG BÁO TOAST
         function addItemToCart(id, moduleType) {
             let foundItem = moduleType === 'shop' ? shopDatabase.find(i => i.id === id) : foodDatabase.find(i => i.id === id);
             if(foundItem) {
                 const cartExist = internalCart.find(i => i.id === id);
-                if(cartExist) cartExist.quantity += 1;
-                else internalCart.push({ ...foundItem, quantity: 1 });
+                let currentQty = 1;
+                
+                if(cartExist) {
+                    cartExist.quantity += 1;
+                    currentQty = cartExist.quantity;
+                } else {
+                    internalCart.push({ ...foundItem, quantity: 1 });
+                }
+                
+                // 1. Cập nhật Badge số lượng và giao diện giỏ hàng
                 updateCartBadge();
                 renderCartSidebarUI();
+                
+                // 2. TỰ ĐỘNG HIỆN GIỎ HÀNG (MỞ SIDEBAR)
+                openCart();
+                
+                // 3. TỰ ĐỘNG CHẠY THÔNG BÁO TĂNG GIỎ HÀNG
+                showToastNotification(foundItem.name, currentQty);
             }
         }
 
