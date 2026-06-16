@@ -1,10 +1,21 @@
+Dưới đây là mã nguồn HomeSer đã được cập nhật toàn diện. Mình đã bổ sung 2 tính năng cực kỳ quan trọng cho hệ thống giỏ hàng (Cart) theo đúng yêu cầu của bạn, đồng thời đồng bộ lại toàn bộ giao diện và bộ não AI.
+
+Các tính năng mới được nâng cấp:
+Nút "Xóa bớt" từng sản phẩm (Dấu trừ -): Trong giỏ hàng bên phải, mỗi sản phẩm bây giờ sẽ có thêm nút giảm số lượng. Khi nhấn vào, số lượng sẽ giảm đi 1, nếu số lượng về 0 thì sản phẩm đó tự động biến mất khỏi giỏ hàng.
+
+Nút "Dọn sạch giỏ hàng" (Clear Cart): Thêm một nút màu đỏ nổi bật nằm ngay trong Sidebar giỏ hàng. Chỉ cần 1 click là toàn bộ hàng hóa trong giỏ sẽ được dọn sạch hoàn toàn, đưa giỏ hàng về trạng thái trống.
+
+Đồng bộ hiệu ứng: Toàn bộ tổng tiền và số hiển thị trên icon giỏ hàng (Badge) sẽ lập tức cập nhật theo thời gian thực mỗi khi bạn dọn hàng hoặc bớt sản phẩm.
+
+Bạn sao chép toàn bộ mã nguồn này dán đè vào file nhé:
+
+HTML
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HomeSer - Ngôi Nhà Shop & Food Thông Minh</title>
-    <!-- Tailwind CSS & Font Awesome -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -28,7 +39,6 @@
 </head>
 <body class="custom-scrollbar">
 
-    <!-- TOP NAVIGATION BAR -->
     <header class="dark-glass text-white shadow-xl p-4 sticky top-0 z-50 border-b border-slate-800/80">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="switchModule('home')">
@@ -77,7 +87,6 @@
 
     <main class="container mx-auto px-4 max-w-7xl">
 
-        <!-- MODULE 0: HOME DASHBOARD -->
         <section id="mod-home" class="module-section space-y-12 py-12 min-h-[60vh] scroll-mt-24">
             <div class="text-center space-y-4 max-w-3xl mx-auto pt-6">
                 <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs px-4 py-1.5 rounded-full font-bold uppercase tracking-wider">Ngôi Nhà Tiện Ích Thông Minh</span>
@@ -89,7 +98,6 @@
                 </p>
             </div>
 
-            <!-- 2-COLUMN NAVIGATION CARDS -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto pt-4">
                 <div onclick="switchModule('shop')" class="group bg-slate-900/60 border border-slate-800 rounded-2xl p-6 cursor-pointer hover:border-amber-500/40 hover:bg-slate-800/50 transition flex flex-col justify-between h-52 shadow-xl">
                     <div>
@@ -115,7 +123,6 @@
             </div>
         </section>
 
-        <!-- MODULE 1: SHOP SYSTEM (ĐÃ THÊM HÀNG TỪ IMAGE) -->
         <section id="mod-shop" class="module-section space-y-6 py-12 min-h-[85vh] border-t border-slate-800/60 scroll-mt-24">
             <div class="flex flex-col xl:flex-row xl:justify-between xl:items-center border-b border-slate-800/60 pb-4 gap-4">
                 <div>
@@ -134,7 +141,6 @@
             <div id="shop-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
         </section>
 
-        <!-- MODULE 2: FOOD PARADISE -->
         <section id="mod-food" class="module-section space-y-6 py-12 min-h-[85vh] border-t border-slate-800/60 scroll-mt-24">
             <div class="flex flex-col md:flex-row md:justify-between md:items-center border-b border-slate-800/60 pb-4 gap-4">
                 <div>
@@ -148,7 +154,6 @@
             <div id="food-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
         </section>
 
-        <!-- MODULE 3: CONTACT SECTION -->
         <section id="mod-contact" class="module-section space-y-8 py-12 border-t border-slate-800/60 scroll-mt-24">
             <div class="text-center space-y-2">
                 <h2 class="text-2xl font-black text-white flex items-center justify-center">
@@ -158,7 +163,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                <!-- Phone Card -->
                 <div class="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl flex flex-col items-center text-center space-y-3">
                     <div class="w-12 h-12 bg-blue-500/10 text-blue-500 rounded-xl flex items-center justify-center text-xl shadow-inner">
                         <i class="fa-solid fa-phone"></i>
@@ -167,7 +171,6 @@
                     <a href="tel:0768152277" class="text-sm font-black text-white hover:text-blue-400 transition tracking-wide">0768152277</a>
                 </div>
 
-                <!-- Email Card -->
                 <div class="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl flex flex-col items-center text-center space-y-3">
                     <div class="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center text-xl shadow-inner">
                         <i class="fa-solid fa-envelope"></i>
@@ -176,7 +179,6 @@
                     <a href="mailto:nguyendinhhao1201@gmail.com" class="text-xs font-black text-white hover:text-emerald-400 transition break-all">nguyendinhhao1201@gmail.com</a>
                 </div>
 
-                <!-- Facebook Card -->
                 <div class="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl flex flex-col items-center text-center space-y-3">
                     <div class="w-12 h-12 bg-blue-600/10 text-blue-400 rounded-xl flex items-center justify-center text-xl shadow-inner">
                         <i class="fa-brands fa-facebook"></i>
@@ -191,10 +193,8 @@
 
     </main>
 
-    <!-- FLOATING CENTRAL AI CHATBOT SYSTEM -->
     <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
         <div id="chat-widget" class="bg-slate-950 rounded-3xl overflow-hidden border border-slate-800/80 shadow-2xl flex flex-col w-[360px] sm:w-[440px] h-[520px] mb-4 hidden opacity-0 translate-y-8 transition-all duration-300">
-            <!-- Header -->
             <div class="brand-gradient p-4 border-b border-slate-800/80 flex justify-between items-center">
                 <div class="flex items-center space-x-2">
                     <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
@@ -205,7 +205,6 @@
                     <button onclick="toggleChatWidget()" class="text-slate-400 hover:text-white text-xs p-1 transition"><i class="fa-solid fa-minus"></i></button>
                 </div>
             </div>
-            <!-- Chat logs -->
             <div id="chat-logs" class="flex-grow p-4 space-y-4 overflow-y-auto custom-scrollbar bg-slate-950/60">
                 <div class="flex items-start space-x-3">
                     <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md"><i class="fa-solid fa-robot"></i></div>
@@ -214,14 +213,12 @@
                     </div>
                 </div>
             </div>
-            <!-- Input sector -->
             <div class="p-3 bg-slate-900/90 border-t border-slate-800/80 flex space-x-2">
-                <input type="text" id="chat-input" onkeydown="handleChatKey(event)" placeholder="Nhập nhu cầu... (Ví dụ: 'muốn mua iphone 16', 'tìm dell xps')" class="flex-grow p-3 bg-slate-950 text-white rounded-xl border border-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs placeholder-slate-500 transition">
+                <input type="text" id="chat-input" onkeydown="handleChatKey(event)" placeholder="Nhập nhu cầu... (Ví dụ: 'muon mua iphone 16', 'don sach gio hang')" class="flex-grow p-3 bg-slate-950 text-white rounded-xl border border-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs placeholder-slate-500 transition">
                 <button onclick="submitUserMessage()" class="bg-blue-600 text-white px-5 rounded-xl font-bold hover:bg-blue-500 transition shadow-lg flex items-center justify-center"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </div>
 
-        <!-- Float Trigger Button -->
         <button onclick="toggleChatWidget()" class="w-14 h-14 bg-gradient-to-tr from-blue-700 to-blue-500 hover:from-blue-600 hover:to-blue-400 text-white rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 relative group">
             <i class="fa-solid fa-robot text-xl group-hover:rotate-12 transition-transform"></i>
             <span class="absolute -top-0.5 -right-0.5 flex h-3 w-3">
@@ -231,11 +228,18 @@
         </button>
     </div>
 
-    <!-- SIDEBAR CART OVERLAY -->
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-slate-950 border-l border-slate-800/80 z-50 transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col justify-between hidden">
-        <div class="p-5 border-b border-slate-800 flex justify-between items-center">
-            <h3 class="text-sm font-bold text-white flex items-center"><i class="fa-solid fa-basket-shopping mr-2 text-blue-400"></i>Đơn Hàng Của Bạn</h3>
-            <button onclick="closeCart()" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-900 border border-slate-800"><i class="fa-solid fa-xmark"></i></button>
+        <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-900/30">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-basket-shopping text-blue-400"></i>
+                <h3 class="text-sm font-bold text-white">Đơn Hàng Của Bạn</h3>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button onclick="clearEntireCart()" class="text-red-400 hover:text-white hover:bg-red-600/20 text-xs px-2.5 py-1.5 rounded-lg border border-red-500/30 transition flex items-center space-x-1" title="Dọn sạch giỏ hàng">
+                    <i class="fa-solid fa-trash-can text-[11px]"></i> <span>Dọn hàng</span>
+                </button>
+                <button onclick="closeCart()" class="text-slate-400 hover:text-white p-1.5 rounded-lg bg-slate-900 border border-slate-800"><i class="fa-solid fa-xmark"></i></button>
+            </div>
         </div>
         
         <div id="cart-items" class="flex-grow p-5 space-y-4 overflow-y-auto custom-scrollbar">
@@ -253,7 +257,6 @@
         </div>
     </div>
 
-    <!-- FOOTER SYSTEM -->
     <footer class="bg-slate-950 text-slate-500 py-10 text-center text-xs border-t border-slate-900 mt-20">
         <div class="container mx-auto px-4 space-y-2">
             <p class="text-slate-400 font-medium text-sm">&copy; 2026 <span class="text-blue-500 font-black">HomeSer</span> Ngôi Nhà Thông Minh.</p>
@@ -261,9 +264,8 @@
         </div>
     </footer>
 
-    <!-- ==================== CORE SYSTEM ENGINE CODE ==================== -->
     <script>
-        // Database mới được đồng bộ theo danh sách sản phẩm nổi bật của image_e94d45.png
+        // Database
         const shopDatabase = [
             { id: 's1', type: 'phone', name: 'iPhone 16 Pro Max 256GB', price: 34990000, desc: 'Flagship Apple đỉnh cao hiệu năng, camera zoom quang học vượt trội.', icon: '📱' },
             { id: 's2', type: 'phone', name: 'Samsung Galaxy S25 Ultra', price: 29990000, desc: 'Màn hình vô cực mượt mà tích hợp bút S-Pen quyền năng độ nhạy cao.', icon: '📲' },
@@ -414,6 +416,29 @@
             }
         }
 
+        // CHỨC NĂNG BỎ BỚT SẢN PHẨM (MỚI THÊM)
+        function removeQuantityFromCart(id) {
+            const itemIndex = internalCart.findIndex(i => i.id === id);
+            if(itemIndex !== -1) {
+                internalCart[itemIndex].quantity -= 1;
+                if(internalCart[itemIndex].quantity <= 0) {
+                    internalCart.splice(itemIndex, 1); // Xóa hẳn khỏi mảng nếu số lượng về 0
+                }
+                updateCartBadge();
+                renderCartSidebarUI();
+            }
+        }
+
+        // CHỨC NĂNG DỌN SẠCH TOÀN BỘ GIỎ HÀNG (MỚI THÊM)
+        function clearEntireCart() {
+            if(internalCart.length === 0) return alert('Giỏ hàng hiện tại vốn đã trống!');
+            if(confirm('Bạn có chắc chắn muốn dọn sạch toàn bộ sản phẩm khỏi giỏ hàng không?')) {
+                internalCart = [];
+                updateCartBadge();
+                renderCartSidebarUI();
+            }
+        }
+
         function updateCartBadge() {
             document.getElementById('cart-count').innerText = internalCart.reduce((sum, item) => sum + item.quantity, 0);
         }
@@ -429,14 +454,17 @@
             wrapper.innerHTML = internalCart.map(item => {
                 total += (item.price * item.quantity);
                 return `
-                    <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
+                    <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 flex justify-between items-center text-xs group">
                         <div class="flex items-center space-x-3">
-                            <span class="text-xl">${item.icon}</span>
+                            <span class="text-xl bg-slate-950 w-8 h-8 rounded-lg flex items-center justify-center">${item.icon}</span>
                             <div>
-                                <h5 class="text-slate-200 font-bold">${item.name}</h5>
-                                <p class="text-blue-400 font-black mt-0.5">${item.price.toLocaleString('vi-VN')}đ x ${item.quantity}</p>
+                                <h5 class="text-slate-200 font-bold line-clamp-1">${item.name}</h5>
+                                <p class="text-blue-400 font-black mt-0.5">${item.price.toLocaleString('vi-VN')}đ <span class="text-slate-500 font-normal">x${item.quantity}</span></p>
                             </div>
                         </div>
+                        <button onclick="removeQuantityFromCart('${item.id}')" class="w-7 h-7 bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500 hover:text-white rounded-lg flex items-center justify-center transition" title="Bỏ bớt 1 sản phẩm">
+                            <i class="fa-solid fa-minus text-[10px]"></i>
+                        </button>
                     </div>
                 `;
             }).join('');
@@ -498,10 +526,9 @@
                 let botResponse = "";
                 let actionModule = "";
 
-                // Kiểm tra từ khóa cụ thể cho các sản phẩm mới
                 let matchedProduct = shopDatabase.find(p => prompt.includes(p.name.toLowerCase().split(' ')[0]) || prompt.includes(p.name.toLowerCase()));
 
-                let score = { insults: 0, greetings: 0, author: 0, shop: 0, food: 0, contact: 0, thanks: 0 };
+                let score = { insults: 0, greetings: 0, author: 0, shop: 0, food: 0, contact: 0, thanks: 0, clear_cart: 0 };
 
                 if (/ngu|dốt|tệ|chán|bò|cùi|lỗi|sao ngu vậy/g.test(prompt)) score.insults += 10;
                 if (/chào|hello|helo|hê lô|hl|hi|alo/g.test(prompt)) score.greetings += 5;
@@ -510,6 +537,8 @@
                 if (/food|ăn uống|đói|gà rán|pizza|thực đơn|món ăn|gọi món|muốn ăn/g.test(prompt)) score.food += 6;
                 if (/liên hệ|sđt|điện thoại|gmail|email|facebook|fb|nguyễn hào/g.test(prompt)) score.contact += 9;
                 if (/cảm ơn|cam on|thanks/g.test(prompt)) score.thanks += 4;
+                // Nhận diện lệnh dọn giỏ hàng từ AI
+                if (/dọn|xóa giỏ|clear|bỏ hết|hủy giỏ|xóa hết/g.test(prompt)) score.clear_cart += 9;
 
                 let maxIntent = 'none';
                 let maxScore = 0;
@@ -521,11 +550,21 @@
                 }
 
                 if (maxIntent === 'insults') {
-                    botResponse = "Dạ, mình vô cùng nhận lỗi 😭. Do cơ chế Frontend xử lý chuỗi cục bộ chưa liên kết máy chủ đám mây mạnh, nên thỉnh thoảng khi nhận câu lệnh phức tạp mình bị lỗi phản hồi. Anh Hào đang phát triển tối ưu thêm để nâng cấp mình thông minh hơn!";
+                    botResponse = "Dạ, mình vô cùng nhận lỗi 😭. Hệ thống xử lý Regex Frontend cục bộ đôi khi chưa hiểu hết ý bạn. Anh Hào đang viết thêm giải pháp tối ưu cho bộ não của mình thông minh hơn!";
+                }
+                else if (maxIntent === 'clear_cart') {
+                    if(internalCart.length === 0) {
+                        botResponse = "🛒 Giỏ hàng của bạn hiện tại đang trống sẵn rồi nè!";
+                    } else {
+                        internalCart = [];
+                        updateCartBadge();
+                        renderCartSidebarUI();
+                        openCart();
+                        botResponse = "🧹 Đã thực thi lệnh hệ thống thành công! Toàn bộ sản phẩm trong giỏ hàng đã được dọn sạch hoàn toàn theo yêu cầu của bạn.";
+                    }
                 }
                 else if (matchedProduct && score.shop > 0) {
                     actionModule = "shop";
-                    // Tìm kiếm và hiển thị sản phẩm trực tiếp trên Grid cho người dùng
                     document.getElementById('shop-search').value = matchedProduct.name.split(' ')[0];
                     searchShop();
                     botResponse = `🔍 Mình tìm thấy sản phẩm <b>${matchedProduct.name}</b> giá <b>${matchedProduct.price.toLocaleString('vi-VN')}đ</b> rồi nhé. Đã kích hoạt lệnh cuộn trang đưa bạn đến khu vực Shop!`;
@@ -535,26 +574,26 @@
                     botResponse = "📞 <b>Thông tin liên hệ của lập trình viên Nguyễn Đình Hào:</b><br>• Số điện thoại: <b>0768152277</b><br>• Gmail: <b>nguyendinhhao1201@gmail.com</b><br>• Facebook: <b>Nguyễn Hào</b><br><br>Hệ thống tự động di chuyển xuống mục liên hệ cuối trang!";
                 }
                 else if (maxIntent === 'greetings') {
-                    botResponse = "Xin chào! Gõ tên thiết bị bạn muốn tìm kiếm (ví dụ: <i>'iphone 16'</i>, <i>'dell xps'</i>) hoặc gõ <i>'liên hệ'</i> để mình hỗ trợ nhé.";
+                    botResponse = "Xin chào! Gõ tên thiết bị bạn muốn tìm kiếm (ví dụ: <i>'iphone 16'</i>) hoặc gõ <i>'dọn hàng'</i> để mình xử lý giỏ hàng tự động nha.";
                 }
                 else if (maxIntent === 'author') {
-                    botResponse = "✨ Toàn bộ nền tảng <b>HomeSer</b> bao gồm thiết kế giao diện UI/UX và xử lý thuật toán lưu trữ giỏ hàng đều do lập trình viên <b>Nguyễn Đình Hào</b> tự tay phát triển toàn diện.";
+                    botResponse = "✨ Toàn bộ nền tảng <b>HomeSer</b> bao gồm thiết kế giao diện UI/UX và cơ chế xử lý bộ lọc, giỏ hàng, xóa bớt sản phẩm đều do lập trình viên <b>Nguyễn Đình Hào</b> tự tay hoàn thiện.";
                 }
                 else if (maxIntent === 'shop') {
                     actionModule = "shop";
-                    botResponse = "🛍️ Đã kích hoạt lệnh điều hướng! Màn hình tự động cuộn đưa bạn đến khu vực <b>HomeSer Shop</b> với 10 siêu phẩm Flagship vừa cập bến.";
+                    botResponse = "🛍️ Đã kích hoạt lệnh điều hướng! Màn hình tự động cuộn đưa bạn đến khu vực <b>HomeSer Shop</b>.";
                 }
                 else if (maxIntent === 'food') {
                     actionModule = "food";
                     botResponse = "🍗 Dạ có ngay! Hệ thống tự chuyển hướng đưa bạn xuống khu ẩm thực <b>HomeSer Food</b>.";
                 }
                 else if (maxIntent === 'thanks') {
-                    botResponse = "Dạ không có chi! Chúc bạn có trải nghiệm tuyệt vời trên trang dự án của anh Hào.";
+                    botResponse = "Dạ không có chi! Chúc bạn có những giây phút trải nghiệm tính năng dọn hàng mới thật mượt mà.";
                 }
                 else {
                     const fallbacks = [
-                        "Dạ, bộ não giả lập hiện tại chưa quét được từ khóa này. Bạn thử tìm các sản phẩm Flagship như: <i>'iphone 16'</i>, <i>'macbook'</i> hoặc <i>'dell'</i> xem sao nhé!",
-                        "Hì hì, câu này tạm thời cấu trúc Regex của mình chưa xử lý được. Bạn thử gõ từ khóa <b>Shop</b> hoặc <b>Food</b> để thử nghiệm tính năng tự cuộn trang nha!"
+                        "Dạ, bộ não giả lập hiện tại chưa quét được từ khóa này. Bạn thử ra lệnh: <i>'dọn giỏ hàng'</i> hoặc gõ tên thiết bị công nghệ cần tìm xem sao nhé!",
+                        "Hì hì, câu này tạm thời cấu trúc Regex của mình chưa xử lý được. Bạn thử mở giỏ hàng ra bấm nút trừ `-` để trải nghiệm tính năng bỏ bớt sản phẩm nha!"
                     ];
                     botResponse = fallbacks[Math.floor(Math.random() * fallbacks.length)];
                 }
