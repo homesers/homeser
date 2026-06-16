@@ -211,7 +211,7 @@
             <div class="brand-gradient p-4 border-b border-slate-800 flex justify-between items-center">
                 <div class="flex items-center space-x-3">
                     <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                    <span class="text-white text-xs font-bold uppercase tracking-wider">Trợ Lý Phục Vụ Thông Minh</span>
+                    <span class="text-white text-xs font-bold uppercase tracking-wider">Trợ Lý Phục Vụ Thông Minh v2.0</span>
                 </div>
                 <div class="flex items-center space-x-2">
                     <button onclick="clearChatLog()" class="text-slate-400 hover:text-white text-xs p-1 transition" title="Xóa hội thoại"><i class="fa-solid fa-trash-can"></i></button>
@@ -222,12 +222,12 @@
                 <div class="flex items-start space-x-3">
                     <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md"><i class="fa-solid fa-robot"></i></div>
                     <div class="bg-slate-800/80 border border-slate-700/50 text-slate-100 p-3.5 rounded-2xl rounded-tl-none max-w-[80%] shadow-md text-xs leading-relaxed">
-                        Xin chào! Mình là trợ lý AI. Bạn muốn tìm sản phẩm thông minh bên <span class="text-amber-400 font-semibold">Shop</span>, gọi món bên <span class="text-emerald-400 font-semibold">Food</span> hay xem video giải trí bên <span class="text-red-400 font-semibold">Watch</span>? Gõ yêu cầu hoặc cuộn chuột trải nghiệm thử nha!
+                        Xin chào! Mình là trợ lý AI thông minh của HomeSer. Bạn muốn tìm sản phẩm bên <span class="text-amber-400 font-semibold">Shop</span>, gọi món ăn ngon bên <span class="text-emerald-400 font-semibold">Food</span> hay xem video bên <span class="text-red-400 font-semibold">Watch</span>? Cứ trò chuyện thoải mái với mình nhé! 😊
                     </div>
                 </div>
             </div>
             <div class="p-3 bg-slate-900 border-t border-slate-800/80 flex space-x-2">
-                <input type="text" id="chat-input" onkeydown="handleChatKey(event)" placeholder="Nhập nhu cầu của bạn vào đây..." class="flex-grow p-3 bg-slate-950 text-white rounded-xl border border-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs placeholder-slate-500 transition">
+                <input type="text" id="chat-input" onkeydown="handleChatKey(event)" placeholder="Nhập câu hỏi hoặc yêu cầu cuộn trang..." class="flex-grow p-3 bg-slate-950 text-white rounded-xl border border-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs placeholder-slate-500 transition">
                 <button onclick="submitUserMessage()" class="bg-blue-600 text-white px-5 rounded-xl font-bold hover:bg-blue-500 transition shadow-lg flex items-center justify-center"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </div>
@@ -309,7 +309,6 @@
                 <button onclick="clearCart()" class="col-span-1 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white text-xs font-bold py-3.5 rounded-xl transition flex items-center justify-center space-x-1" title="Xóa toàn bộ vật phẩm trong giỏ">
                     <i class="fa-solid fa-trash-can"></i> <span>Dọn giỏ</span>
                 </button>
-                
                 <button onclick="executeCheckout()" class="col-span-2 brand-gradient text-white text-xs font-bold py-3.5 rounded-xl tracking-wide hover:shadow-lg transition">
                     XÁC NHẬN ĐẶT HÀNG
                 </button>
@@ -351,7 +350,7 @@
         let isScrollAnimating = false;
 
         window.addEventListener('wheel', (e) => {
-            if (e.target.closest('#video-feed') || e.target.closest('#promo-slider') || e.target.closest('#chat-logs') || e.target.closest('#cart-items')) {
+            if (e.target.closest('#video-feed') || e.target.closest('#promo-slider') || e.target.closest('#chat-logs') || e.target.closest('#chat-input') || e.target.closest('#cart-items')) {
                 return; 
             }
             e.preventDefault(); 
@@ -461,7 +460,7 @@
                 chatWidget.classList.remove('hidden');
                 setTimeout(() => chatWidget.classList.remove('opacity-0', 'translate-y-8'), 50);
             } else {
-                chatWidget.classList.add('opacity-0', 'translate-y-8');
+                chatWidget.opacity-0; chatWidget.classList.add('translate-y-8');
                 setTimeout(() => chatWidget.classList.add('hidden'), 300);
             }
         }
@@ -546,7 +545,6 @@
 
                 const targetAccount = users.find(u => u.email === typedEmail);
 
-                // KIỂM TRA MẬT KHẨU KHÔNG KHỚP -> CHẶN NGAY LẬP TỨC
                 if (!targetAccount || targetAccount.password !== typedPass) {
                     alert('❌ Sai tài khoản hoặc mật khẩu rồi ông bạn ơi! Hãy kiểm tra lại nhé.');
                     return; 
@@ -647,23 +645,19 @@
             }
         }
 
-        // ==================== HỆ THỐNG ĐIỀU KHIỂN CHI TIẾT GIỎ HÀNG (MỚI NÂNG CẤP) ====================
-        
-        // 1. Hàm Bỏ bớt số lượng từng món (-)
         function decreaseQuantity(id) {
             const targetItem = internalCart.find(item => item.id === id);
             if(targetItem) {
                 if(targetItem.quantity > 1) {
-                    targetItem.quantity -= 1; // Giảm đi 1 đơn vị
+                    targetItem.quantity -= 1;
                 } else {
-                    internalCart = internalCart.filter(item => item.id !== id); // Nếu bằng 1 thì gạt tên xóa luôn
+                    internalCart = internalCart.filter(item => item.id !== id);
                 }
                 updateCartBadge();
                 renderCartSidebarUI();
             }
         }
 
-        // 2. Hàm tăng thêm số lượng từ trong giỏ (+)
         function increaseQuantity(id) {
             const targetItem = internalCart.find(item => item.id === id);
             if(targetItem) {
@@ -673,14 +667,12 @@
             }
         }
 
-        // 3. Hàm xóa hoàn toàn một món ra khỏi giỏ (Nút thùng rác)
         function removeItemFromCart(id) {
             internalCart = internalCart.filter(item => item.id !== id);
             updateCartBadge();
             renderCartSidebarUI();
         }
 
-        // 4. Hàm DỌN SẠCH TOÀN BỘ GIỎ HÀNG
         function clearCart() {
             if(internalCart.length === 0) {
                 alert('Giỏ hàng có gì đâu mà dọn hả ông bạn ơi!');
@@ -693,7 +685,6 @@
             }
         }
 
-        // Hàm render lại giao diện sidebar của giỏ hàng
         function renderCartSidebarUI() {
             const wrapper = document.getElementById('cart-items');
             if(internalCart.length === 0) {
@@ -716,12 +707,11 @@
                         
                         <div class="flex items-center space-x-2">
                             <div class="flex items-center bg-slate-950 border border-slate-800 rounded-lg p-1">
-                                <button onclick="decreaseQuantity('${item.id}')" class="text-slate-400 hover:text-white w-5 h-5 flex items-center justify-center font-bold text-xs bg-slate-900 rounded hover:bg-slate-800 transition" title="Bỏ bớt 1 số lượng">-</button>
+                                <button onclick="decreaseQuantity('${item.id}')" class="text-slate-400 hover:text-white w-5 h-5 flex items-center justify-center font-bold text-xs bg-slate-900 rounded hover:bg-slate-800 transition">-</button>
                                 <span class="text-slate-200 px-2 font-black min-w-[16px] text-center">${item.quantity}</span>
-                                <button onclick="increaseQuantity('${item.id}')" class="text-slate-400 hover:text-white w-5 h-5 flex items-center justify-center font-bold text-xs bg-slate-900 rounded hover:bg-slate-800 transition" title="Thêm 1 số lượng">+</button>
+                                <button onclick="increaseQuantity('${item.id}')" class="text-slate-400 hover:text-white w-5 h-5 flex items-center justify-center font-bold text-xs bg-slate-900 rounded hover:bg-slate-800 transition">+</button>
                             </div>
-                            
-                            <button onclick="removeItemFromCart('${item.id}')" class="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition" title="Xóa món này khỏi giỏ">
+                            <button onclick="removeItemFromCart('${item.id}')" class="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition">
                                 <i class="fa-solid fa-trash-can text-sm"></i>
                             </button>
                         </div>
@@ -756,6 +746,7 @@
 
         function handleChatKey(e) { if (e.key === 'Enter') { submitUserMessage(); } }
 
+        // ==================== HỆ THỐNG TRÍ THÔNG MINH NHÂN TẠO NÂNG CẤP (AI ENGINE v2.0) ====================
         function submitUserMessage() {
             const inputField = document.getElementById('chat-input');
             const txt = inputField.value.trim();
@@ -766,11 +757,56 @@
 
             setTimeout(() => {
                 let lower = txt.toLowerCase();
-                if(lower.includes('watch') || lower.includes('video')) { switchModule('watch'); renderChatBubble('Đã lướt mượt mà tới mục Watch!', 'bot'); }
-                else if(lower.includes('ăn') || lower.includes('food')) { switchModule('food'); renderChatBubble('Đã lướt mượt mà xuống khu Food!', 'bot'); }
-                else if(lower.includes('shop') || lower.includes('mua')) { switchModule('shop'); renderChatBubble('Đã lướt mượt mà tới khu Shop!', 'bot'); }
-                else { renderChatBubble('Thử gõ "xem video" hoặc "gọi đồ ăn" xem tui tự cuộn trang nhé!', 'bot'); }
-            }, 400);
+                let botResponse = "";
+                let triggerScroll = false;
+                let targetModule = "";
+
+                // 1. LUỒNG KIỂM TRA BẢN QUYỀN TÁC GIẢ (NGUYỄN ĐÌNH HÀO)
+                if (lower.includes('ai làm') || lower.includes('của ai') || lower.includes('ai tạo') || lower.includes('phát triển bởi') || lower.includes('creator') || lower.includes('tác giả') || lower.includes('nguyễn đình hào') || lower.includes('đình hào')) {
+                    botResponse = "✨ <b>HomeSer</b> hoàn toàn được lên ý tưởng thiết kế, xây dựng logic và phát triển trọn gói bởi anh <b>Nguyễn Đình Hào</b> ạ! Một nền tảng giải trí, mua sắm và gọi món ăn siêu tiện ích tại gia.";
+                }
+                // 2. CÁC CÂU GIAO TIẾP TỐI THIỂU HẰNG NGÀY
+                else if (lower.includes('chào') || lower.includes('hello') || lower.includes('hi') || lower.includes('alo') || lower.includes('hey')) {
+                    botResponse = "Xin chào ngày mới tốt lành! Mình là trợ lý thông minh của HomeSer. Hôm nay bạn cần mình hỗ trợ tìm kiếm gì không nè? 😊";
+                }
+                else if (lower.includes('cảm ơn') || lower.includes('cam on') || lower.includes('thanks') || lower.includes('tks') || lower.includes('thank you')) {
+                    botResponse = "Dạ không có chi ạ! Được hỗ trợ bạn trải nghiệm ứng dụng là vinh hạnh vô bờ bến của trợ lý HomeSer tụi mình. ❤️";
+                }
+                else if (lower.includes('tạm biệt') || lower.includes('tam biet') || lower.includes('bye') || lower.includes('goodbye') || lower.includes('ngủ đây')) {
+                    botResponse = "Tạm biệt bạn nhé! Chúc bạn có những phút giây thư giãn tuyệt vời. Hẹn sớm gặp lại bạn trên HomeSer nha! 👋";
+                }
+                else if (lower.includes('đẹp') || lower.includes('xịn') || lower.includes('hay quá') || lower.includes('tốt') || lower.includes('mượt')) {
+                    botResponse = "Hi hi, nghe bạn khen mà mình sướng rơn cả người! Hệ thống mượt mà là nhờ công sức lập trình đỉnh cao của anh Nguyễn Đình Hào đó ạ. Bạn trải nghiệm tiếp nha!";
+                }
+                // 3. ĐIỀU HƯỚNG CUỘN TRANG THÔNG MINH THEO TỪ KHÓA
+                else if (lower.includes('watch') || lower.includes('video') || lower.includes('xem') || lower.includes('phim') || lower.includes('clip')) {
+                    triggerScroll = true;
+                    targetModule = "watch";
+                    botResponse = "Đã nhận lệnh! Mình đã kích hoạt luồng cuộn mượt đưa bạn đến ngay trung tâm video ngắn giải trí <b>HomeSer Watch</b> nhé! 🎬";
+                }
+                else if (lower.includes('ăn') || lower.includes('food') || lower.includes('đói') || lower.includes('món') || lower.includes('đồ ăn') || lower.includes('uống')) {
+                    triggerScroll = true;
+                    targetModule = "food";
+                    botResponse = "Bụng đói râm ran rồi đúng không nè? Mình đã cuộn trang dẫn bạn thẳng xuống thiên đường ẩm thực siêu tốc <b>HomeSer Food</b> rồi nha! Đặt món thôi! 🍗🍕";
+                }
+                else if (lower.includes('shop') || lower.includes('mua') || lower.includes('sắm') || lower.includes('hàng') || lower.includes('thiết bị') || lower.includes('giá')) {
+                    triggerScroll = true;
+                    targetModule = "shop";
+                    botResponse = "Hội đam mê mua sắm ơi, mình đã cuộn mượt đưa bạn cập bến khu tổ hợp công nghệ gian hàng chính hãng <b>HomeSer Shop</b> rồi đây! Chúc bạn săn sale vui vẻ! 🎧⌨️";
+                }
+                // 4. PHƯƠNG ÁN TRẢ LỜI MẶC ĐỊNH KHI KHÔNG KHỚP TỪ KHÓA
+                else {
+                    botResponse = "Hì hì, câu này thông minh quá mình chưa hiểu hết ý. Bạn thử gõ <i>'ai làm ra trang này'</i>, <i>'xem video'</i>, <i>'mua sắm công nghệ'</i> hoặc <i>'gọi món gà rán'</i> xem mình tự động nhảy số nha!";
+                }
+
+                // Thực thi phản hồi lên màn hình chat log
+                renderChatBubble(botResponse, 'bot');
+
+                // Nếu có kích hoạt cuộn trang tự động
+                if(triggerScroll && targetModule) {
+                    switchModule(targetModule);
+                }
+            }, 450);
         }
 
         function renderChatBubble(text, sender) {
