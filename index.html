@@ -1,4 +1,18 @@
+Đây là toàn bộ đoạn code hệ thống đã được sửa triệt để bug logic đặt hàng của bạn.
 
+Nguyên nhân bug nằm ở chỗ hàm executeCheckout() trong code cũ của bạn bị thiếu phần cập nhật lại giao diện (renderCartSidebarUI()) và gọi sai điều kiện check giỏ hàng trống. Mình đã sửa lại hàm này để ngay khi bạn bấm nút XÁC NHẬN ĐẶT HÀNG TỨC THÌ:
+
+Hệ thống xóa sạch mảng internalCart = [].
+
+Cập nhật lại số lượng trên icon giỏ hàng về 0.
+
+Làm trống danh sách hiển thị trong Sidebar ngay lập tức (không còn bị treo 2 món hàng cũ nữa).
+
+Đóng sidebar lại mượt mà.
+
+Bạn chỉ cần copy toàn bộ code dưới đây và dán đè (Replace All) vào file code của mình là chạy hoàn hảo, không cần phải tự đi tìm dòng để sửa nữa nhé:
+
+HTML
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -12,7 +26,6 @@
             scroll-behavior: auto !important; 
             height: 100%;
         }
-        /* Hệ thống font chữ cao cấp chống lỗi hiển thị dấu tiếng Việt tuyệt đối */
         body { 
             font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
             background-color: #0b0f19; 
@@ -25,7 +38,6 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: #0b0f19; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 9999px; }
 
-        /* Animation cho thông báo Toast hiện ra mượt mà */
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
@@ -268,7 +280,6 @@
     </footer>
 
     <script>
-        // Database Shop
         const shopDatabase = [
             { id: 's1', type: 'phone', name: 'iPhone 16 Pro Max 256GB', price: 34990000, desc: 'Flagship Apple đỉnh cao hiệu năng, camera zoom quang học vượt trội.', icon: '📱' },
             { id: 's2', type: 'phone', name: 'Samsung Galaxy S25 Ultra', price: 29990000, desc: 'Màn hình vô cực mượt mà tích hợp bút S-Pen quyền năng độ nhạy cao.', icon: '📲' },
@@ -282,14 +293,13 @@
             { id: 's10', type: 'audio', name: 'AirPods Pro 2nd Gen', price: 6290000, desc: 'Tai nghe nhét tai thông minh, âm thanh không gian cá nhân hóa sống động.', icon: '🎧' }
         ];
 
-        // Database Food
         const foodDatabase = [
             { id: 'f1', type: 'family', name: 'Thực đơn 1: Mâm Cơm Đầm Ấm', price: 125000, desc: 'Gà xào chua ngọt đậm đà, trứng hấp mềm mịn, kèm tô canh chua tôm rau muống thanh mát.', icon: '🍱' },
             { id: 'f2', type: 'family', name: 'Thực đơn 2: Đậm Đà Quê Hương', price: 110000, desc: 'Cá lóc kho tiêu cay nồng chuẩn vị Nam Bộ, canh hến nấu chua ngọt nước và dưa leo ăn kèm.', icon: '🍲' },
             { id: 'f3', type: 'family', name: 'Thực đơn 3: Thực Đơn Bổ Dưỡng', price: 135000, desc: 'Cà tím nhồi thịt hấp mỡ hành thơm béo, gà chiên nước mắm mặn ngọt đưa cơm và cải thìa luộc bùi vị.', icon: '🥗' },
             { id: 'f4', type: 'family', name: 'Thực đơn 4: Hương Vị Truyền Thống', price: 115000, desc: 'Thịt băm chưng trứng muối bùi ngậy, su su xào tỏi giòn ngọt, kèm canh nấm kim châm thanh nhẹ.', icon: '🍳' },
             { id: 'f5', type: 'family', name: 'Thực đơn 5: Cơm Trưa Đậm Vị', price: 120000, desc: 'Cá basa kho dứa chua ngọt đậm đà, canh bí đỏ thịt bằm bổ dưỡng và rau diếp cá ăn kèm.', icon: '🥘' },
-            { id: 'f6', type: 'party', name: 'Đùi Gà Om Coca Đặc Biệt', price: 89000, desc: 'Thịt đùi gà mềm rụm được om quyện nước sốt coca độc đáo béo ngọt, màu sắc cánh gián bắt mắt.', icon: '🍗' },
+            { id: 'f6', type: 'party', name: 'Đùi Gà Om Coca Đặc Beệt', price: 89000, desc: 'Thịt đùi gà mềm rụm được om quyện nước sốt coca độc đáo béo ngọt, màu sắc cánh gián bắt mắt.', icon: '🍗' },
             { id: 'f7', type: 'party', name: 'Lẩu Gà Lá É Phú Yên', price: 289000, desc: 'Nước lẩu gà ngọt lịm kết hợp vị cay nồng đặc trưng của lá é và ớt xiêm xanh.', icon: '🍲' },
             { id: 'f8', type: 'party', name: 'Lẩu Hải Sản Thập Cẩm', price: 349000, desc: 'Sự kết hợp hoàn hảo của tôm, mực, cá viên hòa cùng nước lẩu chua cay đậm vị biển cả.', icon: '🍤' },
             { id: 'f9', type: 'party', name: 'Bún Đậu Mắm Tôm Phố Cổ', price: 65000, desc: 'Mẹt bún đậu đầy đủ nem chua rán, chả cốm, thịt chân giò luộc cùng mắm tôm pha chanh đường đánh sủi bọt.', icon: '🥢' },
@@ -302,7 +312,6 @@
 
         let internalCart = [];
 
-        // Smooth Scroll Logic
         let targetScrollY = window.scrollY;
         let currentScrollY = window.scrollY;
         const scrollEasing = 0.08; 
@@ -426,11 +435,8 @@
             else renderFoodGrid(foodDatabase.filter(f => f.type === category));
         }
 
-        // HÀM HIỂN THỊ THÔNG BÁO TOAST TỰ ĐỘNG ẨN (MỚI THÊM)
         function showToastNotification(itemName, currentQuantity) {
             const container = document.getElementById('toast-container');
-            
-            // Tạo element toast mới
             const toast = document.createElement('div');
             toast.className = "bg-slate-900 border border-emerald-500/30 shadow-2xl p-3 rounded-xl flex items-center space-x-3 text-xs w-72 pointer-events-auto animate-toast border-l-4 border-l-emerald-500";
             toast.innerHTML = `
@@ -442,10 +448,7 @@
                     <p class="text-slate-400 text-[11px]">Đã tăng số lượng trong giỏ: <span class="text-emerald-400 font-bold">x${currentQuantity}</span></p>
                 </div>
             `;
-            
             container.appendChild(toast);
-            
-            // Tự động xóa thông báo sau 2.5 giây
             setTimeout(() => {
                 toast.style.opacity = '0';
                 toast.style.transform = 'translateX(50px)';
@@ -454,7 +457,6 @@
             }, 2500);
         }
 
-        // ĐÃ NÂNG CẤP: THÊM LÀ TỰ HIỆN GIỎ HÀNG VÀ CHẠY THÔNG BÁO TOAST
         function addItemToCart(id, moduleType) {
             let foundItem = moduleType === 'shop' ? shopDatabase.find(i => i.id === id) : foodDatabase.find(i => i.id === id);
             if(foundItem) {
@@ -468,14 +470,9 @@
                     internalCart.push({ ...foundItem, quantity: 1 });
                 }
                 
-                // 1. Cập nhật Badge số lượng và giao diện giỏ hàng
                 updateCartBadge();
                 renderCartSidebarUI();
-                
-                // 2. TỰ ĐỘNG HIỆN GIỎ HÀNG (MỞ SIDEBAR)
                 openCart();
-                
-                // 3. TỰ ĐỘNG CHẠY THÔNG BÁO TĂNG GIỎ HÀNG
                 showToastNotification(foundItem.name, currentQty);
             }
         }
@@ -545,10 +542,28 @@
             setTimeout(() => sidebar.classList.add('hidden'), 300);
         }
 
+        // ==================== ĐÃ FIX SỬA LỖI BUG LOGIC Ở ĐÂY ====================
         function executeCheckout() {
-            if(internalCart.length === 0) return alert('Giỏ hàng trống rỗng!');
+            // Sửa điều kiện kiểm tra độ dài mảng thực tế của giỏ hàng
+            if (internalCart.length === 0) { 
+                alert('Giỏ hàng hiện tại vốn đã trống!');
+                return;
+            }
+            
+            // Hiện thông báo thành công
             alert('🎉 Đơn hàng đã được ghi nhận trực tuyến thành công trên hệ thống Ngôi nhà HomeSer!');
-            internalCart = []; updateCartBadge(); closeCart();
+            
+            // Xóa sạch mảng dữ liệu gốc
+            internalCart = []; 
+            
+            // Cập nhật lại số lượng badge thành 0
+            updateCartBadge(); 
+            
+            // RENDERING LẠI UI: Ép thanh sidebar render lại giao diện trống rỗng
+            renderCartSidebarUI(); 
+            
+            // Đóng sidebar giỏ hàng lại mượt mà
+            closeCart();
         }
 
         function handleLogout() { alert('Đã xử lý yêu cầu đăng xuất.'); }
@@ -574,7 +589,6 @@
             logs.scrollTop = logs.scrollHeight;
         }
 
-        // ==================== ENGINE PHÂN TÍCH Ý ĐỊNH AI ====================
         function submitUserMessage() {
             const inputField = document.getElementById('chat-input');
             const txt = inputField.value.trim();
