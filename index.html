@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
         
         /* Tắt scroll-behavior mặc định để nhường chỗ cho Engine Lerp tự xử lý */
         html, body { 
@@ -36,10 +36,8 @@
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans custom-scrollbar">
 
-    <!-- TOP NAVIGATION BAR -->
     <header class="dark-glass text-white shadow-xl p-4 sticky top-0 z-50 border-b border-slate-800">
         <div class="container mx-auto flex justify-between items-center">
-            <!-- Brand Logo Group -->
             <div class="flex items-center space-x-3 cursor-pointer" onclick="switchModule('home')">
                 <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-lg flex items-center justify-center">
                     <i class="fa-solid fa-house-laptop text-xl"></i>
@@ -49,7 +47,6 @@
                 </h1>
             </div>
             
-            <!-- Quick Tab Navigation System -->
             <nav class="hidden md:flex bg-slate-800/60 p-1 rounded-full border border-slate-700/50">
                 <button onclick="switchModule('home')" id="btn-nav-home" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition flex items-center space-x-2 bg-blue-600 text-white shadow-md">
                     <i class="fa-solid fa-house"></i> <span>Home</span>
@@ -65,14 +62,12 @@
                 </button>
             </nav>
 
-            <!-- Actions and Auth Block -->
             <div class="flex items-center space-x-4">
                 <button onclick="openCart()" class="relative p-2.5 bg-slate-800 rounded-full hover:bg-slate-700 transition">
                     <i class="fa-solid fa-cart-shopping text-blue-400"></i>
                     <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-md scale-90">0</span>
                 </button>
                 
-                <!-- Khu vực hiển thị Auth (Sẽ giữ nguyên trạng thái khi reload trang) -->
                 <div id="auth-header-zone">
                     <button onclick="toggleAuthModal('login')" class="bg-slate-800 border border-slate-700 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-700 transition flex items-center space-x-1.5">
                         <i class="fa-solid fa-user-lock text-blue-500"></i> <span>Đăng Nhập</span>
@@ -82,10 +77,8 @@
         </div>
     </header>
 
-    <!-- MAIN INTERACTIVE HUB -->
     <main class="container mx-auto px-4 max-w-7xl">
 
-        <!-- MODULE 0: HOME PORTAL -->
         <section id="mod-home" class="module-section space-y-12 py-16 min-h-[80vh] scroll-mt-24">
             <div class="text-center space-y-4 max-w-3xl mx-auto pt-6">
                 <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs px-4 py-1.5 rounded-full font-bold uppercase tracking-wider">Chào mừng đến với HomeSer</span>
@@ -97,7 +90,6 @@
                 </p>
             </div>
 
-            <!-- PROMO BANNER SLIDER -->
             <div class="relative group max-w-5xl mx-auto">
                 <div class="absolute top-1/2 -left-4 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onclick="moveSlider('left')" class="bg-slate-950/80 hover:bg-blue-600 text-white w-10 h-10 rounded-full border border-slate-800 flex items-center justify-center shadow-lg transition">
@@ -134,7 +126,6 @@
                 </div>
             </div>
 
-            <!-- Conceptual Grid Boxes -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4">
                 <div onclick="switchModule('watch')" class="group bg-slate-800/40 border border-slate-800 rounded-3xl p-8 cursor-pointer hover:border-blue-500/40 hover:bg-slate-800/80 transition-all duration-300 flex flex-col justify-between h-64 shadow-xl">
                     <div>
@@ -171,7 +162,6 @@
             </div>
         </section>
 
-        <!-- MODULE 1: WATCH ENGINE -->
         <section id="mod-watch" class="module-section space-y-8 py-16 min-h-[85vh] border-t border-slate-800/60">
             <div class="flex justify-between items-center border-b border-slate-800 pb-4">
                 <div>
@@ -185,7 +175,6 @@
             </div>
         </section>
 
-        <!-- MODULE 2: SHOP SYSTEM -->
         <section id="mod-shop" class="module-section space-y-8 py-16 min-h-[85vh] border-t border-slate-800/60">
             <div class="flex flex-col md:flex-row md:justify-between md:items-center border-b border-slate-800 pb-6 gap-4">
                 <div>
@@ -202,7 +191,6 @@
             <div id="shop-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
         </section>
 
-        <!-- MODULE 3: FOOD PARADISE -->
         <section id="mod-food" class="module-section space-y-8 py-16 min-h-[85vh] border-t border-slate-800/60">
             <div class="flex flex-col md:flex-row md:justify-between md:items-center border-b border-slate-800 pb-6 gap-4">
                 <div>
@@ -220,7 +208,6 @@
 
     </main>
 
-    <!-- FLOATING AI CHATBOT SYSTEM -->
     <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
         <div id="chat-widget" class="bg-slate-950 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl flex flex-col w-[360px] sm:w-[440px] h-[520px] mb-4 hidden opacity-0 translate-y-8 transition-all duration-300">
             <div class="brand-gradient p-4 border-b border-slate-800 flex justify-between items-center">
@@ -256,7 +243,6 @@
         </button>
     </div>
 
-    <!-- AUTH POPUP MODAL (Có tích hợp nút xem mật khẩu mắt thần) -->
     <div id="auth-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
         <div class="bg-slate-900 border border-slate-800 w-full max-w-md p-8 rounded-3xl shadow-2xl transform scale-95 transition-transform duration-300 relative">
             <button onclick="toggleAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 rounded-lg bg-slate-800/50 border border-slate-700/50"><i class="fa-solid fa-xmark"></i></button>
@@ -265,7 +251,6 @@
                 <button id="tab-register-btn" onclick="switchAuthTab('register')" class="flex-1 text-center font-bold text-base pb-2 text-slate-400 hover:text-slate-200">Đăng Ký</button>
             </div>
             
-            <!-- Form Đăng nhập -->
             <form id="form-login" onsubmit="handleAuthSubmit(event, 'login')" class="space-y-4">
                 <div class="space-y-1">
                     <label class="text-xs text-slate-400 font-semibold">Tài khoản hoặc Email</label>
@@ -283,7 +268,6 @@
                 <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl mt-4 hover:bg-blue-500 transition shadow-lg text-sm">VÀO HOMESER LIỀN</button>
             </form>
 
-            <!-- Form Đăng ký -->
             <form id="form-register" onsubmit="handleAuthSubmit(event, 'register')" class="space-y-4 hidden">
                 <div class="space-y-1">
                     <label class="text-xs text-slate-400 font-semibold">Họ và Tên Khách Hàng</label>
@@ -307,11 +291,15 @@
         </div>
     </div>
 
-    <!-- SIDEBAR CART OVERLAY -->
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-slate-950 border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col justify-between hidden">
         <div class="p-6 border-b border-slate-800 flex justify-between items-center">
             <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-basket-shopping mr-2 text-blue-400"></i>Đơn Hàng Của Bạn</h3>
-            <button onclick="closeCart()" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-900 border border-slate-800"><i class="fa-solid fa-xmark"></i></button>
+            <div class="flex items-center space-x-2">
+                <button onclick="clearCart()" class="text-[11px] text-red-400 hover:text-red-300 transition px-2.5 py-1.5 rounded-xl bg-red-500/10 border border-red-500/20 font-bold" title="Xóa toàn bộ giỏ hàng">
+                    <i class="fa-solid fa-trash-can mr-1"></i> Dọn giỏ
+                </button>
+                <button onclick="closeCart()" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-900 border border-slate-800"><i class="fa-solid fa-xmark"></i></button>
+            </div>
         </div>
         <div id="cart-items" class="flex-grow p-6 space-y-4 overflow-y-auto custom-scrollbar">
             <p class="text-sm text-slate-500 text-center py-12">Chưa có hàng.</p>
@@ -325,14 +313,12 @@
         </div>
     </div>
 
-    <!-- FOOTER (Đã cập nhật theo yêu cầu của ông) -->
     <footer class="bg-slate-950 text-slate-500 py-12 text-center text-sm border-t border-slate-900 mt-20">
         <div class="container mx-auto px-4 space-y-2">
             <p class="text-slate-400 font-medium text-base">&copy; 2026 <span class="text-blue-500 font-black">HomeSer</span> được tạo bởi Nguyễn Đình Hào.</p>
         </div>
     </footer>
 
-    <!-- ==================== CORE SYSTEM ENGINE CODE ==================== -->
     <script>
         const watchDatabase = [
             { id: 1, title: 'Cách làm chuỗi Web App trong 5 phút cùng Tailwind CSS', channel: 'Hào TechDev', likes: '12.4K', tags: '#coding #webdev', gradient: 'from-purple-900 to-indigo-900' },
@@ -354,7 +340,7 @@
         let internalCart = [];
         let userDataState = null;
 
-        // --- SIÊU MƯỢT ENGINE CHẬM QUÁN TÍNH (LERP SMOOTH SCROLL) ---
+        // --- LERP SMOOTH SCROLL ---
         let targetScrollY = window.scrollY;
         let currentScrollY = window.scrollY;
         const scrollEasing = 0.06; 
@@ -391,14 +377,12 @@
             }
         }
 
-        // TỰ ĐỘNG KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP KHI TẢI LẠI TRANG (REFRESH)
         window.onload = function() {
             renderWatchFeed();
             renderShopGrid(shopDatabase);
             renderFoodGrid();
             setupScrollTracking();
 
-            // Khôi phục phiên làm việc từ localStorage
             const savedUser = localStorage.getItem('homeser_logged_user');
             if (savedUser) {
                 userDataState = JSON.parse(savedUser);
@@ -406,7 +390,6 @@
             }
         };
 
-        // THEO DÕI THANH CUỘN ĐỂ TỰ ĐỘNG ĐỔI TRẠNG THÁI MENU TAB
         function setupScrollTracking() {
             const observerOptions = { root: null, rootMargin: '-40% 0px -40% 0px', threshold: 0 };
             const observer = new IntersectionObserver((entries) => {
@@ -441,7 +424,6 @@
             }
         }
 
-        // CHỨC NĂNG ẨN/HIỆN MẬT KHẨU (MẮT THẦN)
         function togglePasswordVisibility(inputId, iconId) {
             const passInput = document.getElementById(inputId);
             const eyeIcon = document.getElementById(iconId);
@@ -506,7 +488,6 @@
             }
         }
 
-        // TÁCH RIÊNG HÀM RENDER HEADER KHI ĐÃ ĐĂNG NHẬP THÀNH CÔNG
         function renderUserHeaderUI(username) {
             document.getElementById('auth-header-zone').innerHTML = `
                 <div class="flex items-center space-x-3 bg-slate-800/90 py-1.5 px-4 rounded-xl border border-slate-700 shadow-md">
@@ -523,7 +504,6 @@
             `;
         }
 
-        // XỬ LÝ ĐĂNG NHẬP + LƯU TRỮ VÀO LOCALSTORAGE TRÁNH MẤT DỮ LIỆU KHI REFRESH
         function handleAuthSubmit(event, mode) {
             event.preventDefault();
             let finalUserName = "Đình Hào"; 
@@ -537,21 +517,14 @@
             }
 
             userDataState = { name: finalUserName };
-            
-            // Lưu dữ liệu vào localStorage để khi F5 không bị mất
             localStorage.setItem('homeser_logged_user', JSON.stringify(userDataState));
-            
-            // Cập nhật giao diện thanh điều hướng
             renderUserHeaderUI(userDataState.name);
             toggleAuthModal();
         }
 
-        // HÀM ĐĂNG XUẤT XỬ LÝ TRIỆT ĐỂ (XÓA CẢ BỘ NHỚ LOCALSTORAGE)
         function handleLogout() {
             userDataState = null;
-            // Xóa khóa lưu trữ phiên đăng nhập
             localStorage.removeItem('homeser_logged_user');
-            
             document.getElementById('auth-header-zone').innerHTML = `
                 <button onclick="toggleAuthModal('login')" class="bg-slate-800 border border-slate-700 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-700 transition flex items-center space-x-1.5">
                     <i class="fa-solid fa-user-lock text-blue-500"></i> <span>Đăng Nhập</span>
@@ -620,17 +593,41 @@
             `).join('');
         }
 
+        // CẬP NHẬT SỐ LƯỢNG BADGE TRÊN HEADER
+        function updateCartBadge() {
+            const totalItems = internalCart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').innerText = totalItems;
+        }
+
         function addItemToCart(id, moduleType) {
             let foundItem = moduleType === 'shop' ? shopDatabase.find(i => i.id === id) : foodDatabase.find(i => i.id === id);
             if(foundItem) {
                 const cartExist = internalCart.find(i => i.id === id);
                 if(cartExist) cartExist.quantity += 1;
                 else internalCart.push({ ...foundItem, quantity: 1 });
-                document.getElementById('cart-count').innerText = internalCart.reduce((sum, item) => sum + item.quantity, 0);
+                updateCartBadge();
                 renderCartSidebarUI();
             }
         }
 
+        // TÍNH NĂNG 1: XÓA MÓN HÀNG KHỎI GIỎ HÀNG
+        function removeItemFromCart(id) {
+            internalCart = internalCart.filter(item => item.id !== id);
+            updateCartBadge();
+            renderCartSidebarUI();
+        }
+
+        // TÍNH NĂNG 2: DỌN SẠCH TOÀN BỘ GIỎ HÀNG
+        function clearCart() {
+            if(internalCart.length === 0) return;
+            if(confirm('Ông có chắc muốn xóa sạch sành sanh giỏ hàng không?')) {
+                internalCart = [];
+                updateCartBadge();
+                renderCartSidebarUI();
+            }
+        }
+
+        // RENDER GIỎ HÀNG THAY ĐỔI THEO THỜI GIAN THỰC (CÓ NÚT XÓA THÙNG RÁC)
         function renderCartSidebarUI() {
             const wrapper = document.getElementById('cart-items');
             if(internalCart.length === 0) {
@@ -642,8 +639,17 @@
             wrapper.innerHTML = internalCart.map(item => {
                 total += (item.price * item.quantity);
                 return `
-                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
-                        <div class="flex items-center space-x-2"><span>${item.icon}</span><div><h5 class="text-slate-200 font-bold">${item.name}</h5><p class="text-slate-500">${item.price.toLocaleString('vi-VN')}đ x ${item.quantity}</p></div></div>
+                    <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 flex justify-between items-center text-xs group transition hover:border-slate-700">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-2xl">${item.icon}</span>
+                            <div>
+                                <h5 class="text-slate-200 font-bold line-clamp-1">${item.name}</h5>
+                                <p class="text-slate-500 mt-0.5">${item.price.toLocaleString('vi-VN')}đ x ${item.quantity}</p>
+                            </div>
+                        </div>
+                        <button onclick="removeItemFromCart('${item.id}')" class="text-slate-500 hover:text-red-400 p-2 rounded-lg hover:bg-red-500/10 transition" title="Xóa món này">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
                     </div>
                 `;
             }).join('');
@@ -663,8 +669,14 @@
         }
 
         function executeCheckout() {
+            if(internalCart.length === 0) {
+                alert('Giỏ hàng đang trống rỗng, ông chưa mua gì hết!');
+                return;
+            }
             alert('Đơn hàng thành công!');
-            internalCart = []; document.getElementById('cart-count').innerText = '0'; closeCart();
+            internalCart = []; 
+            updateCartBadge(); 
+            closeCart();
         }
 
         function handleChatKey(e) { if (e.key === 'Enter') { submitUserMessage(); } }
@@ -699,4 +711,4 @@
         function clearChatLog() { document.getElementById('chat-logs').innerHTML = ''; }
     </script>
 </body>
-</html>m
+</html>
