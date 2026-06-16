@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HomeSer - Ngôi Nhà Shop & Food Thông Minh</title>
+    <!-- Tailwind CSS & Font Awesome -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -27,6 +28,7 @@
 </head>
 <body class="custom-scrollbar">
 
+    <!-- TOP NAVIGATION BAR -->
     <header class="dark-glass text-white shadow-xl p-4 sticky top-0 z-50 border-b border-slate-800/80">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="switchModule('home')">
@@ -75,6 +77,7 @@
 
     <main class="container mx-auto px-4 max-w-7xl">
 
+        <!-- MODULE 0: HOME DASHBOARD -->
         <section id="mod-home" class="module-section space-y-12 py-12 min-h-[60vh] scroll-mt-24">
             <div class="text-center space-y-4 max-w-3xl mx-auto pt-6">
                 <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs px-4 py-1.5 rounded-full font-bold uppercase tracking-wider">Ngôi Nhà Tiện Ích Thông Minh</span>
@@ -86,6 +89,7 @@
                 </p>
             </div>
 
+            <!-- 2-COLUMN NAVIGATION CARDS -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto pt-4">
                 <div onclick="switchModule('shop')" class="group bg-slate-900/60 border border-slate-800 rounded-2xl p-6 cursor-pointer hover:border-amber-500/40 hover:bg-slate-800/50 transition flex flex-col justify-between h-52 shadow-xl">
                     <div>
@@ -111,22 +115,26 @@
             </div>
         </section>
 
+        <!-- MODULE 1: SHOP SYSTEM (ĐÃ THÊM HÀNG TỪ IMAGE) -->
         <section id="mod-shop" class="module-section space-y-6 py-12 min-h-[85vh] border-t border-slate-800/60 scroll-mt-24">
-            <div class="flex flex-col md:flex-row md:justify-between md:items-center border-b border-slate-800/60 pb-4 gap-4">
+            <div class="flex flex-col xl:flex-row xl:justify-between xl:items-center border-b border-slate-800/60 pb-4 gap-4">
                 <div>
                     <h2 class="text-xl font-black text-white flex items-center"><i class="fa-solid fa-bag-shopping text-amber-500 mr-2"></i> HomeSer Shop</h2>
-                    <p class="text-xs text-slate-400">Sản phẩm công nghệ và phụ kiện chính hãng tiện ích</p>
+                    <p class="text-xs text-slate-400">Thiết bị công nghệ flagship và phụ kiện chính hãng</p>
                 </div>
-                <div class="flex items-center space-x-2 overflow-x-auto pb-1 md:pb-0">
-                    <input type="text" id="shop-search" oninput="searchShop()" placeholder="Tìm kiếm nhanh..." class="bg-slate-900 text-white rounded-xl text-xs px-3 py-2 border border-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500 w-44">
+                <div class="flex flex-wrap items-center gap-2">
+                    <input type="text" id="shop-search" oninput="searchShop()" placeholder="Tìm sản phẩm nhanh..." class="bg-slate-900 text-white rounded-xl text-xs px-3 py-2 border border-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500 w-44">
                     <button onclick="filterShop('all')" class="bg-blue-600 text-white text-xs px-3 py-2 rounded-xl font-bold">Tất cả</button>
-                    <button onclick="filterShop('tech')" class="bg-slate-900 text-slate-400 text-xs px-3 py-2 rounded-xl font-bold hover:text-white">Công nghệ</button>
-                    <button onclick="filterShop('life')" class="bg-slate-900 text-slate-400 text-xs px-3 py-2 rounded-xl font-bold hover:text-white">Gia dụng</button>
+                    <button onclick="filterShop('phone')" class="bg-slate-900 text-slate-400 text-xs px-3 py-2 rounded-xl font-bold hover:text-white">Điện thoại/Tablet</button>
+                    <button onclick="filterShop('laptop')" class="bg-slate-900 text-slate-400 text-xs px-3 py-2 rounded-xl font-bold hover:text-white">Laptop</button>
+                    <button onclick="filterShop('audio')" class="bg-slate-900 text-slate-400 text-xs px-3 py-2 rounded-xl font-bold hover:text-white">Tai nghe/Loa</button>
+                    <button onclick="filterShop('gadget')" class="bg-slate-900 text-slate-400 text-xs px-3 py-2 rounded-xl font-bold hover:text-white">Máy ảnh/Đồng hồ</button>
                 </div>
             </div>
-            <div id="shop-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <div id="shop-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
         </section>
 
+        <!-- MODULE 2: FOOD PARADISE -->
         <section id="mod-food" class="module-section space-y-6 py-12 min-h-[85vh] border-t border-slate-800/60 scroll-mt-24">
             <div class="flex flex-col md:flex-row md:justify-between md:items-center border-b border-slate-800/60 pb-4 gap-4">
                 <div>
@@ -140,6 +148,7 @@
             <div id="food-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
         </section>
 
+        <!-- MODULE 3: CONTACT SECTION -->
         <section id="mod-contact" class="module-section space-y-8 py-12 border-t border-slate-800/60 scroll-mt-24">
             <div class="text-center space-y-2">
                 <h2 class="text-2xl font-black text-white flex items-center justify-center">
@@ -149,6 +158,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <!-- Phone Card -->
                 <div class="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl flex flex-col items-center text-center space-y-3">
                     <div class="w-12 h-12 bg-blue-500/10 text-blue-500 rounded-xl flex items-center justify-center text-xl shadow-inner">
                         <i class="fa-solid fa-phone"></i>
@@ -157,6 +167,7 @@
                     <a href="tel:0768152277" class="text-sm font-black text-white hover:text-blue-400 transition tracking-wide">0768152277</a>
                 </div>
 
+                <!-- Email Card -->
                 <div class="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl flex flex-col items-center text-center space-y-3">
                     <div class="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center text-xl shadow-inner">
                         <i class="fa-solid fa-envelope"></i>
@@ -165,6 +176,7 @@
                     <a href="mailto:nguyendinhhao1201@gmail.com" class="text-xs font-black text-white hover:text-emerald-400 transition break-all">nguyendinhhao1201@gmail.com</a>
                 </div>
 
+                <!-- Facebook Card -->
                 <div class="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl flex flex-col items-center text-center space-y-3">
                     <div class="w-12 h-12 bg-blue-600/10 text-blue-400 rounded-xl flex items-center justify-center text-xl shadow-inner">
                         <i class="fa-brands fa-facebook"></i>
@@ -179,8 +191,10 @@
 
     </main>
 
+    <!-- FLOATING CENTRAL AI CHATBOT SYSTEM -->
     <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
         <div id="chat-widget" class="bg-slate-950 rounded-3xl overflow-hidden border border-slate-800/80 shadow-2xl flex flex-col w-[360px] sm:w-[440px] h-[520px] mb-4 hidden opacity-0 translate-y-8 transition-all duration-300">
+            <!-- Header -->
             <div class="brand-gradient p-4 border-b border-slate-800/80 flex justify-between items-center">
                 <div class="flex items-center space-x-2">
                     <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
@@ -191,20 +205,23 @@
                     <button onclick="toggleChatWidget()" class="text-slate-400 hover:text-white text-xs p-1 transition"><i class="fa-solid fa-minus"></i></button>
                 </div>
             </div>
+            <!-- Chat logs -->
             <div id="chat-logs" class="flex-grow p-4 space-y-4 overflow-y-auto custom-scrollbar bg-slate-950/60">
                 <div class="flex items-start space-x-3">
                     <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md"><i class="fa-solid fa-robot"></i></div>
                     <div class="bg-slate-900 border border-slate-800 text-slate-200 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-xs leading-relaxed">
-                        Xin chào! Mình là trợ lý AI thông minh của <b>HomeSer</b>. Bạn cần tìm sản phẩm bên <span class="text-amber-400 font-bold cursor-pointer underline" onclick="switchModule('shop')">Shop</span>, gọi món ăn ngon bên <span class="text-emerald-400 font-bold cursor-pointer underline" onclick="switchModule('food')">Food</span> hay xem thông tin <span class="text-blue-400 font-bold cursor-pointer underline" onclick="switchModule('contact')">Liên hệ</span>? Gõ yêu cầu vào đây mình xử lý ngay nhé!
+                        Xin chào! Mình là trợ lý AI thông minh của <b>HomeSer</b>. Bạn cần tìm các thiết bị Flagship cao cấp mới cập nhật bên <span class="text-amber-400 font-bold cursor-pointer underline" onclick="switchModule('shop')">Shop</span> chứ? Gõ tên sản phẩm cần tìm vào đây nhé!
                     </div>
                 </div>
             </div>
+            <!-- Input sector -->
             <div class="p-3 bg-slate-900/90 border-t border-slate-800/80 flex space-x-2">
-                <input type="text" id="chat-input" onkeydown="handleChatKey(event)" placeholder="Nhập nhu cầu... (Ví dụ: 'cho xin số liên hệ', 'helo')" class="flex-grow p-3 bg-slate-950 text-white rounded-xl border border-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs placeholder-slate-500 transition">
+                <input type="text" id="chat-input" onkeydown="handleChatKey(event)" placeholder="Nhập nhu cầu... (Ví dụ: 'muốn mua iphone 16', 'tìm dell xps')" class="flex-grow p-3 bg-slate-950 text-white rounded-xl border border-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs placeholder-slate-500 transition">
                 <button onclick="submitUserMessage()" class="bg-blue-600 text-white px-5 rounded-xl font-bold hover:bg-blue-500 transition shadow-lg flex items-center justify-center"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </div>
 
+        <!-- Float Trigger Button -->
         <button onclick="toggleChatWidget()" class="w-14 h-14 bg-gradient-to-tr from-blue-700 to-blue-500 hover:from-blue-600 hover:to-blue-400 text-white rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 relative group">
             <i class="fa-solid fa-robot text-xl group-hover:rotate-12 transition-transform"></i>
             <span class="absolute -top-0.5 -right-0.5 flex h-3 w-3">
@@ -214,6 +231,7 @@
         </button>
     </div>
 
+    <!-- SIDEBAR CART OVERLAY -->
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-slate-950 border-l border-slate-800/80 z-50 transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col justify-between hidden">
         <div class="p-5 border-b border-slate-800 flex justify-between items-center">
             <h3 class="text-sm font-bold text-white flex items-center"><i class="fa-solid fa-basket-shopping mr-2 text-blue-400"></i>Đơn Hàng Của Bạn</h3>
@@ -235,6 +253,7 @@
         </div>
     </div>
 
+    <!-- FOOTER SYSTEM -->
     <footer class="bg-slate-950 text-slate-500 py-10 text-center text-xs border-t border-slate-900 mt-20">
         <div class="container mx-auto px-4 space-y-2">
             <p class="text-slate-400 font-medium text-sm">&copy; 2026 <span class="text-blue-500 font-black">HomeSer</span> Ngôi Nhà Thông Minh.</p>
@@ -242,12 +261,20 @@
         </div>
     </footer>
 
+    <!-- ==================== CORE SYSTEM ENGINE CODE ==================== -->
     <script>
-        // Database
+        // Database mới được đồng bộ theo danh sách sản phẩm nổi bật của image_e94d45.png
         const shopDatabase = [
-            { id: 's1', type: 'tech', name: 'Tai Nghe Bluetooth Pro v2', price: 650000, desc: 'Âm thanh sống động, chống ồn thông minh, pin trâu 24h liên tục.', icon: '🎧' },
-            { id: 's2', type: 'tech', name: 'Bàn Phím Cơ Custom RGB', price: 1200000, desc: 'Switch gõ mượt mà, độ phản hồi cực nhạy lý tưởng cho Dev.', icon: '⌨️' },
-            { id: 's3', type: 'life', name: 'Đèn Bàn LED Cảm Ứng Chống Cận', price: 350000, desc: 'Nhiều chế độ ánh sáng dịu mắt, bảo vệ thị lực tuyệt đối khi làm việc.', icon: '💡' }
+            { id: 's1', type: 'phone', name: 'iPhone 16 Pro Max 256GB', price: 34990000, desc: 'Flagship Apple đỉnh cao hiệu năng, camera zoom quang học vượt trội.', icon: '📱' },
+            { id: 's2', type: 'phone', name: 'Samsung Galaxy S25 Ultra', price: 29990000, desc: 'Màn hình vô cực mượt mà tích hợp bút S-Pen quyền năng độ nhạy cao.', icon: '📲' },
+            { id: 's3', type: 'laptop', name: 'MacBook Air M3 15 inch', price: 36990000, desc: 'Thiết kế mỏng nhẹ sang trọng, chip Apple M3 cân mọi tác vụ đồ họa.', icon: '💻' },
+            { id: 's4', type: 'audio', name: 'Sony WH-1000XM6', price: 8490000, desc: 'Tai nghe chụp tai chống ồn chủ động đỉnh cấp thế giới thế hệ mới.', icon: '🎧' },
+            { id: 's5', type: 'gadget', name: 'Canon EOS R50 Kit', price: 19990000, desc: 'Máy ảnh không gương lật lấy nét siêu nhanh, lý tưởng cho vlogger.', icon: '📷' },
+            { id: 's6', type: 'gadget', name: 'Apple Watch Series 10', price: 12990000, desc: 'Đồng hồ thông minh theo dõi sức khỏe và luyện tập thể thao chuyên sâu.', icon: '⌚' },
+            { id: 's7', type: 'phone', name: 'iPad Pro M4 11 inch', price: 27990000, desc: 'Màn hình OLED rực rỡ, chip M4 siêu mạnh mẽ phá vỡ mọi giới hạn.', icon: '📟' },
+            { id: 's8', type: 'audio', name: 'JBL Charge 5', price: 3190000, desc: 'Loa di động kháng nước IP67, âm bass mạnh mẽ khuấy động mọi cuộc vui.', icon: '🔊' },
+            { id: 's9', type: 'laptop', name: 'Dell XPS 15 9570 OLED', price: 42990000, desc: 'Màn hình OLED 4K vô cực sắc nét, cấu hình khủng cho dân chuyên nghiệp.', icon: '💻' },
+            { id: 's10', type: 'audio', name: 'AirPods Pro 2nd Gen', price: 6290000, desc: 'Tai nghe nhét tai thông minh, âm thanh không gian cá nhân hóa sống động.', icon: '🎧' }
         ];
 
         const foodDatabase = [
@@ -330,16 +357,20 @@
 
         function renderShopGrid(data) {
             const container = document.getElementById('shop-grid');
+            if (data.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center col-span-full py-8">Không tìm thấy sản phẩm nào khớp từ khóa.</p>`;
+                return;
+            }
             container.innerHTML = data.map(item => `
-                <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between hover:border-slate-700/80 transition">
+                <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between hover:border-slate-700/80 transition group">
                     <div>
-                        <div class="text-2xl bg-slate-900 w-11 h-11 rounded-xl flex items-center justify-center mb-4 border border-slate-800">${item.icon}</div>
-                        <h4 class="text-xs font-bold text-white line-clamp-1">${item.name}</h4>
+                        <div class="text-2xl bg-slate-900 w-11 h-11 rounded-xl flex items-center justify-center mb-4 border border-slate-800 group-hover:bg-blue-600/10 group-hover:border-blue-500/20 transition">${item.icon}</div>
+                        <h4 class="text-xs font-bold text-white line-clamp-1 group-hover:text-blue-400 transition">${item.name}</h4>
                         <p class="text-[11px] text-slate-400 mt-1 line-clamp-2 leading-relaxed">${item.desc}</p>
                     </div>
                     <div class="mt-4 flex items-center justify-between pt-3 border-t border-slate-800/60">
-                        <span class="text-xs font-black text-blue-400">${item.price.toLocaleString('vi-VN')}đ</span>
-                        <button onclick="addItemToCart('${item.id}', 'shop')" class="bg-blue-600/10 border border-blue-500/20 text-blue-400 hover:bg-blue-600 hover:text-white px-3 py-1.5 rounded-lg text-[11px] font-bold transition">Thêm</button>
+                        <span class="text-xs font-black text-amber-400">${item.price.toLocaleString('vi-VN')}đ</span>
+                        <button onclick="addItemToCart('${item.id}', 'shop')" class="bg-blue-600/10 border border-blue-500/20 text-blue-400 hover:bg-blue-600 hover:text-white px-3 py-1.5 rounded-lg text-[11px] font-bold transition">Thêm vào giỏ</button>
                     </div>
                 </div>
             `).join('');
@@ -453,7 +484,7 @@
             logs.scrollTop = logs.scrollHeight;
         }
 
-        // ==================== ENGINE PHÂN TÍCH Ý ĐỊNH AI (AI INTENT MATRIC ENGINE) ====================
+        // ==================== ENGINE PHÂN TÍCH Ý ĐỊNH AI ====================
         function submitUserMessage() {
             const inputField = document.getElementById('chat-input');
             const txt = inputField.value.trim();
@@ -467,15 +498,17 @@
                 let botResponse = "";
                 let actionModule = "";
 
-                // Ma trận điểm số ý định đa luồng
+                // Kiểm tra từ khóa cụ thể cho các sản phẩm mới
+                let matchedProduct = shopDatabase.find(p => prompt.includes(p.name.toLowerCase().split(' ')[0]) || prompt.includes(p.name.toLowerCase()));
+
                 let score = { insults: 0, greetings: 0, author: 0, shop: 0, food: 0, contact: 0, thanks: 0 };
 
                 if (/ngu|dốt|tệ|chán|bò|cùi|lỗi|sao ngu vậy/g.test(prompt)) score.insults += 10;
                 if (/chào|hello|helo|hê lô|hl|hi|alo/g.test(prompt)) score.greetings += 5;
                 if (/của ai|ai làm|ai tạo|sáng lập|nguyễn đình hào|đình hào/g.test(prompt)) score.author += 8;
-                if (/shop|mua sắm|cửa hàng|bàn phím|tai nghe|chuột|đèn|mua đồ/g.test(prompt)) score.shop += 6;
+                if (/shop|mua sắm|cửa hàng|bàn phím|tai nghe|chuột|đèn|mua đồ|iphone|samsung|macbook|sony|canon|apple watch|ipad|jbl|dell|airpods/g.test(prompt)) score.shop += 6;
                 if (/food|ăn uống|đói|gà rán|pizza|thực đơn|món ăn|gọi món|muốn ăn/g.test(prompt)) score.food += 6;
-                if (/liên hệ|sđt|điện thoại|gmail|email|facebook|fb|nguyễn hào/g.test(prompt)) score.contact += 9; // Ý định xem thông tin liên hệ
+                if (/liên hệ|sđt|điện thoại|gmail|email|facebook|fb|nguyễn hào/g.test(prompt)) score.contact += 9;
                 if (/cảm ơn|cam on|thanks/g.test(prompt)) score.thanks += 4;
 
                 let maxIntent = 'none';
@@ -488,33 +521,40 @@
                 }
 
                 if (maxIntent === 'insults') {
-                    botResponse = "Dạ, mình vô cùng xin lỗi bạn 😭. Vì đây chỉ là bộ nhận diện ý định chạy trực tiếp trên trình duyệt (Frontend) chứ chưa có hệ thống AI Server lớn xử lý phía sau, nên đôi khi trả lời còn ngớ ngẩn làm bạn bực mình. Anh Hào đang viết code Backend để nâng cấp cho mình thông minh hơn đó ạ!";
+                    botResponse = "Dạ, mình vô cùng nhận lỗi 😭. Do cơ chế Frontend xử lý chuỗi cục bộ chưa liên kết máy chủ đám mây mạnh, nên thỉnh thoảng khi nhận câu lệnh phức tạp mình bị lỗi phản hồi. Anh Hào đang phát triển tối ưu thêm để nâng cấp mình thông minh hơn!";
+                }
+                else if (matchedProduct && score.shop > 0) {
+                    actionModule = "shop";
+                    // Tìm kiếm và hiển thị sản phẩm trực tiếp trên Grid cho người dùng
+                    document.getElementById('shop-search').value = matchedProduct.name.split(' ')[0];
+                    searchShop();
+                    botResponse = `🔍 Mình tìm thấy sản phẩm <b>${matchedProduct.name}</b> giá <b>${matchedProduct.price.toLocaleString('vi-VN')}đ</b> rồi nhé. Đã kích hoạt lệnh cuộn trang đưa bạn đến khu vực Shop!`;
                 }
                 else if (maxIntent === 'contact') {
                     actionModule = "contact";
-                    botResponse = "📞 <b>Thông tin liên hệ của anh Nguyễn Đình Hào:</b><br>• Số điện thoại: <b>0768152277</b><br>• Gmail: <b>nguyendinhhao1201@gmail.com</b><br>• Facebook: <b>Nguyễn Hào</b><br><br>Hệ thống tự động di chuyển màn hình xuống phần thông tin liên hệ cho bạn nhé!";
+                    botResponse = "📞 <b>Thông tin liên hệ của lập trình viên Nguyễn Đình Hào:</b><br>• Số điện thoại: <b>0768152277</b><br>• Gmail: <b>nguyendinhhao1201@gmail.com</b><br>• Facebook: <b>Nguyễn Hào</b><br><br>Hệ thống tự động di chuyển xuống mục liên hệ cuối trang!";
                 }
                 else if (maxIntent === 'greetings') {
-                    botResponse = "Yêu cầu đã được tiếp nhận. Gõ <b>\"muốn ăn\"</b>, <b>\"mua đồ\"</b> hoặc <b>\"liên hệ\"</b> để AI tự động chuyển trang nhé.";
+                    botResponse = "Xin chào! Gõ tên thiết bị bạn muốn tìm kiếm (ví dụ: <i>'iphone 16'</i>, <i>'dell xps'</i>) hoặc gõ <i>'liên hệ'</i> để mình hỗ trợ nhé.";
                 }
                 else if (maxIntent === 'author') {
-                    botResponse = "✨ Toàn bộ nền tảng <b>HomeSer</b> bao gồm thiết kế giao diện và xử lý thuật toán đều do lập trình viên <b>Nguyễn Đình Hào</b> tự tay hoàn thiện.";
+                    botResponse = "✨ Toàn bộ nền tảng <b>HomeSer</b> bao gồm thiết kế giao diện UI/UX và xử lý thuật toán lưu trữ giỏ hàng đều do lập trình viên <b>Nguyễn Đình Hào</b> tự tay phát triển toàn diện.";
                 }
                 else if (maxIntent === 'shop') {
                     actionModule = "shop";
-                    botResponse = "🛍️ Đã kích hoạt lệnh điều hướng! Màn hình tự động cuộn đưa bạn đến khu vực <b>HomeSer Shop</b>.";
+                    botResponse = "🛍️ Đã kích hoạt lệnh điều hướng! Màn hình tự động cuộn đưa bạn đến khu vực <b>HomeSer Shop</b> với 10 siêu phẩm Flagship vừa cập bến.";
                 }
                 else if (maxIntent === 'food') {
                     actionModule = "food";
                     botResponse = "🍗 Dạ có ngay! Hệ thống tự chuyển hướng đưa bạn xuống khu ẩm thực <b>HomeSer Food</b>.";
                 }
                 else if (maxIntent === 'thanks') {
-                    botResponse = "Dạ không có chi! Phục vụ bạn là niềm vui lớn của mình.";
+                    botResponse = "Dạ không có chi! Chúc bạn có trải nghiệm tuyệt vời trên trang dự án của anh Hào.";
                 }
                 else {
                     const fallbacks = [
-                        "Dạ, bộ não giả lập hiện tại chưa quét được từ khóa này. Bạn thử ra lệnh bằng các câu đơn giản như: <i>'tôi muốn ăn gà rán'</i> hoặc <i>'cho xem liên hệ'</i> xem sao nhé!",
-                        "Hì hì, vì chưa được cắm API đám mây thực tế nên câu này hơi quá sức với mình. Bạn thử gõ từ khóa <b>Liên hệ</b> hoặc <b>Shop</b> để thử nghiệm nhé!"
+                        "Dạ, bộ não giả lập hiện tại chưa quét được từ khóa này. Bạn thử tìm các sản phẩm Flagship như: <i>'iphone 16'</i>, <i>'macbook'</i> hoặc <i>'dell'</i> xem sao nhé!",
+                        "Hì hì, câu này tạm thời cấu trúc Regex của mình chưa xử lý được. Bạn thử gõ từ khóa <b>Shop</b> hoặc <b>Food</b> để thử nghiệm tính năng tự cuộn trang nha!"
                     ];
                     botResponse = fallbacks[Math.floor(Math.random() * fallbacks.length)];
                 }
