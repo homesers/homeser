@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomeSer - Nơi Dịch Vụ Tại Gia Toàn Diện</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .brand-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+        }
+        .service-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans scroll-smooth">
+
+    <!-- Header / Điều hướng -->
+    <header class="bg-slate-900 text-white shadow-md p-4 sticky top-0 z-50 border-b border-slate-800">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Logo: Home (Xanh) Ser (Trắng) -->
+            <h1 class="text-3xl font-black tracking-tight select-none">
+                <span class="text-blue-500">Home</span><span class="text-white">Ser</span>
+            </h1>
+            <nav class="space-x-6 text-sm font-medium">
+                <a href="#services" class="hover:text-blue-400 transition">Dịch Vụ</a>
+                <a href="#chat" class="hover:text-blue-400 transition">Trợ Lý AI</a>
+                <a href="#chat" class="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-500 transition shadow-md">Trải Nghiệm</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section (Giới thiệu chính) -->
+    <section class="brand-gradient text-white py-24 text-center px-4">
+        <div class="container mx-auto">
+            <h2 class="text-5xl font-extrabold mb-6 tracking-tight leading-tight">
+                <span class="text-blue-400">Nơi</span> Giải Trí & Tiện Ích Tại Gia
+            </h2>
+            <p class="text-lg text-slate-300 mb-10 max-w-2xl mx-auto">
+                Xem video ngắn giải trí, mua sắm thả ga và thưởng thức món ngon trọn vẹn chỉ trong một nền tảng. <span class="text-blue-400 font-bold">HomeSer</span> luôn đồng hành cùng cuộc sống của bạn.
+            </p>
+            <a href="#services" class="bg-white text-slate-950 px-8 py-3 rounded-full text-lg font-bold hover:bg-slate-100 transition shadow-lg">Khám Phá Nơi Này</a>
+        </div>
+    </section>
+
+    <!-- Services Grid (Khối dịch vụ cốt lõi) -->
+    <section id="services" class="py-20 bg-slate-50">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl font-black text-center text-slate-950 mb-3">Nơi Trải Nghiệm Dịch Vụ</h3>
+            <p class="text-center text-slate-500 mb-12 max-w-md mx-auto">Tập trung nguồn lực mang lại 3 tiện ích thiết thực và chất lượng nhất.</p>
+            
+            <!-- Grid chia 3 cột cân đối cho 3 dịch vụ -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                
+                <!-- Dịch vụ 1: HomeSer Watch -->
+                <div class="service-card bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center transition duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="text-5xl mb-5">📺</div>
+                        <h4 class="text-xl font-bold text-slate-900">HomeSer Watch</h4>
+                        <p class="text-slate-500 text-sm mt-3 leading-relaxed">
+                            Vũ trụ giải trí video ngắn đỉnh cao, cập nhật xu hướng thịnh hành mỗi ngày giúp bạn thư giãn tuyệt đối tại nhà.
+                        </p>
+                    </div>
+                    <span class="text-blue-600 text-sm font-semibold mt-6 inline-block hover:underline cursor-pointer">Xem ngay &rarr;</span>
+                </div>
+
+                <!-- Dịch vụ 2: HomeSer Shop -->
+                <div class="service-card bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center transition duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="text-5xl mb-5">🛒</div>
+                        <h4 class="text-xl font-bold text-slate-900">HomeSer Shop</h4>
+                        <p class="text-slate-500 text-sm mt-3 leading-relaxed">
+                            Kênh mua sắm trực tuyến đa dạng, tiện lợi với hàng ngàn sản phẩm chất lượng cùng ưu đãi giảm giá hời dành riêng cho bạn.
+                        </p>
+                    </div>
+                    <span class="text-blue-600 text-sm font-semibold mt-6 inline-block hover:underline cursor-pointer">Mua sắm ngay &rarr;</span>
+                </div>
+
+                <!-- Dịch vụ 3: HomeSer Food -->
+                <div class="service-card bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center transition duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="text-5xl mb-5">🍲</div>
+                        <h4 class="text-xl font-bold text-slate-900">HomeSer Food</h4>
+                        <p class="text-slate-500 text-sm mt-3 leading-relaxed">
+                            Thiên đường ẩm thực phong phú, gọi món ngon yêu thích cực nhanh, đảm bảo giao hàng tận cửa nóng hổi siêu tốc.
+                        </p>
+                    </div>
+                    <span class="text-blue-600 text-sm font-semibold mt-6 inline-block hover:underline cursor-pointer">Đặt món ngay &rarr;</span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Chatbot Section (Khu vực tương tác trợ lý) -->
+    <section id="chat" class="py-20 bg-white border-t border-slate-100">
+        <div class="container mx-auto max-w-3xl px-4">
+            <h3 class="text-3xl font-black text-center text-slate-950 mb-12">Trợ Lý Thông Minh HomeSer</h3>
+            <div class="bg-slate-900 rounded-2xl shadow-xl overflow-hidden flex flex-col min-h-[450px]">
+                
+                <!-- Giao diện Header Chatbox -->
+                <div class="brand-gradient p-4 border-b border-slate-800 flex items-center space-x-3">
+                    <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
+                    <span class="text-white font-semibold text-sm">Trợ lý <span class="text-blue-400">Home</span>Ser Trực Tuyến</span>
+                </div>
+                
+                <!-- Nội dung tin nhắn -->
+                <div class="flex-grow p-6 space-y-4 text-sm overflow-y-auto bg-slate-950">
+                    <div class="flex items-start">
+                        <div class="bg-blue-600 text-white p-4 rounded-2xl rounded-bl-none max-w-md shadow-md leading-relaxed">
+                            Xin chào! Mình là trợ lý AI thông minh của <span class="font-bold text-slate-950 bg-white px-2 py-0.5 rounded text-xs"><span class="text-blue-600">Home</span>Ser</span>. 
+                            Hôm nay bạn muốn xem video giải trí (<span class="font-semibold text-amber-300">Watch</span>), mua sắm sản phẩm (<span class="font-semibold text-amber-300">Shop</span>) hay đặt món ăn ngon (<span class="font-semibold text-amber-300">Food</span>)? Hãy nói cho mình biết nhé!
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Ô nhập tin nhắn -->
+                <div class="p-4 bg-slate-900 border-t border-slate-800 flex space-x-3">
+                    <input type="text" placeholder="Bạn cần hỗ trợ dịch vụ nào... (Ví dụ: 'Tìm món gà rán của HomeSer Food')" class="flex-grow p-3.5 bg-slate-800 text-white rounded-full border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm placeholder-slate-400">
+                    <button class="bg-blue-600 text-white px-6 py-3 rounded-full font-bold hover:bg-blue-500 transition shadow-md text-sm">Gửi</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (Chân trang) -->
+    <footer class="bg-slate-950 text-slate-500 py-12 text-center text-sm border-t border-slate-900">
+        <div class="container mx-auto px-4">
+            <p class="text-slate-400 font-medium">
+                &copy; 2026 <span class="text-blue-500 font-bold">Home</span><span class="text-white font-bold">Ser</span>. 
+                Được phát triển bởi Đình Hào.
+            </p>
+            <p class="mt-2 text-xs text-slate-600">Nơi tích hợp công nghệ cao phục vụ mọi gia đình.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
