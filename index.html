@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HomeSer - Ngôi Nhà Shop & Food Thông Minh</title>
+    <!-- Tailwind CSS & Font Awesome -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -35,8 +35,10 @@
 </head>
 <body class="custom-scrollbar relative">
 
+    <!-- VÙNG CHỨA THÔNG BÁO TOAST -->
     <div id="toast-container" class="fixed top-24 right-6 z-[60] space-y-3 pointer-events-none"></div>
 
+    <!-- TOP NAVIGATION BAR -->
     <header class="dark-glass text-white shadow-xl p-4 sticky top-0 z-50 border-b border-slate-800/80">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="switchModule('home')">
@@ -85,6 +87,7 @@
 
     <main class="container mx-auto px-4 max-w-7xl">
 
+        <!-- MODULE 0: HOME DASHBOARD -->
         <section id="mod-home" class="module-section space-y-12 py-12 min-h-[60vh] scroll-mt-24">
             <div class="text-center space-y-4 max-w-3xl mx-auto pt-6">
                 <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs px-4 py-1.5 rounded-full font-bold uppercase tracking-wider">Ngôi Nhà Tiện Ích Thông Minh</span>
@@ -121,6 +124,7 @@
             </div>
         </section>
 
+        <!-- MODULE 1: SHOP SYSTEM -->
         <section id="mod-shop" class="module-section space-y-6 py-12 min-h-[85vh] border-t border-slate-800/60 scroll-mt-24">
             <div class="flex flex-col xl:flex-row xl:justify-between xl:items-center border-b border-slate-800/60 pb-4 gap-4">
                 <div>
@@ -139,11 +143,12 @@
             <div id="shop-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
         </section>
 
+        <!-- MODULE 2: FOOD PARADISE -->
         <section id="mod-food" class="module-section space-y-6 py-12 min-h-[85vh] border-t border-slate-800/60 scroll-mt-24">
             <div class="flex flex-col xl:flex-row xl:justify-between xl:items-center border-b border-slate-800/60 pb-4 gap-4">
                 <div>
                     <h2 class="text-xl font-black text-white flex items-center"><i class="fa-solid fa-bowl-food text-emerald-500 mr-2"></i> HomeSer Food</h2>
-                    <p class="text-xs text-slate-400">Thực đơn đa dạng từ mâm cơm ấm cúng đến các bữa tiệc cuối tuần thịnh soạn</p>
+                    <p class="text-xs text-slate-400">Thực đơn đa dạng với tính năng tùy chọn Size (S, M, L) phù hợp với mọi nhu cầu</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
                     <button onclick="filterFood('all')" class="bg-emerald-600 text-white text-xs px-3 py-2 rounded-xl font-bold">Tất cả</button>
@@ -155,6 +160,7 @@
             <div id="food-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
         </section>
 
+        <!-- MODULE 3: CONTACT SECTION -->
         <section id="mod-contact" class="module-section space-y-8 py-12 border-t border-slate-800/60 scroll-mt-24">
             <div class="text-center space-y-2">
                 <h2 class="text-2xl font-black text-white flex items-center justify-center">
@@ -194,6 +200,7 @@
 
     </main>
 
+    <!-- FLOATING CENTRAL AI CHATBOT SYSTEM -->
     <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
         <div id="chat-widget" class="bg-slate-950 rounded-3xl overflow-hidden border border-slate-800/80 shadow-2xl flex flex-col w-[360px] sm:w-[440px] h-[520px] mb-4 hidden opacity-0 translate-y-8 transition-all duration-300">
             <div class="brand-gradient p-4 border-b border-slate-800/80 flex justify-between items-center">
@@ -210,7 +217,7 @@
                 <div class="flex items-start space-x-3">
                     <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md"><i class="fa-solid fa-robot"></i></div>
                     <div class="bg-slate-900 border border-slate-800 text-slate-200 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-xs leading-relaxed">
-                        Xin chào! Mình là trợ lý AI thông minh của <b>HomeSer</b>. Hôm nay bạn muốn lên lịch đặt cơm mâm gia đình, làm tiệc lẩu cuối tuần, hay ăn chay thanh đạm? Hãy gõ món ăn bạn cần nhé!
+                        Xin chào! Mình là trợ lý AI thông minh của <b>HomeSer</b>. Hôm nay bạn muốn lên lịch đặt cơm mâm gia đình, làm tiệc lẩu cuối tuần, hay ăn chay thanh đạm? Hiện tại các món ăn đều đã có đủ các lựa chọn size S, M, L rồi đó!
                     </div>
                 </div>
             </div>
@@ -229,6 +236,7 @@
         </button>
     </div>
 
+    <!-- SIDEBAR CART OVERLAY -->
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-slate-950 border-l border-slate-800/80 z-50 transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col justify-between hidden">
         <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-900/30">
             <div class="flex items-center space-x-2">
@@ -258,6 +266,7 @@
         </div>
     </div>
 
+    <!-- FOOTER SYSTEM -->
     <footer class="bg-slate-950 text-slate-500 py-10 text-center text-xs border-t border-slate-900 mt-20">
         <div class="container mx-auto px-4 space-y-2">
             <p class="text-slate-400 font-medium text-sm">&copy; 2026 <span class="text-blue-500 font-black">HomeSer</span> Ngôi Nhà Thông Minh.</p>
@@ -265,6 +274,7 @@
         </div>
     </footer>
 
+    <!-- ==================== CORE SYSTEM ENGINE CODE ==================== -->
     <script>
         const shopDatabase = [
             { id: 's1', type: 'phone', name: 'iPhone 16 Pro Max 256GB', price: 34990000, desc: 'Flagship Apple đỉnh cao hiệu năng, camera zoom quang học vượt trội.', icon: '📱' },
@@ -279,22 +289,26 @@
             { id: 's10', type: 'audio', name: 'AirPods Pro 2nd Gen', price: 6290000, desc: 'Tai nghe nhét tai thông minh, âm thanh không gian cá nhân hóa sống động.', icon: '🎧' }
         ];
 
+        // ĐÃ UPDATE CẤU TRÚC SIZE S-M-L CHO FOOD DATABASE
         const foodDatabase = [
-            { id: 'f1', type: 'family', name: 'Thực đơn 1: Mâm Cơm Đầm Ấm', price: 125000, desc: 'Gà xào chua ngọt đậm đà, trứng hấp mềm mịn, kèm tô canh chua tôm rau muống thanh mát.', icon: '🍱' },
-            { id: 'f2', type: 'family', name: 'Thực đơn 2: Đậm Đà Quê Hương', price: 110000, desc: 'Cá lóc kho tiêu cay nồng chuẩn vị Nam Bộ, canh hến nấu chua ngọt nước và dưa leo ăn kèm.', icon: '🍲' },
-            { id: 'f3', type: 'family', name: 'Thực đơn 3: Thực Đơn Bổ Dưỡng', price: 135000, desc: 'Cà tím nhồi thịt hấp mỡ hành thơm béo, gà chiên nước mắm mặn ngọt đưa cơm và cải thìa luộc bùi vị.', icon: '🥗' },
-            { id: 'f4', type: 'family', name: 'Thực đơn 4: Hương Vị Truyền Thống', price: 115000, desc: 'Thịt băm chưng trứng muối bùi ngậy, su su xào tỏi giòn ngọt, kèm canh nấm kim châm thanh nhẹ.', icon: '🍳' },
-            { id: 'f5', type: 'family', name: 'Thực đơn 5: Cơm Trưa Đậm Vị', price: 120000, desc: 'Cá basa kho dứa chua ngọt đậm đà, canh bí đỏ thịt bằm bổ dưỡng và rau diếp cá ăn kèm.', icon: '🥘' },
-            { id: 'f6', type: 'party', name: 'Đùi Gà Om Coca Đặc Beệt', price: 89000, desc: 'Thịt đùi gà mềm rụm được om quyện nước sốt coca độc đáo béo ngọt, màu sắc cánh gián bắt mắt.', icon: '🍗' },
-            { id: 'f7', type: 'party', name: 'Lẩu Gà Lá É Phú Yên', price: 289000, desc: 'Nước lẩu gà ngọt lịm kết hợp vị cay nồng đặc trưng của lá é và ớt xiêm xanh.', icon: '🍲' },
-            { id: 'f8', type: 'party', name: 'Lẩu Hải Sản Thập Cẩm', price: 349000, desc: 'Sự kết hợp hoàn hảo của tôm, mực, cá viên hòa cùng nước lẩu chua cay đậm vị biển cả.', icon: '🍤' },
-            { id: 'f9', type: 'party', name: 'Bún Đậu Mắm Tôm Phố Cổ', price: 65000, desc: 'Mẹt bún đậu đầy đủ nem chua rán, chả cốm, thịt chân giò luộc cùng mắm tôm pha chanh đường đánh sủi bọt.', icon: '🥢' },
-            { id: 'f10', type: 'party', name: 'Bò Nhúng Giấm Hà Nội', price: 299000, desc: 'Thịt bò tươi thái mỏng nhúng trong nước giấm sả chua thanh, cuốn bánh tráng rau sống tuyệt đỉnh.', icon: '🥩' },
-            { id: 'f11', type: 'vegan', name: 'Đậu Hũ Sốt Cà Chua Chay', price: 35000, desc: 'Đậu hũ chiên vàng ươm, om trong nước sốt cà chua tươi đậm đà thanh đạm.', icon: '🍅' },
-            { id: 'f12', type: 'vegan', name: 'Nấm Đùi Gà Kho Tiêu Chay', price: 45000, desc: 'Nấm đùi gà dai giòn sần sật, kho tiêu đen cay ấm cực kỳ bắt cơm.', icon: '🍄' },
-            { id: 'f13', type: 'vegan', name: 'Canh Kiểm / Canh Rau Củ Thập Cẩm', price: 50000, desc: 'Món canh chay Nam Bộ nấu từ các loại củ quả, nước dùng ngọt tự nhiên.', icon: '🥣' },
-            { id: 'f14', type: 'vegan', name: 'Cải Thìa Xào Nấm Đông Cô', price: 45000, desc: 'Cải thìa xanh mướt giữ độ giòn ngọt, xào chung với nấm đông cô thơm phức.', icon: '🥬' }
+            { id: 'f1', type: 'family', name: 'Thực đơn 1: Mâm Cơm Đầm Ấm', prices: { S: 125000, M: 150000, L: 175000 }, desc: 'Gà xào chua ngọt đậm đà, trứng hấp mềm mịn, kèm tô canh chua tôm rau muống thanh mát.', icon: '🍱' },
+            { id: 'f2', type: 'family', name: 'Thực đơn 2: Đậm Đà Quê Hương', prices: { S: 110000, M: 132000, L: 154000 }, desc: 'Cá lóc kho tiêu cay nồng chuẩn vị Nam Bộ, canh hến nấu chua ngọt nước và dưa leo ăn kèm.', icon: '🍲' },
+            { id: 'f3', type: 'family', name: 'Thực đơn 3: Thực Đơn Bổ Dưỡng', prices: { S: 135000, M: 162000, L: 189000 }, desc: 'Cà tím nhồi thịt hấp mỡ hành thơm béo, gà chiên nước mắm mặn ngọt đưa cơm và cải thìa luộc bùi vị.', icon: '🥗' },
+            { id: 'f4', type: 'family', name: 'Thực đơn 4: Hương Vị Truyền Thống', prices: { S: 115000, M: 138000, L: 161000 }, desc: 'Thịt băm chưng trứng muối bùi ngậy, su su xào tỏi giòn ngọt, kèm canh nấm kim châm thanh nhẹ.', icon: '🍳' },
+            { id: 'f5', type: 'family', name: 'Thực đơn 5: Cơm Trưa Đậm Vị', prices: { S: 120000, M: 144000, L: 168000 }, desc: 'Cá basa kho dứa chua ngọt đậm đà, canh bí đỏ thịt bằm bổ dưỡng và rau diếp cá ăn kèm.', icon: '🥘' },
+            { id: 'f6', type: 'party', name: 'Đùi Gà Om Coca Đặc Biệt', prices: { S: 89000, M: 107000, L: 125000 }, desc: 'Thịt đùi gà mềm rụm được om quyện nước sốt coca độc đáo béo ngọt, màu sắc cánh gián bắt mắt.', icon: '🍗' },
+            { id: 'f7', type: 'party', name: 'Lẩu Gà Lá É Phú Yên', prices: { S: 289000, M: 347000, L: 405000 }, desc: 'Nước lẩu gà ngọt lịm kết hợp vị cay nồng đặc trưng của lá é và ớt xiêm xanh.', icon: '🍲' },
+            { id: 'f8', type: 'party', name: 'Lẩu Hải Sản Thập Cẩm', prices: { S: 349000, M: 419000, L: 489000 }, desc: 'Sự kết hợp hoàn hảo của tôm, mực, cá viên hòa cùng nước lẩu chua cay đậm vị biển cả.', icon: '🍤' },
+            { id: 'f9', type: 'party', name: 'Bún Đậu Mắm Tôm Phố Cổ', prices: { S: 65000, M: 78000, L: 91000 }, desc: 'Mẹt bún đậu đầy đủ nem chua rán, chả cốm, thịt chân giò luộc cùng mắm tôm pha chanh đường đánh sủi bọt.', icon: '🥢' },
+            { id: 'f10', type: 'party', name: 'Bò Nhúng Giấm Hà Nội', prices: { S: 299000, M: 359000, L: 419000 }, desc: 'Thịt bò tươi thái mỏng nhúng trong nước giấm sả chua thanh, cuốn bánh tráng rau sống tuyệt đỉnh.', icon: '🥩' },
+            { id: 'f11', type: 'vegan', name: 'Đậu Hũ Sốt Cà Chua Chay', prices: { S: 35000, M: 42000, L: 49000 }, desc: 'Đậu hũ chiên vàng ươm, om trong nước sốt cà chua tươi đậm đà thanh đạm.', icon: '🍅' },
+            { id: 'f12', type: 'vegan', name: 'Nấm Đùi Gà Kho Tiêu Chay', prices: { S: 45000, M: 54000, L: 63000 }, desc: 'Nấm đùi gà dai giòn sần sật, kho tiêu đen cay ấm cực kỳ bắt cơm.', icon: '🍄' },
+            { id: 'f13', type: 'vegan', name: 'Canh Kiểm / Rau Củ Thập Cẩm', prices: { S: 50000, M: 60000, L: 70000 }, desc: 'Món canh chay Nam Bộ nấu từ các loại củ quả, nước dùng ngọt tự nhiên.', icon: '🥣' },
+            { id: 'f14', type: 'vegan', name: 'Cải Thìa Xào Nấm Đông Cô', prices: { S: 45000, M: 54000, L: 63000 }, desc: 'Cải thìa xanh mướt giữ độ giòn ngọt, xào chung với nấm đông cô thơm phức.', icon: '🥬' }
         ];
+
+        // Biến lưu trữ state size hiện tại khách hàng đang click chọn cho từng món ăn
+        let selectedFoodSizes = {};
 
         let internalCart = [];
 
@@ -325,6 +339,8 @@
         }
 
         window.onload = function() {
+            // Khởi tạo size mặc định ban đầu là size S cho tất cả các món ăn
+            foodDatabase.forEach(f => { selectedFoodSizes[f.id] = 'S'; });
             renderShopGrid(shopDatabase);
             renderFoodGrid(foodDatabase);
             setupScrollTracking();
@@ -399,21 +415,57 @@
             renderShopGrid(shopDatabase.filter(i => i.name.toLowerCase().includes(val)));
         }
 
+        // ĐÃ UPDATE HIỂN THỊ CHỌN SIZE TRÊN UI FOOD GRID
+        function changeFoodSize(foodId, size) {
+            selectedFoodSizes[foodId] = size;
+            const foodItem = foodDatabase.find(f => f.id === foodId);
+            if(foodItem) {
+                // Cập nhật lại giá tiền hiển thị trên card tương ứng với size vừa chọn
+                document.getElementById(`price-display-${foodId}`).innerText = foodItem.prices[size].toLocaleString('vi-VN') + 'đ';
+                
+                // Active màu nút kích thước tương ứng
+                document.querySelectorAll(`.size-btn-${foodId}`).forEach(btn => {
+                    btn.classList.remove('bg-emerald-600', 'text-white');
+                    btn.classList.add('bg-slate-950', 'text-slate-400');
+                });
+                const activeBtn = document.getElementById(`btn-size-${foodId}-${size}`);
+                if(activeBtn) {
+                    activeBtn.classList.remove('bg-slate-950', 'text-slate-400');
+                    activeBtn.classList.add('bg-emerald-600', 'text-white');
+                }
+            }
+        }
+
         function renderFoodGrid(data) {
             const container = document.getElementById('food-grid');
-            container.innerHTML = data.map(food => `
-                <div class="bg-slate-900/30 border border-slate-800 rounded-2xl p-4 flex items-start space-x-4 hover:border-emerald-500/20 transition group">
-                    <div class="text-2xl bg-slate-900 w-12 h-12 rounded-xl flex items-center justify-center border border-slate-800 flex-shrink-0 group-hover:bg-emerald-500/10 transition">${food.icon}</div>
-                    <div class="flex-grow space-y-1">
-                        <h4 class="text-xs font-bold text-white group-hover:text-emerald-400 transition">${food.name}</h4>
-                        <p class="text-[11px] text-slate-400 leading-relaxed">${food.desc}</p>
-                        <div class="pt-2 flex items-center justify-between">
-                            <span class="text-xs font-black text-emerald-400">${food.price.toLocaleString('vi-VN')}đ</span>
-                            <button onclick="addItemToCart('${food.id}', 'food')" class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-white px-3 py-1.5 rounded-lg text-[11px] font-bold transition">Đặt ngay</button>
+            container.innerHTML = data.map(food => {
+                const currentSize = selectedFoodSizes[food.id] || 'S';
+                const currentPrice = food.prices[currentSize];
+                return `
+                    <div class="bg-slate-900/30 border border-slate-800 rounded-2xl p-4 flex items-start space-x-4 hover:border-emerald-500/20 transition group">
+                        <div class="text-2xl bg-slate-900 w-12 h-12 rounded-xl flex items-center justify-center border border-slate-800 flex-shrink-0 group-hover:bg-emerald-500/10 transition">${food.icon}</div>
+                        <div class="flex-grow space-y-2">
+                            <h4 class="text-xs font-bold text-white group-hover:text-emerald-400 transition">${food.name}</h4>
+                            <p class="text-[11px] text-slate-400 leading-relaxed">${food.desc}</p>
+                            
+                            <!-- KHU VỰC ĐIỀU CHỈNH CHỌN SIZE S M L -->
+                            <div class="flex items-center space-x-2 pt-1">
+                                <span class="text-[10px] uppercase font-bold text-slate-500">Kích cỡ:</span>
+                                <div class="flex space-x-1 bg-slate-950 p-0.5 rounded-lg border border-slate-800/80">
+                                    <button id="btn-size-${food.id}-S" onclick="changeFoodSize('${food.id}', 'S')" class="size-btn-${food.id} text-[10px] font-extrabold px-2 py-0.5 rounded-md transition ${currentSize === 'S' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}">S</button>
+                                    <button id="btn-size-${food.id}-M" onclick="changeFoodSize('${food.id}', 'M')" class="size-btn-${food.id} text-[10px] font-extrabold px-2 py-0.5 rounded-md transition ${currentSize === 'M' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}">M</button>
+                                    <button id="btn-size-${food.id}-L" onclick="changeFoodSize('${food.id}', 'L')" class="size-btn-${food.id} text-[10px] font-extrabold px-2 py-0.5 rounded-md transition ${currentSize === 'L' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}">L</button>
+                                </div>
+                            </div>
+
+                            <div class="pt-1 flex items-center justify-between">
+                                <span id="price-display-${food.id}" class="text-xs font-black text-emerald-400">${currentPrice.toLocaleString('vi-VN')}đ</span>
+                                <button onclick="addItemToCart('${food.id}', 'food')" class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-white px-3 py-1.5 rounded-lg text-[11px] font-bold transition">Đặt ngay</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function filterFood(category) {
@@ -443,28 +495,53 @@
             }, 2500);
         }
 
+        // ĐÃ SỬA LOGIC THÊM VÀO GIỎ HÀNG ĐỂ ĐỒNG BỘ SIZE
         function addItemToCart(id, moduleType) {
-            let foundItem = moduleType === 'shop' ? shopDatabase.find(i => i.id === id) : foodDatabase.find(i => i.id === id);
-            if(foundItem) {
-                const cartExist = internalCart.find(i => i.id === id);
-                let currentQty = 1;
-                
-                if(cartExist) {
-                    cartExist.quantity += 1;
-                    currentQty = cartExist.quantity;
-                } else {
-                    internalCart.push({ ...foundItem, quantity: 1 });
+            if (moduleType === 'shop') {
+                let foundItem = shopDatabase.find(i => i.id === id);
+                if (foundItem) {
+                    // ID phân biệt trong giỏ của shop vẫn giữ nguyên id gốc
+                    const cartId = id; 
+                    const cartExist = internalCart.find(i => i.cartId === cartId);
+                    let currentQty = 1;
+                    if (cartExist) {
+                        cartExist.quantity += 1;
+                        currentQty = cartExist.quantity;
+                    } else {
+                        internalCart.push({ cartId: cartId, id: id, name: foundItem.name, price: foundItem.price, icon: foundItem.icon, quantity: 1 });
+                    }
+                    updateCartBadge(); renderCartSidebarUI(); openCart(); showToastNotification(foundItem.name, currentQty);
                 }
-                
-                updateCartBadge();
-                renderCartSidebarUI();
-                openCart();
-                showToastNotification(foundItem.name, currentQty);
+            } else {
+                let foundFood = foodDatabase.find(f => f.id === id);
+                if (foundFood) {
+                    const chosenSize = selectedFoodSizes[id] || 'S';
+                    const calculatedPrice = foundFood.prices[chosenSize];
+                    // Tạo mã nhận diện cartId riêng biệt kết hợp giữa ID món ăn + Size để tránh gộp chung món ăn khi chọn các size khác nhau
+                    const cartId = `${id}-${chosenSize}`;
+                    const cartExist = internalCart.find(i => i.cartId === cartId);
+                    let currentQty = 1;
+
+                    if (cartExist) {
+                        cartExist.quantity += 1;
+                        currentQty = cartExist.quantity;
+                    } else {
+                        internalCart.push({
+                            cartId: cartId,
+                            id: id,
+                            name: `${foundFood.name} (Size ${chosenSize})`,
+                            price: calculatedPrice,
+                            icon: foundFood.icon,
+                            quantity: 1
+                        });
+                    }
+                    updateCartBadge(); renderCartSidebarUI(); openCart(); showToastNotification(`${foundFood.name} [Size ${chosenSize}]`, currentQty);
+                }
             }
         }
 
-        function removeQuantityFromCart(id) {
-            const itemIndex = internalCart.findIndex(i => i.id === id);
+        function removeQuantityFromCart(cartId) {
+            const itemIndex = internalCart.findIndex(i => i.cartId === cartId);
             if(itemIndex !== -1) {
                 internalCart[itemIndex].quantity -= 1;
                 if(internalCart[itemIndex].quantity <= 0) {
@@ -507,7 +584,7 @@
                                 <p class="text-blue-400 font-black mt-0.5">${item.price.toLocaleString('vi-VN')}đ <span class="text-slate-500 font-normal">x${item.quantity}</span></p>
                             </div>
                         </div>
-                        <button onclick="removeQuantityFromCart('${item.id}')" class="w-7 h-7 bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500 hover:text-white rounded-lg flex items-center justify-center transition">
+                        <button onclick="removeQuantityFromCart('${item.cartId}')" class="w-7 h-7 bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500 hover:text-white rounded-lg flex items-center justify-center transition">
                             <i class="fa-solid fa-minus text-[10px]"></i>
                         </button>
                     </div>
@@ -528,27 +605,15 @@
             setTimeout(() => sidebar.classList.add('hidden'), 300);
         }
 
-        // ==================== ĐÃ FIX SỬA LỖI BUG LOGIC Ở ĐÂY ====================
         function executeCheckout() {
-            // Sửa điều kiện kiểm tra độ dài mảng thực tế của giỏ hàng
             if (internalCart.length === 0) { 
                 alert('Giỏ hàng hiện tại vốn đã trống!');
                 return;
             }
-            
-            // Hiện thông báo thành công
             alert('🎉 Đơn hàng đã được ghi nhận trực tuyến thành công trên hệ thống Ngôi nhà HomeSer!');
-            
-            // Xóa sạch mảng dữ liệu gốc
             internalCart = []; 
-            
-            // Cập nhật lại số lượng badge thành 0
             updateCartBadge(); 
-            
-            // RENDERING LẠI UI: Ép thanh sidebar render lại giao diện trống rỗng
             renderCartSidebarUI(); 
-            
-            // Đóng sidebar giỏ hàng lại mượt mà
             closeCart();
         }
 
