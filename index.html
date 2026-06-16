@@ -8,24 +8,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        html { scroll-behavior: smooth; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .brand-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); }
         .dark-glass { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 9999px; }
-        .video-container { height: 600px; scroll-snap-type: y mandatory; overflow-y: scroll; }
-        .video-card { scroll-snap-align: start; height: 600px; }
+        .video-container { height: 500px; scroll-snap-type: y mandatory; overflow-y: scroll; }
+        .video-card { scroll-snap-align: start; height: 500px; }
         
-        /* Hiệu ứng thanh kéo ngang mượt mà */
         .smooth-slider {
             scroll-snap-type: x mandatory;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
         }
-        .slider-item {
-            scroll-snap-align: start;
-        }
+        .slider-item { scroll-snap-align: start; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans scroll-smooth custom-scrollbar">
@@ -45,17 +43,17 @@
             
             <!-- Quick Tab Navigation System -->
             <nav class="hidden md:flex bg-slate-800/60 p-1 rounded-full border border-slate-700/50">
-                <button onclick="switchModule('watch')" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition flex items-center space-x-2 text-slate-400 hover:text-white">
+                <button onclick="switchModule('home')" id="btn-nav-home" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition flex items-center space-x-2 bg-blue-600 text-white shadow-md">
+                    <i class="fa-solid fa-house"></i> <span>Home</span>
+                </button>
+                <button onclick="switchModule('watch')" id="btn-nav-watch" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition flex items-center space-x-2 text-slate-400 hover:text-white">
                     <i class="fa-solid fa-circle-play"></i> <span>Watch</span>
                 </button>
-                <button onclick="switchModule('shop')" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition flex items-center space-x-2 text-slate-400 hover:text-white">
+                <button onclick="switchModule('shop')" id="btn-nav-shop" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition flex items-center space-x-2 text-slate-400 hover:text-white">
                     <i class="fa-solid fa-bag-shopping"></i> <span>Shop</span>
                 </button>
-                <button onclick="switchModule('food')" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition flex items-center space-x-2 text-slate-400 hover:text-white">
+                <button onclick="switchModule('food')" id="btn-nav-food" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition flex items-center space-x-2 text-slate-400 hover:text-white">
                     <i class="fa-solid fa-utensils"></i> <span>Food</span>
-                </button>
-                <button onclick="switchModule('contact')" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold transition flex items-center space-x-2 text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-envelope"></i> <span>Liên Hệ</span>
                 </button>
             </nav>
 
@@ -66,7 +64,6 @@
                     <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-md scale-90">0</span>
                 </button>
                 
-                <!-- Auth Area Layout Dynamic Changer -->
                 <div id="auth-header-zone">
                     <button onclick="toggleAuthModal('login')" class="bg-slate-800 border border-slate-700 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-700 transition">
                         <i class="fa-solid fa-user-lock mr-1.5"></i>Đăng Nhập
@@ -76,24 +73,22 @@
         </div>
     </header>
 
-    <!-- MAIN INTERACTIVE HUB -->
-    <main class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- MAIN INTERACTIVE HUB (Sử dụng luồng cuộn mượt mà liên tục) -->
+    <main class="container mx-auto px-4 max-w-7xl">
 
-        <!-- CORE SECTION 0: HOME PORTAL -->
-        <section id="mod-home" class="module-section space-y-12 py-4">
-            
-            <!-- Hero Landing Header -->
+        <!-- MODULE 0: HOME PORTAL -->
+        <section id="mod-home" class="module-section space-y-12 py-16 min-h-[80vh] scroll-mt-24">
             <div class="text-center space-y-4 max-w-3xl mx-auto pt-6">
                 <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs px-4 py-1.5 rounded-full font-bold uppercase tracking-wider">Chào mừng đến với HomeSer</span>
                 <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight text-white">
                     <span class="text-blue-500">Nơi</span> Giải Trí & Tiện Ích Tại Gia
                 </h2>
                 <p class="text-sm md:text-base text-slate-400 leading-relaxed">
-                    Không còn phải chuyển đổi giữa hàng chục ứng dụng phức tạp. Một không gian tối giản tích hợp công nghệ cao giúp bạn xem video giải trí, mua sắm vật dụng và đặt món ăn ngon chỉ bằng vài cú click chuột.
+                    Không còn phải chuyển đổi giữa hàng chục ứng dụng phức tạp. Một không gian tối giản tích hợp công nghệ cao giúp bạn xem video giải trí, mua sắm vật dụng và đặt món ăn ngon chỉ bằng vài cú click chuột hoặc cuộn lăn mượt mà.
                 </p>
             </div>
 
-            <!-- THANH KÉO BANNER MƯỢT MÀ (SMOOTH HORIZONTAL SLIDER) -->
+            <!-- PROMO BANNER SLIDER -->
             <div class="relative group max-w-5xl mx-auto">
                 <div class="absolute top-1/2 -left-4 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onclick="moveSlider('left')" class="bg-slate-950/80 hover:bg-blue-600 text-white w-10 h-10 rounded-full border border-slate-800 flex items-center justify-center shadow-lg transition">
@@ -101,10 +96,7 @@
                     </button>
                 </div>
                 
-                <!-- Main Horiz Scroll Core Viewport -->
                 <div id="promo-slider" class="smooth-slider flex space-x-6 overflow-x-auto pb-4 custom-scrollbar">
-                    
-                    <!-- Slider Block 1 -->
                     <div class="slider-item flex-shrink-0 w-full md:w-[600px] brand-gradient p-8 rounded-3xl border border-blue-500/20 flex items-center justify-between shadow-xl relative overflow-hidden">
                         <div class="space-y-3 max-w-[65%] z-10">
                             <span class="bg-red-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Hot Event</span>
@@ -115,7 +107,6 @@
                         <i class="fa-solid fa-circle-play text-8xl text-blue-500/20 absolute right-6 bottom-4 pointer-events-none"></i>
                     </div>
 
-                    <!-- Slider Block 2 -->
                     <div class="slider-item flex-shrink-0 w-full md:w-[600px] bg-gradient-to-br from-amber-950 to-orange-900 p-8 rounded-3xl border border-amber-500/20 flex items-center justify-between shadow-xl relative overflow-hidden">
                         <div class="space-y-3 max-w-[65%] z-10">
                             <span class="bg-amber-500 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Voucher Giảm 50K</span>
@@ -126,7 +117,6 @@
                         <i class="fa-solid fa-bag-shopping text-8xl text-amber-500/10 absolute right-6 bottom-4 pointer-events-none"></i>
                     </div>
 
-                    <!-- Slider Block 3 -->
                     <div class="slider-item flex-shrink-0 w-full md:w-[600px] bg-gradient-to-br from-emerald-950 to-teal-900 p-8 rounded-3xl border border-emerald-500/20 flex items-center justify-between shadow-xl relative overflow-hidden">
                         <div class="space-y-3 max-w-[65%] z-10">
                             <span class="bg-emerald-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase">FreeShip 0đ</span>
@@ -136,7 +126,6 @@
                         </div>
                         <i class="fa-solid fa-bowl-food text-8xl text-emerald-500/10 absolute right-6 bottom-4 pointer-events-none"></i>
                     </div>
-
                 </div>
 
                 <div class="absolute top-1/2 -right-4 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -148,12 +137,9 @@
 
             <!-- Conceptual Grid Boxes -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4">
-                <!-- Portal Module: Watch -->
                 <div onclick="switchModule('watch')" class="group bg-slate-800/40 border border-slate-800 rounded-3xl p-8 cursor-pointer hover:border-blue-500/40 hover:bg-slate-800/80 transition-all duration-300 flex flex-col justify-between h-64 shadow-xl">
                     <div>
-                        <div class="w-12 h-12 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform mb-4">
-                            <i class="fa-solid fa-play"></i>
-                        </div>
+                        <div class="w-12 h-12 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform mb-4"><i class="fa-solid fa-play"></i></div>
                         <h3 class="text-xl font-bold text-white mb-2">HomeSer Watch</h3>
                         <p class="text-xs text-slate-400 leading-relaxed">Vũ trụ video giải trí thế hệ mới. Trải nghiệm luồng nội dung ngắn vô tận cực cuốn hút.</p>
                     </div>
@@ -162,12 +148,9 @@
                     </div>
                 </div>
 
-                <!-- Portal Module: Shop -->
                 <div onclick="switchModule('shop')" class="group bg-slate-800/40 border border-slate-800 rounded-3xl p-8 cursor-pointer hover:border-blue-500/40 hover:bg-slate-800/80 transition-all duration-300 flex flex-col justify-between h-64 shadow-xl">
                     <div>
-                        <div class="w-12 h-12 bg-amber-500/10 text-amber-500 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform mb-4">
-                            <i class="fa-solid fa-bag-shopping"></i>
-                        </div>
+                        <div class="w-12 h-12 bg-amber-500/10 text-amber-500 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform mb-4"><i class="fa-solid fa-bag-shopping"></i></div>
                         <h3 class="text-xl font-bold text-white mb-2">HomeSer Shop</h3>
                         <p class="text-xs text-slate-400 leading-relaxed">Trung tâm mua sắm trực tuyến thông minh. Đầy đủ mọi danh mục sản phẩm bạn cần cho ngôi nhà.</p>
                     </div>
@@ -176,12 +159,9 @@
                     </div>
                 </div>
 
-                <!-- Portal Module: Food -->
                 <div onclick="switchModule('food')" class="group bg-slate-800/40 border border-slate-800 rounded-3xl p-8 cursor-pointer hover:border-blue-500/40 hover:bg-slate-800/80 transition-all duration-300 flex flex-col justify-between h-64 shadow-xl">
                     <div>
-                        <div class="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform mb-4">
-                            <i class="fa-solid fa-bowl-food"></i>
-                        </div>
+                        <div class="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform mb-4"><i class="fa-solid fa-bowl-food"></i></div>
                         <h3 class="text-xl font-bold text-white mb-2">HomeSer Food</h3>
                         <p class="text-xs text-slate-400 leading-relaxed">Thiên đường ăn uống siêu tốc phục vụ tại gia. Món ăn chuẩn vị, ship nhanh nóng hổi.</p>
                     </div>
@@ -192,22 +172,22 @@
             </div>
         </section>
 
-        <!-- CORE SECTION 1: HOMESER WATCH ENGINE -->
-        <section id="mod-watch" class="module-section hidden space-y-8">
+        <!-- MODULE 1: WATCH ENGINE -->
+        <section id="mod-watch" class="module-section space-y-8 py-16 min-h-[85vh] border-t border-slate-800/60 scroll-mt-24">
             <div class="flex justify-between items-center border-b border-slate-800 pb-4">
                 <div>
                     <h2 class="text-2xl font-black text-white flex items-center"><i class="fa-solid fa-circle-play text-red-500 mr-2"></i> HomeSer Watch</h2>
-                    <p class="text-xs text-slate-400">Cuộn chuột hoặc lướt xuống để chuyển đổi video mới</p>
+                    <p class="text-xs text-slate-400">Cuộn chuột hoặc lướt xuống để chuyển đổi video mới trong feed</p>
                 </div>
                 <span class="bg-red-500/10 text-red-400 border border-red-500/20 text-xs px-3 py-1 rounded-full font-bold">Xu Hướng HOT</span>
             </div>
-            <div class="max-w-md mx-auto bg-slate-950 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl relative">
+            <div class="max-w-md mx-auto bg-slate-950 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
                 <div id="video-feed" class="video-container custom-scrollbar"></div>
             </div>
         </section>
 
-        <!-- CORE SECTION 2: HOMESER SHOP SYSTEM -->
-        <section id="mod-shop" class="module-section hidden space-y-8">
+        <!-- MODULE 2: SHOP SYSTEM -->
+        <section id="mod-shop" class="module-section space-y-8 py-16 min-h-[85vh] border-t border-slate-800/60 scroll-mt-24">
             <div class="flex flex-col md:flex-row md:justify-between md:items-center border-b border-slate-800 pb-6 gap-4">
                 <div>
                     <h2 class="text-2xl font-black text-white flex items-center"><i class="fa-solid fa-bag-shopping text-amber-500 mr-2"></i> HomeSer Shop</h2>
@@ -223,8 +203,8 @@
             <div id="shop-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
         </section>
 
-        <!-- CORE SECTION 3: HOMESER FOOD PARADISE -->
-        <section id="mod-food" class="module-section hidden space-y-8">
+        <!-- MODULE 3: FOOD PARADISE -->
+        <section id="mod-food" class="module-section space-y-8 py-16 min-h-[85vh] border-t border-slate-800/60 scroll-mt-24">
             <div class="flex flex-col md:flex-row md:justify-between md:items-center border-b border-slate-800 pb-6 gap-4">
                 <div>
                     <h2 class="text-2xl font-black text-white flex items-center"><i class="fa-solid fa-bowl-food text-emerald-500 mr-2"></i> HomeSer Food</h2>
@@ -239,110 +219,57 @@
             <div id="food-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
         </section>
 
-        <!-- CORE SECTION 4: LIÊN HỆ KHIẾU NẠI & HỖ TRỢ KÝ SỰ (CONTACT MODULE) -->
-        <section id="mod-contact" class="module-section hidden space-y-8">
-            <div class="border-b border-slate-800 pb-4">
-                <h2 class="text-2xl font-black text-white flex items-center"><i class="fa-solid fa-envelope text-blue-500 mr-2"></i> Trung Tâm Hỗ Trợ & Liên Hệ</h2>
-                <p class="text-xs text-slate-400">Kết nối với ban quản trị HomeSer để phản hồi chất lượng dịch vụ</p>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                <!-- Form liên hệ -->
-                <form onsubmit="alert('Cảm ơn ông đã gửi liên hệ! Đội ngũ HomeSer sẽ phản hồi trong vòng 24h.'); event.preventDefault();" class="bg-slate-800/40 p-6 rounded-3xl border border-slate-800 space-y-4">
-                    <h3 class="text-base font-bold text-white"><i class="fa-solid fa-paper-plane mr-2 text-blue-400"></i>Gửi phản hồi nhanh</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-1">
-                            <label class="text-[11px] text-slate-400">Họ và tên *</label>
-                            <input type="text" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-blue-500">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-[11px] text-slate-400">Địa chỉ Email *</label>
-                            <input type="email" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-blue-500">
-                        </div>
-                    </div>
-                    <div class="space-y-1">
-                        <label class="text-[11px] text-slate-400">Vấn đề cần hỗ trợ</label>
-                        <select class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 focus:outline-none focus:border-blue-500">
-                            <option>Góp ý tính năng phần mềm</option>
-                            <option>Khiếu nại đơn hàng Shop / Food</option>
-                            <option>Hợp tác phát triển nội dung Watch</option>
-                        </select>
-                    </div>
-                    <div class="space-y-1">
-                        <label class="text-[11px] text-slate-400">Nội dung chi tiết *</label>
-                        <textarea rows="4" required placeholder="Nhập lời nhắn của ông tại đây..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-blue-500"></textarea>
-                    </div>
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-6 py-3 rounded-xl transition shadow-lg w-full">GỬI YÊU CẦU NGAY CHÓP</button>
-                </form>
-
-                <!-- Bản đồ giả lập + Thông tin văn phòng -->
-                <div class="space-y-6">
-                    <div class="bg-slate-800/20 p-6 rounded-3xl border border-slate-800 space-y-4">
-                        <h3 class="text-base font-bold text-white"><i class="fa-solid fa-building mr-2 text-blue-400"></i>Trụ sở tổng bộ HomeSer</h3>
-                        <ul class="space-y-3 text-xs text-slate-300">
-                            <li class="flex items-center space-x-3"><i class="fa-solid fa-map-pin text-red-400 w-4 text-center"></i> <span>Tòa nhà HomeSer Tech, Quận 1, TP. Hồ Chí Minh, Việt Nam</span></li>
-                            <li class="flex items-center space-x-3"><i class="fa-solid fa-phone text-emerald-400 w-4 text-center"></i> <span>Hotline khẩn cấp: 1900 88xx (Phục vụ 24/7)</span></li>
-                            <li class="flex items-center space-x-3"><i class="fa-solid fa-envelope-open text-amber-400 w-4 text-center"></i> <span>Email công việc: support@homeser.vn</span></li>
-                        </ul>
-                    </div>
-                    <!-- Bản đồ Mockup sang chảnh -->
-                    <div class="h-44 brand-gradient rounded-3xl border border-slate-800 relative overflow-hidden flex items-center justify-center">
-                        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                        <div class="text-center space-y-2 z-10">
-                            <i class="fa-solid fa-earth-asia text-4xl text-blue-500 animate-spin-slow"></i>
-                            <p class="text-[10px] uppercase font-black tracking-widest text-slate-400">Bản đồ vệ tinh HomeSer Map Engine</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CHATBOT ARCHETYPE BLOCK -->
-        <section id="chat" class="py-16 border-t border-slate-800/80 mt-20">
-            <div class="max-w-3xl mx-auto space-y-6">
-                <div class="text-center">
-                    <h3 class="text-2xl font-black text-white">Hệ Thống Trợ Lý Phục Vụ Thông Minh</h3>
-                    <p class="text-xs text-slate-400 mt-1">Yêu cầu tìm kiếm sản phẩm, đặt đồ ăn hoặc mở video trực tiếp tại đây</p>
-                </div>
-                <div class="bg-slate-950 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl flex flex-col min-h-[460px]">
-                    <div class="brand-gradient p-4 border-b border-slate-800 flex justify-between items-center">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
-                            <span class="text-white text-xs font-bold uppercase tracking-wider">Hệ thống xử lý AI Trung Tâm</span>
-                        </div>
-                        <button onclick="clearChatLog()" class="text-slate-400 hover:text-white text-xs transition"><i class="fa-solid fa-trash-can"></i> Xóa hội thoại</button>
-                    </div>
-                    <div id="chat-logs" class="flex-grow p-6 space-y-4 overflow-y-auto custom-scrollbar h-80 bg-slate-950/80">
-                        <div class="flex items-start space-x-3">
-                            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md"><i class="fa-solid fa-robot"></i></div>
-                            <div class="bg-slate-800/80 border border-slate-700/50 text-slate-100 p-4 rounded-2xl rounded-tl-none max-w-md shadow-md text-sm leading-relaxed">
-                                Xin chào! Mình là trợ lý AI chuyên nghiệp của <span class="font-extrabold text-blue-400">HomeSer</span>. Bạn muốn tìm sản phẩm thông minh bên <span class="text-amber-400 font-semibold">Shop</span>, gọi món bên <span class="text-emerald-400 font-semibold">Food</span> hay xem video giải trí bên <span class="text-red-400 font-semibold">Watch</span>? Gõ yêu cầu vào khung chat để mình phục vụ ngay nhé!
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-4 bg-slate-900 border-t border-slate-800/80 flex space-x-2">
-                        <input type="text" id="chat-input" onkeydown="handleChatKey(event)" placeholder="Nhập nhu cầu của bạn vào đây... (Ví dụ: 'tôi muốn ăn gà rán', 'xem video')" class="flex-grow p-4 bg-slate-950 text-white rounded-2xl border border-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm placeholder-slate-500 transition">
-                        <button onclick="submitUserMessage()" class="bg-blue-600 text-white px-6 rounded-2xl font-bold hover:bg-blue-500 transition shadow-lg flex items-center justify-center"><i class="fa-solid fa-paper-plane"></i></button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
     </main>
 
-    <!-- HỆ THỐNG ĐĂNG KÝ / ĐĂNG NHẬP POPUP MODAL (AUTH CORES) -->
+    <!-- FLOATING AI CHATBOT SYSTEM (Rút gọn tinh tế theo image_070cd.png) -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <!-- Khung chat ẩn hiện động -->
+        <div id="chat-widget" class="bg-slate-950 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl flex flex-col w-[360px] sm:w-[440px] h-[520px] mb-4 hidden opacity-0 translate-y-8 transition-all duration-300">
+            <!-- Header khung chat -->
+            <div class="brand-gradient p-4 border-b border-slate-800 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                    <span class="text-white text-xs font-bold uppercase tracking-wider">Trợ Lý Phục Vụ Thông Minh</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="clearChatLog()" class="text-slate-400 hover:text-white text-xs p-1 transition" title="Xóa hội thoại"><i class="fa-solid fa-trash-can"></i></button>
+                    <button onclick="toggleChatWidget()" class="text-slate-400 hover:text-white text-xs p-1 transition"><i class="fa-solid fa-minus"></i></button>
+                </div>
+            </div>
+            <!-- Nhật ký hội thoại -->
+            <div id="chat-logs" class="flex-grow p-4 space-y-4 overflow-y-auto custom-scrollbar bg-slate-950/80">
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md"><i class="fa-solid fa-robot"></i></div>
+                    <div class="bg-slate-800/80 border border-slate-700/50 text-slate-100 p-3.5 rounded-2xl rounded-tl-none max-w-[80%] shadow-md text-xs leading-relaxed">
+                        Xin chào! Mình là trợ lý AI chuyên nghiệp của <span class="font-extrabold text-blue-400">HomeSer</span>. Bạn muốn tìm sản phẩm thông minh bên <span class="text-amber-400 font-semibold">Shop</span>, gọi món bên <span class="text-emerald-400 font-semibold">Food</span> hay xem video giải trí bên <span class="text-red-400 font-semibold">Watch</span>? Gõ yêu cầu hoặc cuộn chuột trải nghiệm thử nha!
+                    </div>
+                </div>
+            </div>
+            <!-- Khung nhập liệu -->
+            <div class="p-3 bg-slate-900 border-t border-slate-800/80 flex space-x-2">
+                <input type="text" id="chat-input" onkeydown="handleChatKey(event)" placeholder="Nhập nhu cầu của bạn vào đây..." class="flex-grow p-3 bg-slate-950 text-white rounded-xl border border-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs placeholder-slate-500 transition">
+                <button onclick="submitUserMessage()" class="bg-blue-600 text-white px-5 rounded-xl font-bold hover:bg-blue-500 transition shadow-lg flex items-center justify-center"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+
+        <!-- Nút bấm Bong bóng tròn Robot điều khiển chính -->
+        <button onclick="toggleChatWidget()" class="w-14 h-14 bg-gradient-to-tr from-blue-700 to-blue-500 hover:from-blue-600 hover:to-blue-400 text-white rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 relative group">
+            <i class="fa-solid fa-robot text-xl group-hover:rotate-12 transition-transform"></i>
+            <span class="absolute -top-0.5 -right-0.5 flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
+        </button>
+    </div>
+
+    <!-- AUTH POPUP MODAL -->
     <div id="auth-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
         <div class="bg-slate-900 border border-slate-800 w-full max-w-md p-8 rounded-3xl shadow-2xl transform scale-95 transition-transform duration-300 relative">
-            <!-- Close icon -->
             <button onclick="toggleAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 rounded-lg bg-slate-800/50 border border-slate-700/50"><i class="fa-solid fa-xmark"></i></button>
-            
-            <!-- Modal Tabs Dynamic Navigator -->
             <div class="flex border-b border-slate-800 pb-3 mb-6">
                 <button id="tab-login-btn" onclick="switchAuthTab('login')" class="flex-1 text-center font-extrabold text-base pb-2 border-b-2 border-blue-500 text-white">Đăng Nhập</button>
                 <button id="tab-register-btn" onclick="switchAuthTab('register')" class="flex-1 text-center font-bold text-base pb-2 text-slate-400 hover:text-slate-200">Đăng Ký</button>
             </div>
-
-            <!-- Login Form Area Container -->
             <form id="form-login" onsubmit="handleAuthSubmit(event, 'login')" class="space-y-4">
                 <div class="space-y-1">
                     <label class="text-xs text-slate-400 font-semibold">Tài khoản hoặc Email</label>
@@ -354,8 +281,6 @@
                 </div>
                 <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl mt-4 hover:bg-blue-500 transition shadow-lg text-sm">VÀO HOMESER LIỀN</button>
             </form>
-
-            <!-- Register Form Area Container -->
             <form id="form-register" onsubmit="handleAuthSubmit(event, 'register')" class="space-y-4 hidden">
                 <div class="space-y-1">
                     <label class="text-xs text-slate-400 font-semibold">Họ và Tên Khách Hàng</label>
@@ -374,7 +299,7 @@
         </div>
     </div>
 
-    <!-- FLOATING CART OVERLAY SLIDE OUT PANEL -->
+    <!-- SIDEBAR CART OVERLAY -->
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-slate-950 border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col justify-between hidden">
         <div class="p-6 border-b border-slate-800 flex justify-between items-center">
             <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-basket-shopping mr-2 text-blue-400"></i>Đơn Hàng Của Bạn</h3>
@@ -392,7 +317,7 @@
         </div>
     </div>
 
-    <!-- MAIN ROOT FOOTER -->
+    <!-- FOOTER -->
     <footer class="bg-slate-950 text-slate-500 py-12 text-center text-sm border-t border-slate-900 mt-20">
         <div class="container mx-auto px-4 space-y-2">
             <p class="text-slate-400 font-medium text-base">
@@ -403,9 +328,8 @@
         </div>
     </footer>
 
-    <!-- ==================== JAVASCRIPT SYSTEM ENGINE CODE ==================== -->
+    <!-- ==================== CORE SYSTEM ENGINE CODE ==================== -->
     <script>
-        /* CORE DATABASES INTEGRATION DATA ARRAYS */
         const watchDatabase = [
             { id: 1, title: 'Cách làm chuỗi Web App trong 5 phút cùng Tailwind CSS', channel: 'Hào TechDev', likes: '12.4K', tags: '#coding #webdev', gradient: 'from-purple-900 to-indigo-900', desc: 'Hướng dẫn tối ưu cấu trúc DOM và tích hợp CSS Utility chuyên nghiệp.' },
             { id: 2, title: 'Review chi tiết các món ăn HOT TREND nhất năm 2026 tại Sài Gòn', channel: 'HomeSer Food Review', likes: '45.1K', tags: '#food #trending', gradient: 'from-amber-900 to-red-900', desc: 'Khám phá hương vị gà rán sốt cay hoàng kim giao nhanh trong 15 phút.' },
@@ -429,52 +353,79 @@
         let internalCart = [];
         let userDataState = null;
 
-        /* SYSTEM CORE INIT LAUNCH */
         window.onload = function() {
             renderWatchFeed();
             renderShopGrid(shopDatabase);
             renderFoodGrid();
-            switchModule('home');
+            setupScrollTracking();
         };
 
-        /* MODULE SWITCHING ENGINE */
-        function switchModule(moduleName) {
-            document.querySelectorAll('.module-section').forEach(sec => sec.classList.add('hidden'));
-            const activeSection = document.getElementById(`mod-${moduleName}`);
-            if (activeSection) activeSection.classList.remove('hidden');
+        // CHỨC NĂNG LĂN CHUỘT TỰ ĐỘNG CHUYỂN HOẶC ĐỔI TRẠNG THÁI MENU (Intersection Observer)
+        function setupScrollTracking() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '-30% 0px -50% 0px', // Nhận diện phân hệ nằm giữa màn hình
+                threshold: 0
+            };
 
-            const navButtons = document.querySelectorAll('.nav-btn');
-            navButtons.forEach(btn => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const activeId = entry.target.id.replace('mod-', '');
+                        updateNavButtonsUI(activeId);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.module-section').forEach(sec => observer.observe(sec));
+        }
+
+        function updateNavButtonsUI(currentActiveModule) {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
                 btn.classList.add('text-slate-400');
             });
-
-            if(moduleName !== 'home') {
-                navButtons.forEach(btn => {
-                    if(btn.onclick.toString().includes(`'${moduleName}'`)) {
-                        btn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
-                        btn.classList.remove('text-slate-400');
-                    }
-                });
+            const targetBtn = document.getElementById(`btn-nav-${currentActiveModule}`);
+            if (targetBtn) {
+                targetBtn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+                targetBtn.classList.remove('text-slate-400');
             }
         }
 
-        /* BANNER SLIDER DRAG/MOVE LOGIC */
+        // Click để cuộn mượt mà đến vùng mong muốn
+        function switchModule(moduleName) {
+            const section = document.getElementById(`mod-${moduleName}`);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // ĐIỀU KHIỂN KHUNG CHAT ROBOT ẨN HIỆN BẬT NẨY
+        function toggleChatWidget() {
+            const chatWidget = document.getElementById('chat-widget');
+            if (chatWidget.classList.contains('hidden')) {
+                chatWidget.classList.remove('hidden');
+                setTimeout(() => {
+                    chatWidget.classList.remove('opacity-0', 'translate-y-8');
+                }, 50);
+            } else {
+                chatWidget.classList.add('opacity-0', 'translate-y-8');
+                setTimeout(() => {
+                    chatWidget.classList.add('hidden');
+                }, 300);
+            }
+        }
+
         function moveSlider(direction) {
             const slider = document.getElementById('promo-slider');
             const shiftWidth = 340; 
-            if(direction === 'left') {
-                slider.scrollLeft -= shiftWidth;
-            } else {
-                slider.scrollLeft += shiftWidth;
-            }
+            if(direction === 'left') slider.scrollLeft -= shiftWidth;
+            else slider.scrollLeft += shiftWidth;
         }
 
-        /* AUTHENTICATION LAYER LOGIC (ĐÃ SỬA LỖI ĐƠ) */
         function toggleAuthModal(defaultTab = 'login') {
             const modal = document.getElementById('auth-modal');
             const innerBox = modal.querySelector('div');
-            
             if(modal.classList.contains('hidden')) {
                 switchAuthTab(defaultTab);
                 modal.classList.remove('hidden');
@@ -518,7 +469,7 @@
                 const name = document.getElementById('reg-name').value;
                 const email = document.getElementById('reg-email').value;
                 userDataState = { name: name, email: email };
-                alert(`Đăng ký khách hàng [${name}] hoàn tất! Đang tự động đăng nhập.`);
+                alert(`Đăng ký khách hàng [${name}] hoàn tất!`);
             }
             
             document.getElementById('auth-header-zone').innerHTML = `
@@ -541,7 +492,6 @@
             alert('Đã đăng xuất khỏi hệ thống HomeSer.');
         }
 
-        /* HOMESER WATCH RENDERING */
         function renderWatchFeed() {
             const container = document.getElementById('video-feed');
             container.innerHTML = watchDatabase.map(v => `
@@ -561,7 +511,6 @@
             `).join('');
         }
 
-        /* HOMESER SHOP RENDERING */
         function renderShopGrid(data) {
             const container = document.getElementById('shop-grid');
             if(data.length === 0) {
@@ -584,21 +533,15 @@
         }
 
         function filterShop(category) {
-            if(category === 'all') {
-                renderShopGrid(shopDatabase);
-            } else {
-                const filtered = shopDatabase.filter(i => i.type === category);
-                renderShopGrid(filtered);
-            }
+            if(category === 'all') renderShopGrid(shopDatabase);
+            else renderShopGrid(shopDatabase.filter(i => i.type === category));
         }
 
         function searchShop() {
             const val = document.getElementById('shop-search').value.toLowerCase();
-            const filtered = shopDatabase.filter(i => i.name.toLowerCase().includes(val));
-            renderShopGrid(filtered);
+            renderShopGrid(shopDatabase.filter(i => i.name.toLowerCase().includes(val)));
         }
 
-        /* HOMESER FOOD RENDERING */
         function renderFoodGrid() {
             const container = document.getElementById('food-grid');
             container.innerHTML = foodDatabase.map(food => `
@@ -616,7 +559,6 @@
             `).join('');
         }
 
-        /* CART INTERACTIONS (ĐÃ SỬA LỖI NGOẶC NHỌN KHU VỰC NÀY) */
         function addItemToCart(id, moduleType) {
             let foundItem = null;
             if(moduleType === 'shop') foundItem = shopDatabase.find(i => i.id === id);
@@ -624,19 +566,15 @@
             
             if(foundItem) {
                 const cartExist = internalCart.find(i => i.id === id);
-                if(cartExist) {
-                    cartExist.quantity += 1;
-                } else {
-                    internalCart.push({ ...foundItem, quantity: 1 });
-                }
+                if(cartExist) cartExist.quantity += 1;
+                else internalCart.push({ ...foundItem, quantity: 1 });
                 updateCartBadgeUI();
                 renderCartSidebarUI();
             }
         }
 
         function updateCartBadgeUI() {
-            const totalItemsCount = internalCart.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById('cart-count').innerText = totalItemsCount;
+            document.getElementById('cart-count').innerText = internalCart.reduce((sum, item) => sum + item.quantity, 0);
         }
 
         function renderCartSidebarUI() {
@@ -649,8 +587,7 @@
             
             let accumulatedCost = 0;
             wrapper.innerHTML = internalCart.map(item => {
-                const cost = item.price * item.quantity;
-                accumulatedCost += cost;
+                accumulatedCost += (item.price * item.quantity);
                 return `
                     <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
                         <div class="flex items-center space-x-2">
@@ -663,8 +600,7 @@
                         <button onclick="removeCartUnit('${item.id}')" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
                 `;
-            }).join(''); // -> ĐÃ SỬA: Thêm dấu đóng ngoặc nhọn } chuẩn xác ở đây!
-            
+            }).join('');
             document.getElementById('cart-total').innerText = accumulatedCost.toLocaleString('vi-VN') + 'đ';
         }
 
@@ -687,24 +623,12 @@
         }
 
         function executeCheckout() {
-            if(internalCart.length === 0) {
-                alert('Giỏ hàng trống!');
-                return;
-            }
+            if(internalCart.length === 0) { alert('Giỏ hàng trống!'); return; }
             alert(`Xác nhận đơn hàng thành công trị giá ${document.getElementById('cart-total').innerText}!`);
-            internalCart = [];
-            updateCartBadgeUI();
-            renderCartSidebarUI();
-            closeCart();
+            internalCart = []; updateCartBadgeUI(); renderCartSidebarUI(); closeCart();
         }
 
-        /* CHATBOT CORES (ĐÃ FIX SỰ CỐ ENTER THÀNH CÔNG) */
-        function handleChatKey(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault(); 
-                submitUserMessage();
-            }
-        }
+        function handleChatKey(e) { if (e.key === 'Enter') { e.preventDefault(); submitUserMessage(); } }
 
         function submitUserMessage() {
             const inputField = document.getElementById('chat-input');
@@ -723,9 +647,9 @@
         function renderChatBubble(text, sender) {
             const logsContainer = document.getElementById('chat-logs');
             logsContainer.innerHTML += sender === 'user' ? `
-                <div class="flex items-start justify-end text-right"><div class="bg-blue-600 text-white p-3 rounded-2xl rounded-tr-none max-w-md text-xs text-left shadow-md">${text}</div></div>
+                <div class="flex items-start justify-end text-right"><div class="bg-blue-600 text-white p-3 rounded-2xl rounded-tr-none max-w-[85%] text-xs text-left shadow-md">${text}</div></div>
             ` : `
-                <div class="flex items-start space-x-3"><div class="w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center text-white text-[10px]"><i class="fa-solid fa-robot"></i></div><div class="bg-slate-800 border border-slate-700 text-slate-100 p-3 rounded-2xl rounded-tl-none max-w-md text-xs shadow-md">${text}</div></div>
+                <div class="flex items-start space-x-3"><div class="w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center text-white text-[10px]"><i class="fa-solid fa-robot"></i></div><div class="bg-slate-800 border border-slate-700 text-slate-100 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-xs shadow-md">${text}</div></div>
             `;
             logsContainer.scrollTop = logsContainer.scrollHeight;
         }
@@ -735,11 +659,10 @@
         }
 
         function processQueryBotIntelligence(query) {
-            if(query.includes('watch') || query.includes('video')) { switchModule('watch'); return 'Đã mở cổng HomeSer Watch cho bạn!'; }
-            if(query.includes('ăn') || query.includes('food')) { switchModule('food'); return 'Đã mở danh mục món ăn HomeSer Food!'; }
-            if(query.includes('shop') || query.includes('mua')) { switchModule('shop'); return 'Đã mở trung tâm mua sắm HomeSer Shop!'; }
-            if(query.includes('liên hệ') || query.includes('góp ý')) { switchModule('contact'); return 'Đã điều hướng bạn tới trang Trung Tâm Hỗ Trợ Liên Hệ!'; }
-            return 'Yêu cầu đã được tiếp nhận. Gõ "xem video", "muốn ăn", "mua đồ" hoặc "liên hệ" để AI tự động chuyển trang nhé.';
+            if(query.includes('watch') || query.includes('video')) { switchModule('watch'); return 'Đã lướt mượt mà tới kho HomeSer Watch cho bạn rồi nè!'; }
+            if(query.includes('ăn') || query.includes('food')) { switchModule('food'); return 'Đã cuộn màn hình xuống thiên đường ẩm thực HomeSer Food rồi nhé!'; }
+            if(query.includes('shop') || query.includes('mua')) { switchModule('shop'); return 'Đã dẫn bạn đến trung tâm mua sắm thông minh HomeSer Shop!'; }
+            return 'Yêu cầu đã được tiếp nhận. Thử gõ "xem video", "muốn ăn gà", hoặc "mua phím cơ" để tui cuộn trang tự động phục vụ nhé.';
         }
     </script>
 </body>
