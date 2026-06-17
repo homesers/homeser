@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -76,12 +75,6 @@
                     <h2 class="text-2xl font-bold text-white flex items-center gap-3"><i class="fa-solid fa-bag-shopping text-orange-400"></i> HomeSer Shop</h2>
                     <p class="text-slate-400 text-sm">Thiết bị công nghệ flagship và phụ kiện chính hãng</p>
                 </div>
-                <div class="flex flex-wrap gap-2">
-                    <button class="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-bold">Tất cả</button>
-                    <button class="px-4 py-2 bg-slate-800 text-slate-400 hover:text-white rounded-full text-sm font-bold transition">Điện thoại/Tablet</button>
-                    <button class="px-4 py-2 bg-slate-800 text-slate-400 hover:text-white rounded-full text-sm font-bold transition">Laptop</button>
-                    <button class="px-4 py-2 bg-slate-800 text-slate-400 hover:text-white rounded-full text-sm font-bold transition">Tai nghe/Loa</button>
-                </div>
             </div>
             
             <div id="shop-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -92,7 +85,7 @@
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div>
                     <h2 class="text-2xl font-bold text-white flex items-center gap-3"><i class="fa-solid fa-utensils text-green-400"></i> HomeSer Food</h2>
-                    <p class="text-slate-400 text-sm">Thực đơn đa dạng từ mâm cơm ấm cúng đến các bữa tiệc cuối tuần thịnh soạn</p>
+                    <p class="text-slate-400 text-sm">Thực đơn đa dạng với tùy chọn Size S/M/L cho mọi khẩu phần ăn</p>
                 </div>
             </div>
             
@@ -101,20 +94,40 @@
         </section>
 
         <section id="mod-contact" class="hidden space-y-8 py-12 min-h-[60vh]">
-            <h2 class="text-2xl font-bold text-white text-center">Liên hệ với chúng tôi</h2>
-            <div class="max-w-lg mx-auto bg-slate-800 p-6 rounded-2xl border border-slate-700">
-                <p class="text-slate-400 text-center mb-6">Mọi thắc mắc vui lòng để lại lời nhắn, đội ngũ hỗ trợ sẽ liên hệ bạn sớm nhất.</p>
-                <div class="space-y-4">
-                    <input type="text" placeholder="Tên của bạn" class="w-full bg-slate-900 text-white p-3 rounded-lg border border-slate-700 focus:border-blue-500 outline-none">
-                    <textarea placeholder="Nội dung tin nhắn..." rows="4" class="w-full bg-slate-900 text-white p-3 rounded-lg border border-slate-700 focus:border-blue-500 outline-none"></textarea>
-                    <button class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition">Gửi tin nhắn</button>
+            <h2 class="text-3xl font-black text-white text-center">Thông tin Liên hệ</h2>
+            <div class="max-w-md mx-auto bg-slate-800/80 p-8 rounded-3xl border border-slate-700 text-center space-y-6 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-cyan-400"></div>
+                
+                <div class="w-24 h-24 bg-blue-600/20 text-blue-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-4 border border-blue-500/30 shadow-inner">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                
+                <div>
+                    <h3 class="text-2xl font-bold text-white mb-1">Nguyễn Đình Hào</h3>
+                    <p class="text-slate-400 text-sm">Founder & Developer of HomeSer</p>
+                </div>
+
+                <div class="space-y-4 mt-6">
+                    <div class="flex items-center justify-center gap-3 text-slate-200 bg-slate-900/80 py-3.5 rounded-xl border border-slate-700 shadow-md">
+                        <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <span class="text-lg font-bold tracking-wider">0768 152 277</span>
+                    </div>
+                    
+                    <a href="https://www.facebook.com/share/1CosRDZQ1Z/?mibextid=wwXIfr" target="_blank" class="flex items-center justify-center gap-3 text-slate-200 bg-slate-900/80 py-3.5 rounded-xl border border-slate-700 shadow-md hover:bg-blue-600/10 hover:border-blue-500/50 transition group cursor-pointer">
+                        <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </div>
+                        <span class="text-lg font-bold group-hover:text-blue-400 transition">Facebook: Nguyễn Hào</span>
+                    </a>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-slate-950 border-l border-slate-800/80 z-50 transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col justify-between">
+    <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full sm:w-[400px] bg-slate-950 border-l border-slate-800/80 z-50 transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col justify-between">
         <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900">
             <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-basket-shopping text-blue-400"></i> Đơn Hàng Của Bạn</h3>
             <div class="flex items-center gap-3">
@@ -131,7 +144,7 @@
                 <span class="text-slate-400 text-sm">Tổng cộng thanh toán:</span>
                 <span id="cart-total" class="text-2xl font-black text-blue-400">0đ</span>
             </div>
-            <button onclick="checkout()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition shadow-lg shadow-blue-600/20">XÁC NHẬN ĐẶT HÀNG TỨC THÌ</button>
+            <button onclick="checkout()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition shadow-lg shadow-blue-600/20">XÁC NHẬN ĐẶT HÀNG</button>
         </div>
     </div>
 
@@ -139,7 +152,7 @@
         <div class="bg-slate-900 p-6 rounded-2xl w-full max-w-md border border-slate-700 shadow-2xl relative">
             <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition text-xl"><i class="fa-solid fa-xmark"></i></button>
 
-            <div class="flex space-x-4 border-b border-slate-700 mb-6">
+            <div class="flex space-x-4 border-b border-slate-700 mb-6 mt-2">
                 <button id="tab-login" onclick="switchAuthTab('login')" class="pb-2 text-blue-500 border-b-2 border-blue-500 font-bold flex-1 transition">Đăng nhập</button>
                 <button id="tab-register" onclick="switchAuthTab('register')" class="pb-2 text-slate-400 font-bold flex-1 transition">Đăng ký</button>
             </div>
@@ -166,30 +179,31 @@
     </div>
 
     <script>
-        // 1. DATA SẢN PHẨM (Phục hồi từ ảnh của bạn)
+        // 1. DATA SHOP
         const shopDatabase = [
             { id: 's1', name: 'iPhone 16 Pro Max 256GB', price: 34990000, desc: 'Flagship Apple đỉnh cao hiệu năng, camera zoom quang học vượt trội.', icon: 'fa-mobile-screen-button' },
             { id: 's2', name: 'Samsung Galaxy S25 Ultra', price: 29990000, desc: 'Màn hình vô cực mượt mà tích hợp bút S-Pen quyền năng.', icon: 'fa-mobile' },
-            { id: 's3', name: 'MacBook Air M3 15 inch', price: 36990000, desc: 'Thiết kế mỏng nhẹ sang trọng, chip Apple M3 cân mọi tác vụ đồ họa.', icon: 'fa-laptop' },
+            { id: 's3', name: 'MacBook Air M3 15 inch', price: 36990000, desc: 'Thiết kế mỏng nhẹ sang trọng, chip Apple M3 cân mọi tác vụ.', icon: 'fa-laptop' },
             { id: 's4', name: 'Sony WH-1000XM6', price: 8490000, desc: 'Tai nghe chụp tai chống ồn chủ động đỉnh cấp thế giới.', icon: 'fa-headphones' },
             { id: 's5', name: 'Canon EOS R50 Kit', price: 19990000, desc: 'Máy ảnh không gương lật lấy nét siêu nhanh, lý tưởng cho vlogger.', icon: 'fa-camera' },
-            { id: 's6', name: 'Apple Watch Series 10', price: 12990000, desc: 'Đồng hồ thông minh theo dõi sức khỏe và luyện tập chuyên sâu.', icon: 'fa-clock' },
-            { id: 's7', name: 'iPad Pro M4 11 inch', price: 27990000, desc: 'Màn hình OLED rực rỡ, chip M4 siêu mạnh mẽ phá vỡ mọi giới hạn.', icon: 'fa-tablet-screen-button' },
-            { id: 's8', name: 'AirPods Pro 2nd Gen', price: 6290000, desc: 'Tai nghe nhét tai thông minh, âm thanh không gian cá nhân hóa.', icon: 'fa-ear-listen' },
-            { id: 's9', name: 'Dell XPS 15 9570 OLED', price: 42990000, desc: 'Màn hình OLED 4K vô cực sắc nét, cấu hình khủng cho dân chuyên nghiệp.', icon: 'fa-laptop-code' },
-            { id: 's10', name: 'JBL Charge 5', price: 3190000, desc: 'Loa di động kháng nước IP67, âm bass mạnh mẽ khuấy động mọi cuộc vui.', icon: 'fa-speaker-deck' }
+            { id: 's6', name: 'Apple Watch Series 10', price: 12990000, desc: 'Đồng hồ thông minh theo dõi sức khỏe và luyện tập chuyên sâu.', icon: 'fa-clock' }
         ];
 
+        // 2. DATA FOOD (Đã thêm Size S, M, L)
         const foodDatabase = [
-            { id: 'f1', name: 'Thực đơn 1: Mâm Cơm Đầm Ấm', price: 150000, desc: 'Gà xào chua ngọt đậm đà, trứng hấp mềm mịn, kèm tô canh chua tôm rau muống thanh mát.', icon: 'fa-bowl-food' },
-            { id: 'f2', name: 'Thực đơn 2: Đậm Đà Quê Hương', price: 180000, desc: 'Cá lóc kho tiêu cay nồng chuẩn vị Nam Bộ, canh hến nấu chua ngọt nước và dưa leo ăn kèm.', icon: 'fa-bowl-rice' }
+            { id: 'f1', name: 'Trà Sữa Trân Châu', basePrice: 35000, desc: 'Trà sữa đậm vị, trân châu dai giòn.', icon: 'fa-mug-hot', hasSize: true },
+            { id: 'f2', name: 'Pizza Hải Sản', basePrice: 120000, desc: 'Hải sản tươi ngon, phô mai mozzarella ngập tràn.', icon: 'fa-pizza-slice', hasSize: true },
+            { id: 'f3', name: 'Gà Rán Giòn Cay', basePrice: 45000, desc: 'Thịt gà tươi tẩm ướp đậm đà, vỏ ngoài giòn rụm.', icon: 'fa-drumstick-bite', hasSize: true },
+            { id: 'f4', name: 'Cà Phê Sữa Đá', basePrice: 29000, desc: 'Cà phê nguyên chất pha phin, chuẩn vị Sài Gòn.', icon: 'fa-mug-saucer', hasSize: true },
+            { id: 'f5', name: 'Thực đơn 1: Mâm Cơm Đầm Ấm', basePrice: 150000, desc: 'Gà xào chua ngọt, trứng hấp mềm mịn, canh chua tôm.', icon: 'fa-bowl-food', hasSize: false },
+            { id: 'f6', name: 'Thực đơn 2: Đậm Đà Quê Hương', basePrice: 180000, desc: 'Cá lóc kho tiêu, canh hến nấu chua ngọt và dưa leo.', icon: 'fa-bowl-rice', hasSize: false }
         ];
 
-        // 2. STATE (Biến trạng thái)
+        // 3. STATE (Biến trạng thái)
         let cart = [];
         let currentUser = JSON.parse(localStorage.getItem("homeser_current_user"));
 
-        // 3. RENDER GIAO DIỆN SẢN PHẨM
+        // 4. RENDER GIAO DIỆN SẢN PHẨM & ĐỒ ĂN
         function renderShopGrid() {
             const grid = document.getElementById("shop-grid");
             grid.innerHTML = shopDatabase.map(item => `
@@ -201,7 +215,7 @@
                     </div>
                     <div class="flex items-center justify-between mt-auto">
                         <span class="text-orange-400 font-bold">${item.price.toLocaleString()}đ</span>
-                        <button onclick="addToCart('${item.id}', 'shop')" class="text-xs font-bold px-3 py-1.5 bg-slate-700 hover:bg-blue-600 text-white rounded-lg transition">Thêm vào giỏ</button>
+                        <button onclick="addShopToCart('${item.id}')" class="text-xs font-bold px-3 py-1.5 bg-slate-700 hover:bg-blue-600 text-white rounded-lg transition">Thêm vào giỏ</button>
                     </div>
                 </div>
             `).join('');
@@ -209,22 +223,123 @@
 
         function renderFoodGrid() {
             const grid = document.getElementById("food-grid");
-            grid.innerHTML = foodDatabase.map(item => `
-                <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 hover:border-green-500 transition flex items-center gap-5 group">
-                    <div class="w-16 h-16 bg-slate-700 text-slate-300 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl group-hover:bg-green-600 group-hover:text-white transition"><i class="fa-solid ${item.icon}"></i></div>
-                    <div class="flex-1">
-                        <h4 class="text-white font-bold mb-1">${item.name}</h4>
-                        <p class="text-slate-400 text-xs mb-3 line-clamp-2">${item.desc}</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-green-400 font-bold">${item.price.toLocaleString()}đ</span>
-                            <button onclick="addToCart('${item.id}', 'food')" class="text-xs font-bold px-4 py-2 bg-slate-700 hover:bg-green-600 text-white rounded-lg transition">Đặt ngay</button>
-                        </div>
+            grid.innerHTML = foodDatabase.map(item => {
+                let sizeHtml = '';
+                if(item.hasSize) {
+                    sizeHtml = `
+                        <select id="size-${item.id}" class="mt-2 bg-slate-900 text-slate-300 text-xs px-2 py-1.5 rounded-lg border border-slate-600 outline-none w-full cursor-pointer">
+                            <option value="S">Size S (Mặc định)</option>
+                            <option value="M">Size M (+15.000đ)</option>
+                            <option value="L">Size L (+30.000đ)</option>
+                        </select>
+                    `;
+                }
+
+                return `
+                <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 hover:border-green-500 transition flex items-center gap-4 group">
+                    <div class="w-20 h-20 bg-slate-700 text-slate-300 rounded-2xl flex-shrink-0 flex items-center justify-center text-4xl group-hover:bg-green-600 group-hover:text-white transition"><i class="fa-solid ${item.icon}"></i></div>
+                    <div class="flex-1 w-full">
+                        <h4 class="text-white font-bold mb-1 truncate">${item.name}</h4>
+                        <p class="text-slate-400 text-xs mb-2 line-clamp-1">${item.desc}</p>
+                        <span class="text-green-400 font-bold block">${item.basePrice.toLocaleString()}đ</span>
+                        ${sizeHtml}
+                        <button onclick="addFoodToCart('${item.id}')" class="w-full mt-3 text-xs font-bold px-4 py-2 bg-slate-700 hover:bg-green-600 text-white rounded-lg transition">Thêm vào giỏ</button>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        // 4. LOGIC TÀI KHOẢN (AUTH)
+        // 5. LOGIC GIỎ HÀNG (TÍCH HỢP SIZE)
+        function addShopToCart(id) {
+            const product = shopDatabase.find(item => item.id === id);
+            const existingItem = cart.find(item => item.id === id);
+            if (existingItem) existingItem.qty += 1;
+            else cart.push({ id: product.id, name: product.name, price: product.price, icon: product.icon, qty: 1 });
+            
+            renderCart();
+            alert(`Đã thêm ${product.name} vào giỏ hàng!`);
+        }
+
+        function addFoodToCart(id) {
+            const product = foodDatabase.find(item => item.id === id);
+            let finalPrice = product.basePrice;
+            let sizeLabel = '';
+            let cartItemId = id;
+
+            // Xử lý tính tiền nếu món có Size
+            if (product.hasSize) {
+                const sizeVal = document.getElementById(`size-${id}`).value;
+                sizeLabel = ` (Size ${sizeVal})`;
+                cartItemId = `${id}-${sizeVal}`; // Tách ID trong giỏ hàng theo Size
+                
+                if (sizeVal === 'M') finalPrice += 15000;
+                if (sizeVal === 'L') finalPrice += 30000;
+            }
+
+            const existingItem = cart.find(item => item.id === cartItemId);
+            if (existingItem) {
+                existingItem.qty += 1;
+            } else {
+                cart.push({ id: cartItemId, name: product.name + sizeLabel, price: finalPrice, icon: product.icon, qty: 1 });
+            }
+            
+            renderCart();
+            alert(`Đã thêm ${product.name}${sizeLabel} vào giỏ hàng!`);
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            renderCart();
+        }
+
+        function clearCart() {
+            if(cart.length === 0) return alert("Giỏ hàng đang trống!");
+            if(confirm("Bạn có chắc muốn xóa toàn bộ giỏ hàng?")) {
+                cart = []; renderCart();
+            }
+        }
+
+        function renderCart() {
+            const container = document.getElementById("cart-items");
+            
+            if (cart.length === 0) {
+                container.innerHTML = `<div class="text-center text-slate-500 mt-12"><i class="fa-solid fa-box-open text-5xl mb-4 opacity-50"></i><p>Giỏ hàng của bạn đang trống!</p></div>`;
+                document.getElementById("cart-total").innerText = "0đ";
+                document.getElementById("cart-count").innerText = "0";
+                return;
+            }
+
+            container.innerHTML = cart.map(item => `
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-slate-700 text-slate-300 flex items-center justify-center rounded-lg text-xl"><i class="fa-solid ${item.icon}"></i></div>
+                        <div>
+                            <h5 class="text-white text-sm font-bold w-44 truncate">${item.name}</h5>
+                            <span class="text-blue-400 text-xs font-bold">${item.price.toLocaleString()}đ <span class="text-slate-500">x${item.qty}</span></span>
+                        </div>
+                    </div>
+                    <button onclick="removeFromCart('${item.id}')" class="w-8 h-8 rounded-full border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white transition flex items-center justify-center"><i class="fa-solid fa-minus"></i></button>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const count = cart.reduce((sum, item) => sum + item.qty, 0);
+            
+            document.getElementById("cart-total").innerText = total.toLocaleString() + 'đ';
+            document.getElementById("cart-count").innerText = count;
+        }
+
+        function openCart() { document.getElementById("cart-sidebar").classList.remove("translate-x-full"); }
+        function closeCart() { document.getElementById("cart-sidebar").classList.add("translate-x-full"); }
+        function checkout() {
+            if(!currentUser) { alert("Vui lòng đăng nhập để thanh toán!"); return openAuthModal(); }
+            if(cart.length === 0) return alert("Giỏ hàng trống!");
+            alert("Đặt hàng thành công! Cảm ơn " + currentUser.name + " đã sử dụng HomeSer.");
+            cart = []; renderCart(); closeCart();
+        }
+
+        // 6. LOGIC TÀI KHOẢN (AUTH)
         function renderAuthUI() {
             const zone = document.getElementById("auth-header-zone");
             if(currentUser){
@@ -236,7 +351,7 @@
                     <button onclick="handleLogout()" class="text-red-400 text-sm font-bold hover:text-red-300 transition px-1"><i class="fa-solid fa-right-from-bracket"></i></button>
                 </div>`;
             } else {
-                zone.innerHTML = `<button onclick="openAuthModal()" class="bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-blue-700 transition flex items-center gap-2"><i class="fa-solid fa-user"></i> Đăng nhập</button>`;
+                zone.innerHTML = `<button onclick="openAuthModal()" class="bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-blue-700 transition flex items-center gap-2 shadow-lg"><i class="fa-solid fa-user"></i> Đăng nhập</button>`;
             }
         }
 
@@ -292,87 +407,17 @@
             
             localStorage.setItem("homeser_current_user", JSON.stringify(user));
             currentUser = user; 
-            renderAuthUI(); 
-            closeAuthModal();
+            renderAuthUI(); closeAuthModal();
         }
 
         function handleLogout(){ 
             if(confirm("Bạn có chắc muốn đăng xuất?")) {
                 localStorage.removeItem("homeser_current_user"); 
-                currentUser = null; 
-                renderAuthUI(); 
+                currentUser = null; renderAuthUI(); 
             }
         }
 
-        // 5. LOGIC GIỎ HÀNG (ĐÃ FIX LỖI ẢNH KẸT)
-        function addToCart(id, type) {
-            const db = type === 'shop' ? shopDatabase : foodDatabase;
-            const product = db.find(item => item.id === id);
-            
-            const existingItem = cart.find(item => item.id === id);
-            if (existingItem) existingItem.qty += 1;
-            else cart.push({ ...product, qty: 1 });
-            
-            renderCart();
-            alert(`Đã thêm ${product.name} vào giỏ hàng!`);
-        }
-
-        function removeFromCart(id) {
-            cart = cart.filter(item => item.id !== id);
-            renderCart();
-        }
-
-        function clearCart() {
-            if(cart.length === 0) return alert("Giỏ hàng đã trống sẵn rồi!");
-            if(confirm("Xóa toàn bộ giỏ hàng?")) {
-                cart = [];
-                renderCart();
-            }
-        }
-
-        function renderCart() {
-            const container = document.getElementById("cart-items");
-            
-            // FIX LỖI: Cập nhật giao diện khi giỏ hàng rỗng
-            if (cart.length === 0) {
-                container.innerHTML = `<div class="text-center text-slate-500 mt-10"><i class="fa-solid fa-box-open text-4xl mb-3 opacity-50"></i><p>Giỏ hàng hiện tại đang trống!</p></div>`;
-                document.getElementById("cart-total").innerText = "0đ";
-                document.getElementById("cart-count").innerText = "0";
-                return;
-            }
-
-            container.innerHTML = cart.map(item => `
-                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-slate-700 text-slate-300 flex items-center justify-center rounded-lg"><i class="fa-solid ${item.icon}"></i></div>
-                        <div>
-                            <h5 class="text-white text-sm font-bold w-40 truncate">${item.name}</h5>
-                            <span class="text-blue-400 text-xs font-bold">${item.price.toLocaleString()}đ <span class="text-slate-500">x${item.qty}</span></span>
-                        </div>
-                    </div>
-                    <button onclick="removeFromCart('${item.id}')" class="w-8 h-8 rounded-full border border-red-500/30 text-red-400 hover:bg-red-500/20 transition flex items-center justify-center"><i class="fa-solid fa-minus"></i></button>
-                </div>
-            `).join('');
-
-            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            const count = cart.reduce((sum, item) => sum + item.qty, 0);
-            
-            document.getElementById("cart-total").innerText = total.toLocaleString() + 'đ';
-            document.getElementById("cart-count").innerText = count;
-        }
-
-        function openCart() { document.getElementById("cart-sidebar").classList.remove("translate-x-full"); }
-        function closeCart() { document.getElementById("cart-sidebar").classList.add("translate-x-full"); }
-        function checkout() {
-            if(!currentUser) { alert("Vui lòng đăng nhập trước khi đặt hàng!"); return openAuthModal(); }
-            if(cart.length === 0) return alert("Giỏ hàng trống!");
-            alert("Đặt hàng thành công! Cảm ơn " + currentUser.name);
-            cart = [];
-            renderCart();
-            closeCart();
-        }
-
-        // 6. ĐIỀU HƯỚNG TABS
+        // 7. ĐIỀU HƯỚNG TABS
         function switchModule(modName) {
             ['home', 'shop', 'food', 'contact'].forEach(mod => {
                 document.getElementById(`mod-${mod}`).classList.add('hidden');
