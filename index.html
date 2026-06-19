@@ -17,10 +17,8 @@
 </head>
 <body class="custom-scrollbar relative">
 
-    <!-- HEADER -->
     <header class="dark-glass text-white shadow-xl p-4 sticky top-0 z-50 border-b border-slate-800/80">
         <div class="container mx-auto flex justify-between items-center">
-            <!-- Logo -->
             <div class="flex items-center space-x-3 cursor-pointer" onclick="switchModule('home')">
                 <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-lg flex items-center justify-center">
                     <i class="fa-solid fa-house-laptop text-xl"></i>
@@ -28,7 +26,6 @@
                 <h1 class="text-3xl font-black tracking-tight"><span class="text-blue-500">Home</span><span class="text-white">Ser</span></h1>
             </div>
             
-            <!-- Navigation -->
             <nav class="hidden md:flex bg-slate-800/60 p-1 rounded-full border border-slate-700/50">
                 <button onclick="switchModule('home')" id="btn-nav-home" class="nav-btn px-5 py-2 rounded-full text-sm font-bold bg-blue-600 text-white shadow-md transition"><i class="fa-solid fa-house"></i> <span>Home</span></button>
                 <button onclick="switchModule('shop')" id="btn-nav-shop" class="nav-btn px-5 py-2 rounded-full text-sm font-bold text-slate-400 hover:text-white transition"><i class="fa-solid fa-bag-shopping"></i> <span>Shop</span></button>
@@ -36,23 +33,19 @@
                 <button onclick="switchModule('contact')" id="btn-nav-contact" class="nav-btn px-5 py-2 rounded-full text-sm font-bold text-slate-400 hover:text-white transition"><i class="fa-solid fa-address-book"></i> <span>Liên hệ</span></button>
             </nav>
 
-            <!-- Actions: Cart & Auth -->
             <div class="flex items-center space-x-4">
                 <button onclick="openCart()" class="relative p-2.5 bg-slate-800 rounded-full hover:bg-slate-700 transition">
                     <i class="fa-solid fa-cart-shopping text-blue-400"></i>
                     <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
                 </button>
                 
-                <!-- Vùng Đăng nhập/Tài khoản tự động -->
                 <div id="auth-header-zone"></div>
             </div>
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
     <main class="container mx-auto px-4 max-w-7xl mt-10">
         
-        <!-- SECTION: HOME -->
         <section id="mod-home" class="space-y-12 py-12 min-h-[60vh]">
             <div class="text-center space-y-4">
                 <span class="px-3 py-1 bg-blue-600/20 text-blue-400 rounded-full text-xs font-bold uppercase tracking-wider border border-blue-500/30">Ngôi nhà tiện ích thông minh</span>
@@ -76,7 +69,6 @@
             </div>
         </section>
 
-        <!-- SECTION: SHOP -->
         <section id="mod-shop" class="hidden space-y-8 py-12 min-h-[85vh]">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div>
@@ -87,7 +79,6 @@
             <div id="shop-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
         </section>
 
-        <!-- SECTION: FOOD -->
         <section id="mod-food" class="hidden space-y-8 py-12 min-h-[85vh]">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div>
@@ -98,7 +89,6 @@
             <div id="food-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
         </section>
 
-        <!-- SECTION: CONTACT -->
         <section id="mod-contact" class="hidden space-y-8 py-12 min-h-[60vh]">
             <h2 class="text-3xl font-black text-white text-center">Thông tin Liên hệ</h2>
             <div class="max-w-md mx-auto bg-slate-800/80 p-8 rounded-3xl border border-slate-700 text-center space-y-6 shadow-2xl relative overflow-hidden">
@@ -123,41 +113,69 @@
             </div>
         </section>
 
-        <!-- SECTION BÍ MẬT: ADMIN PANEL -->
-        <section id="mod-admin" class="hidden space-y-8 py-12 min-h-[85vh]">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-700 pb-6">
-                <div>
-                    <h2 class="text-3xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-user-secret text-red-500"></i> Bảng Quản Trị Admin</h2>
-                    <p class="text-slate-400 text-sm mt-1">Chỉ có Nguyễn Đình Hào mới thấy được trang này</p>
+        <section id="mod-admin" class="hidden space-y-12 py-12 min-h-[85vh]">
+            <div class="space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-700 pb-4">
+                    <div>
+                        <h2 class="text-3xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-user-secret text-red-500"></i> Bảng Quản Trị Admin</h2>
+                        <p class="text-slate-400 text-sm mt-1">Chỉ có Nguyễn Đình Hào mới thấy được trang này</p>
+                    </div>
+                    <button onclick="clearAllUsers()" class="px-4 py-2 bg-red-600/20 text-red-400 border border-red-500/30 rounded-lg hover:bg-red-600 hover:text-white transition font-bold text-sm">
+                        <i class="fa-solid fa-trash"></i> Xóa tất cả tài khoản
+                    </button>
                 </div>
-                <button onclick="clearAllUsers()" class="px-4 py-2 bg-red-600/20 text-red-400 border border-red-500/30 rounded-lg hover:bg-red-600 hover:text-white transition font-bold text-sm">
-                    <i class="fa-solid fa-trash"></i> Xóa tất cả tài khoản
-                </button>
+                
+                <div class="bg-slate-800/80 rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-slate-300">
+                            <thead class="bg-slate-900 text-blue-400 text-sm uppercase font-bold">
+                                <tr>
+                                    <th class="p-4">STT</th>
+                                    <th class="p-4">Họ và Tên</th>
+                                    <th class="p-4">Email Đăng nhập</th>
+                                    <th class="p-4">Mật khẩu</th>
+                                    <th class="p-4">Ngày đăng ký</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-user-list" class="divide-y divide-slate-700/50"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            
-            <div class="bg-slate-800/80 rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-slate-300">
-                        <thead class="bg-slate-900 text-blue-400 text-sm uppercase font-bold">
-                            <tr>
-                                <th class="p-4">STT</th>
-                                <th class="p-4">Họ và Tên</th>
-                                <th class="p-4">Email Đăng nhập</th>
-                                <th class="p-4">Mật khẩu</th>
-                                <th class="p-4">Ngày đăng ký</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-user-list" class="divide-y divide-slate-700/50">
-                            <!-- JS render danh sách vào đây -->
-                        </tbody>
-                    </table>
+
+            <div class="space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-700 pb-4">
+                    <div>
+                        <h3 class="text-2xl font-bold text-white flex items-center gap-3"><i class="fa-solid fa-truck-fast text-green-400"></i> Lịch Sử Đơn Hàng & Địa Chỉ Nhận</h3>
+                        <p class="text-slate-400 text-sm mt-1">Theo dõi các đơn hàng ăn uống/phụ kiện cần đi ship</p>
+                    </div>
+                    <button onclick="clearAllOrders()" class="px-4 py-2 bg-orange-600/20 text-orange-400 border border-orange-500/30 rounded-lg hover:bg-orange-600 hover:text-white transition font-bold text-sm">
+                        <i class="fa-solid fa-eraser"></i> Xóa tất cả đơn hàng
+                    </button>
+                </div>
+                
+                <div class="bg-slate-800/80 rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-slate-300">
+                            <thead class="bg-slate-900 text-green-400 text-sm uppercase font-bold">
+                                <tr>
+                                    <th class="p-4">STT</th>
+                                    <th class="p-4">Khách hàng</th>
+                                    <th class="p-4">Chi tiết món đồ đặt</th>
+                                    <th class="p-4">Địa chỉ giao hàng</th>
+                                    <th class="p-4">Tổng tiền</th>
+                                    <th class="p-4">Thời gian đặt</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-order-list" class="divide-y divide-slate-700/50"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- SIDEBAR: GIỎ HÀNG -->
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full sm:w-[400px] bg-slate-950 border-l border-slate-800/80 z-50 transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col justify-between">
         <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900">
             <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-basket-shopping text-blue-400"></i> Đơn Hàng Của Bạn</h3>
@@ -176,18 +194,15 @@
         </div>
     </div>
 
-    <!-- MODAL: ĐĂNG NHẬP / ĐĂNG KÝ -->
     <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
         <div class="bg-slate-900 p-6 rounded-2xl w-full max-w-md border border-slate-700 shadow-2xl relative">
             <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition text-xl"><i class="fa-solid fa-xmark"></i></button>
 
-            <!-- Chuyển đổi Tab -->
             <div class="flex space-x-4 border-b border-slate-700 mb-6 mt-2">
                 <button id="tab-login" onclick="switchAuthTab('login')" class="pb-2 text-blue-500 border-b-2 border-blue-500 font-bold flex-1 transition">Đăng nhập</button>
                 <button id="tab-register" onclick="switchAuthTab('register')" class="pb-2 text-slate-400 font-bold flex-1 transition">Đăng ký</button>
             </div>
 
-            <!-- Form Đăng Nhập -->
             <div id="form-login" class="space-y-4">
                 <input id="login-email" type="email" placeholder="Email của bạn" class="w-full bg-slate-800 text-white p-3 rounded-xl border border-slate-700 focus:border-blue-500 outline-none transition">
                 <div class="relative">
@@ -197,7 +212,6 @@
                 <button onclick="loginUser()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-500/30">Đăng nhập</button>
             </div>
 
-            <!-- Form Đăng Ký -->
             <div id="form-register" class="space-y-4 hidden">
                 <input id="reg-name" type="text" placeholder="Họ và tên" class="w-full bg-slate-800 text-white p-3 rounded-xl border border-slate-700 focus:border-blue-500 outline-none transition">
                 <input id="reg-email" type="email" placeholder="Email đăng ký" class="w-full bg-slate-800 text-white p-3 rounded-xl border border-slate-700 focus:border-blue-500 outline-none transition">
@@ -210,7 +224,6 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
     <script>
         // 1. DATA 
         const shopDatabase = [
@@ -230,7 +243,7 @@
         let cart = [];
         let currentUser = JSON.parse(localStorage.getItem("homeser_current_user"));
 
-        // KHỞI TẠO TÀI KHOẢN ADMIN MẶC ĐỊNH (Nếu chưa có)
+        // KHỞI TẠO TÀI KHOẢN ADMIN MẶC ĐỊNH
         function initAdminAccount() {
             let users = JSON.parse(localStorage.getItem("homeser_users")) || [];
             if(!users.find(u => u.email === "admin@homeser.com")) {
@@ -244,39 +257,60 @@
             }
         }
 
-        // RENDER DANH SÁCH USER CHO ADMIN
+        // RENDER DANH SÁCH USER VÀ ĐƠN HÀNG TRONG ADMIN PANEL
         function renderAdminPanel() {
+            // Khối 1: Render Người dùng
             const users = JSON.parse(localStorage.getItem("homeser_users")) || [];
-            const tbody = document.getElementById("admin-user-list");
-            
-            // Lọc bỏ tài khoản Admin ra khỏi danh sách hiển thị cho đỡ rối, hoặc để nguyên tùy bạn. Ở đây tôi để nguyên.
+            const tbodyUsers = document.getElementById("admin-user-list");
             if(users.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">Chưa có khách hàng nào đăng ký</td></tr>`;
-                return;
+                tbodyUsers.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">Chưa có khách hàng nào đăng ký</td></tr>`;
+            } else {
+                tbodyUsers.innerHTML = users.map((u, i) => `
+                    <tr class="hover:bg-slate-700/30 transition">
+                        <td class="p-4 text-slate-400">${i + 1}</td>
+                        <td class="p-4 font-bold ${u.email === 'admin@homeser.com' ? 'text-red-400' : 'text-white'}">${u.name} ${u.email === 'admin@homeser.com' ? '<i class="fa-solid fa-crown text-yellow-400 ml-1"></i>' : ''}</td>
+                        <td class="p-4 text-blue-300">${u.email}</td>
+                        <td class="p-4 font-mono text-slate-400">${u.password}</td>
+                        <td class="p-4 text-sm text-slate-400">${u.date || 'Không xác định'}</td>
+                    </tr>
+                `).join('');
             }
 
-            tbody.innerHTML = users.map((u, i) => `
+            // Khối 2: Render Đơn hàng kèm theo địa chỉ (MỚI THÊM)
+            const orders = JSON.parse(localStorage.getItem("homeser_orders")) || [];
+            const tbodyOrders = document.getElementById("admin-order-list");
+            if(orders.length === 0) {
+                tbodyOrders.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500">Chưa có đơn hàng nào được đặt</td></tr>`;
+                return;
+            }
+            tbodyOrders.innerHTML = orders.map((o, i) => `
                 <tr class="hover:bg-slate-700/30 transition">
                     <td class="p-4 text-slate-400">${i + 1}</td>
-                    <td class="p-4 font-bold ${u.email === 'admin@homeser.com' ? 'text-red-400' : 'text-white'}">${u.name} ${u.email === 'admin@homeser.com' ? '<i class="fa-solid fa-crown text-yellow-400 ml-1"></i>' : ''}</td>
-                    <td class="p-4 text-blue-300">${u.email}</td>
-                    <td class="p-4 font-mono text-slate-400">${u.password}</td>
-                    <td class="p-4 text-sm text-slate-400">${u.date || 'Không xác định'}</td>
+                    <td class="p-4 font-bold text-white">${o.customerName}<br><span class="text-xs text-slate-400 font-normal">${o.customerEmail}</span></td>
+                    <td class="p-4 text-slate-300 text-sm max-w-[260px] truncate" title="${o.items}">${o.items}</td>
+                    <td class="p-4 text-yellow-400 font-bold bg-yellow-500/5">${o.address}</td>
+                    <td class="p-4 text-orange-400 font-black">${o.total.toLocaleString()}đ</td>
+                    <td class="p-4 text-xs text-slate-400">${o.date}</td>
                 </tr>
             `).join('');
         }
 
         function clearAllUsers() {
-            if(confirm("CẢNH BÁO: Bạn có chắc chắn muốn xóa toàn bộ tài khoản khách hàng không?")) {
-                // Xóa hết, chỉ giữ lại tài khoản admin
+            if(confirm("Bạn có chắc chắn muốn xóa tất cả tài khoản khách hàng không?")) {
                 const adminAcc = {name: "Admin Đình Hào", email: "admin@homeser.com", password: "admin", date: new Date().toLocaleString('vi-VN')};
                 localStorage.setItem("homeser_users", JSON.stringify([adminAcc]));
-                renderAdminPanel();
-                alert("Đã dọn dẹp sạch danh sách tài khoản!");
+                renderAdminPanel(); alert("Đã dọn dẹp danh sách tài khoản!");
             }
         }
 
-        // 4. RENDER GIAO DIỆN SẢN PHẨM & ĐỒ ĂN
+        function clearAllOrders() {
+            if(confirm("Bạn có chắc chắn muốn xóa toàn bộ lịch sử đơn hàng không?")) {
+                localStorage.removeItem("homeser_orders");
+                renderAdminPanel(); alert("Đã xóa sạch danh sách đơn hàng!");
+            }
+        }
+
+        // RENDER GIAO DIỆN SẢN PHẨM & ĐỒ ĂN
         function renderShopGrid() {
             const grid = document.getElementById("shop-grid");
             grid.innerHTML = shopDatabase.map(item => `
@@ -307,7 +341,6 @@
                         </select>
                     `;
                 }
-
                 return `
                 <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 hover:border-green-500 transition flex items-center gap-4 group">
                     <div class="w-20 h-20 bg-slate-700 text-slate-300 rounded-2xl flex-shrink-0 flex items-center justify-center text-4xl group-hover:bg-green-600 group-hover:text-white transition"><i class="fa-solid ${item.icon}"></i></div>
@@ -323,7 +356,7 @@
             }).join('');
         }
 
-        // 5. LOGIC GIỎ HÀNG
+        // LOGIC GIỎ HÀNG & THANH TOÁN THÊM ĐỊA CHỈ
         function addShopToCart(id) {
             const product = shopDatabase.find(item => item.id === id);
             const existingItem = cart.find(item => item.id === id);
@@ -334,22 +367,15 @@
 
         function addFoodToCart(id) {
             const product = foodDatabase.find(item => item.id === id);
-            let finalPrice = product.basePrice;
-            let sizeLabel = '';
-            let cartItemId = id;
-
+            let finalPrice = product.basePrice; let sizeLabel = ''; let cartItemId = id;
             if (product.hasSize) {
                 const sizeVal = document.getElementById(`size-${id}`).value;
-                sizeLabel = ` (Size ${sizeVal})`;
-                cartItemId = `${id}-${sizeVal}`; 
-                if (sizeVal === 'M') finalPrice += 15000;
-                if (sizeVal === 'L') finalPrice += 30000;
+                sizeLabel = ` (${sizeVal})`; cartItemId = `${id}-${sizeVal}`; 
+                if (sizeVal === 'M') finalPrice += 15000; if (sizeVal === 'L') finalPrice += 30000;
             }
-
             const existingItem = cart.find(item => item.id === cartItemId);
             if (existingItem) existingItem.qty += 1;
             else cart.push({ id: cartItemId, name: product.name + sizeLabel, price: finalPrice, icon: product.icon, qty: 1 });
-            
             renderCart(); alert(`Đã thêm ${product.name}${sizeLabel} vào giỏ hàng!`);
         }
 
@@ -360,8 +386,7 @@
             const container = document.getElementById("cart-items");
             if (cart.length === 0) {
                 container.innerHTML = `<div class="text-center text-slate-500 mt-12"><i class="fa-solid fa-box-open text-5xl mb-4 opacity-50"></i><p>Giỏ hàng đang trống!</p></div>`;
-                document.getElementById("cart-total").innerText = "0đ"; document.getElementById("cart-count").innerText = "0";
-                return;
+                document.getElementById("cart-total").innerText = "0đ"; document.getElementById("cart-count").innerText = "0"; return;
             }
             container.innerHTML = cart.map(item => `
                 <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between">
@@ -375,25 +400,52 @@
                     <button onclick="removeFromCart('${item.id}')" class="w-8 h-8 rounded-full border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white transition"><i class="fa-solid fa-minus"></i></button>
                 </div>
             `).join('');
-
             document.getElementById("cart-total").innerText = cart.reduce((sum, item) => sum + (item.price * item.qty), 0).toLocaleString() + 'đ';
             document.getElementById("cart-count").innerText = cart.reduce((sum, item) => sum + item.qty, 0);
         }
 
         function openCart() { document.getElementById("cart-sidebar").classList.remove("translate-x-full"); }
         function closeCart() { document.getElementById("cart-sidebar").classList.add("translate-x-full"); }
+
+        // CHỨC NĂNG THU THẬP ĐỊA CHỈ & LƯU LẠI CHO ADMIN (CẬP NHẬT CHÍNH)
         function checkout() {
-            if(!currentUser) { alert("Vui lòng đăng nhập để thanh toán!"); return openAuthModal(); }
-            if(cart.length === 0) return alert("Giỏ hàng trống!");
-            alert("Đặt hàng thành công! Cảm ơn " + currentUser.name + " đã sử dụng HomeSer.");
+            if(!currentUser) { alert("Vui lòng đăng nhập để đặt hàng!"); return openAuthModal(); }
+            if(cart.length === 0) return alert("Giỏ hàng của bạn đang trống!");
+
+            // Bật lên thông báo xin địa chỉ giao hàng
+            const customerAddress = prompt("Vui lòng nhập Địa Chỉ Giao Hàng chính xác của bạn:");
+            
+            // Kiểm tra nếu khách bấm Hủy hoặc không nhập gì
+            if(customerAddress === null) return; 
+            if(customerAddress.trim() === "") {
+                alert("Bạn phải nhập địa chỉ thì chúng tôi mới biết đường đi giao chứ!");
+                return;
+            }
+
+            // Gộp chuỗi các món hàng trong giỏ thành 1 dòng văn bản
+            const itemsSummary = cart.map(item => `${item.name} (x${item.qty})`).join(', ');
+            const finalTotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            // Lưu vào cơ sở dữ liệu đơn hàng
+            let orders = JSON.parse(localStorage.getItem("homeser_orders")) || [];
+            orders.push({
+                customerName: currentUser.name,
+                customerEmail: currentUser.email,
+                items: itemsSummary,
+                address: customerAddress.trim(),
+                total: finalTotal,
+                date: new Date().toLocaleString('vi-VN')
+            });
+            localStorage.setItem("homeser_orders", JSON.stringify(orders));
+
+            alert(`Đặt hàng thành công!\nĐơn của bạn đã được gửi tới Admin Nguyễn Đình Hào để xử lý.`);
             cart = []; renderCart(); closeCart();
         }
 
-        // 6. LOGIC TÀI KHOẢN (ĐÃ TÍCH HỢP NÚT ADMIN)
+        // LOGIC TÀI KHOẢN (AUTH)
         function renderAuthUI() {
             const zone = document.getElementById("auth-header-zone");
             if(currentUser){
-                // KIỂM TRA NẾU LÀ ADMIN THÌ HIỂN THỊ THÊM NÚT ĐẶC BIỆT
                 let adminButton = '';
                 if(currentUser.email === 'admin@homeser.com') {
                     adminButton = `
@@ -403,7 +455,6 @@
                         <div class="w-px h-5 bg-slate-600 mx-1"></div>
                     `;
                 }
-
                 zone.innerHTML = `
                 <div class="flex items-center space-x-2 sm:space-x-3 bg-slate-800/80 py-1.5 px-3 sm:px-4 rounded-full border border-slate-700 shadow-md">
                     ${adminButton}
@@ -429,8 +480,7 @@
         }
 
         function togglePassword(inputId, iconId) {
-            const input = document.getElementById(inputId);
-            const icon = document.getElementById(iconId);
+            const input = document.getElementById(inputId); const icon = document.getElementById(iconId);
             if (input.type === "password") { input.type = "text"; icon.classList.replace("fa-eye", "fa-eye-slash"); } 
             else { input.type = "password"; icon.classList.replace("fa-eye-slash", "fa-eye"); }
         }
@@ -444,19 +494,10 @@
             let users = JSON.parse(localStorage.getItem("homeser_users")) || [];
             if(users.find(u => u.email === email)) return alert("Email này đã được sử dụng!");
             
-            // Lưu thêm thông tin Ngày giờ đăng ký
-            users.push({
-                name, 
-                email, 
-                password, 
-                date: new Date().toLocaleString('vi-VN')
-            }); 
+            users.push({ name, email, password, date: new Date().toLocaleString('vi-VN') }); 
             localStorage.setItem("homeser_users", JSON.stringify(users));
-            
-            alert("Đăng ký thành công! Vui lòng đăng nhập.");
-            switchAuthTab('login');
-            document.getElementById("login-email").value = email; 
-            document.getElementById("reg-password").value = ""; 
+            alert("Đăng ký thành công! Vui lòng đăng nhập."); switchAuthTab('login');
+            document.getElementById("login-email").value = email; document.getElementById("reg-password").value = ""; 
         }
 
         function loginUser(){
@@ -469,64 +510,40 @@
             if(!user) return alert("Sai email hoặc mật khẩu!");
             
             localStorage.setItem("homeser_current_user", JSON.stringify(user));
-            currentUser = user; 
-            renderAuthUI(); 
-            closeAuthModal();
-
-            // Nếu là admin thì nhảy thẳng vào trang Admin luôn
-            if(user.email === 'admin@homeser.com') {
-                switchModule('admin');
-            }
+            currentUser = user; renderAuthUI(); closeAuthModal();
+            if(user.email === 'admin@homeser.com') switchModule('admin');
         }
 
         function handleLogout(){ 
             if(confirm("Bạn có chắc muốn đăng xuất?")) {
-                localStorage.removeItem("homeser_current_user"); 
-                currentUser = null; 
-                renderAuthUI(); 
-                switchModule('home'); // Về trang chủ khi đăng xuất
+                localStorage.removeItem("homeser_current_user"); currentUser = null; 
+                renderAuthUI(); switchModule('home');
             }
         }
 
-        // 7. ĐIỀU HƯỚNG TABS
+        // ĐIỀU HƯỚNG TABS
         function switchModule(modName) {
             ['home', 'shop', 'food', 'contact', 'admin'].forEach(mod => {
                 const modEl = document.getElementById(`mod-${mod}`);
                 const btnEl = document.getElementById(`btn-nav-${mod}`);
-                
                 if(modEl) modEl.classList.add('hidden');
-                
                 if(btnEl) {
                     btnEl.classList.replace('bg-blue-600', 'bg-transparent');
                     btnEl.classList.replace('text-white', 'text-slate-400');
                 }
             });
-
             document.getElementById(`mod-${modName}`).classList.remove('hidden');
-            
             if(document.getElementById(`btn-nav-${modName}`)) {
                 document.getElementById(`btn-nav-${modName}`).classList.replace('bg-transparent', 'bg-blue-600');
                 document.getElementById(`btn-nav-${modName}`).classList.replace('text-slate-400', 'text-white');
             }
-
-            // Nếu bấm vào tab Admin, lập tức render lại danh sách user mới nhất
-            if(modName === 'admin') {
-                renderAdminPanel();
-            }
-
+            if(modName === 'admin') renderAdminPanel();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // KHỞI TẠO KHI TẢI TRANG
+        // KHỞI TẠO
         window.addEventListener("load", () => {
-            initAdminAccount(); // Tạo tk admin mặc định
-            renderAuthUI();
-            renderShopGrid();
-            renderFoodGrid();
-            renderCart();
-            
-            // Nếu F5 mà đang là tài khoản admin, có thể cho hiện luôn trang admin
-            // if(currentUser && currentUser.email === 'admin@homeser.com') switchModule('admin');
+            initAdminAccount(); renderAuthUI(); renderShopGrid(); renderFoodGrid(); renderCart();
         });
     </script>
 </body>
