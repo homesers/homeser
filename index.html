@@ -239,30 +239,39 @@
             { id: 'f3', name: 'Gà Rán Giòn Cay', basePrice: 45000, desc: 'Thịt gà tươi tẩm ướp đậm đà.', icon: 'fa-drumstick-bite', hasSize: true },
             { id: 'f5', name: 'Thực đơn 1: Mâm Cơm Đầm Ấm', basePrice: 150000, desc: 'Gà xào chua ngọt, trứng hấp, canh chua.', icon: 'fa-bowl-food', hasSize: false }
         ];
-
+const SERVER_URL = "https://homeser-m3h8.vercel.app";
         let cart = [];
         let currentUser = JSON.parse(localStorage.getItem("homeser_current_user"));
 
         // KHỞI TẠO TÀI KHOẢN ADMIN MẶC ĐỊNH
-        function initAdminAccount() {
-            let users = JSON.parse(localStorage.getItem("homeser_users")) || [];
-            if(!users.find(u => u.email === "admin@homeser.com")) {
-                users.push({
-                    name: "Admin Đình Hào", 
-                    email: "admin@homeser.com", 
-                    password: "admin", 
-                    date: new Date().toLocaleString('vi-VN')
-                });
-                // Gửi dữ liệu user lên server qua API
-fetch(`${SERVER_URL}/api/users`, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ name: "Admin Đình Hào", email: "admin@homeser.com", password: "admin" })
-// Lấy dữ liệu từ server về thay vì localStorage
-fetch(`${SERVER_URL}/api/users`)
-    .then(res => res.json())
+       // // KHỞI TẠO TÀI KHOẢN ADMIN MẶC ĐỊNH (Bỏ qua vì backend đã có sẵn admin)
+function initAdminAccount() {
+    console.log("Hệ thống API đã sẵn sàng!");
+}
+
+// Lấy dữ liệu từ server về thay vì localstorage
+function renderAdminPanel() {
+    const tbodyUsers = document.getElementById("admin-user-list");
+    
+    fetch(`${SERVER_URL}/api/users`)
+        .then(res => res.json())
+        .then(users => {
+            if (!users || users.length === 0) {
+                tbodyUsers.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">Chưa có khách hàng nào đăng ký</td></tr>`;
+            } else {
+                tbodyUsers.innerHTML = users.map((u, i) => `
+                    <tr class="hover:bg-slate-700/30 transition">
+                        <td class="p-4 text-slate-400">${i + 1}</td>
+                        <td class="p-4 font-bold ${u.email === 'admin@homeser.com' ? 'text-red-400' : 'text-white'}">${u.name}</td>
+                        <td class="p-4 text-blue-300">${u.email}</td>
+                        <td class="p-4 font-mono text-slate-400">${u.password}</td>
+                        <td class="p-4 text-sm text-slate-400">${u.date || 'Không xác định'}</td>
+                    </tr>
+                `).join('');
+            }
+        })
+        .catch(err => console.error("Lỗi tải danh sách user:", err));
+}
     .then(users => {
         const tbodyUsers = document.getElementById("admin-user-list");
         if (!users || users.length === 0) {
