@@ -2,29 +2,24 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'database.json');
 
-// Khởi tạo file database nếu chưa có
-if (!fs.existsSync(DATA_FILE)) {
-    fs.writeFileSync(DATA_FILE, JSON.stringify({ users: [], orders: [] }, null, 2), 'utf8');
-}
+// Tạo biến lưu trữ dữ liệu trực tiếp trên bộ nhớ RAM của Server
+let database = {
+    users: [],
+    orders: []
+};
 
-// Hàm đọc dữ liệu từ file JSON
+// Hàm đọc dữ liệu từ RAM
 function readData() {
-    try {
-        const content = fs.readFileSync(DATA_FILE, 'utf8');
-        return JSON.parse(content);
-    } catch (e) {
-        return { users: [], orders: [] };
-    }
+    return database;
 }
 
-// Hàm ghi dữ liệu vào file JSON
+// Hàm ghi dữ liệu vào RAM
 function writeData(data) {
-    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+    database = data;
 }
-
 const server = http.createServer((req, res) => {
     // Cấu hình CORS để các máy tính khác trong mạng có thể gửi dữ liệu tới server này
     res.setHeader('Access-Control-Allow-Origin', '*');
