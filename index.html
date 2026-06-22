@@ -253,7 +253,34 @@
                     password: "admin", 
                     date: new Date().toLocaleString('vi-VN')
                 });
-                localStorage.setItem("homeser_users", JSON.stringify(users));
+                // Gửi dữ liệu user lên server qua API
+fetch(`${SERVER_URL}/api/users`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ name: "Admin Đình Hào", email: "admin@homeser.com", password: "admin" })
+// Lấy dữ liệu từ server về thay vì localStorage
+fetch(`${SERVER_URL}/api/users`)
+    .then(res => res.json())
+    .then(users => {
+        const tbodyUsers = document.getElementById("admin-user-list");
+        if (!users || users.length === 0) {
+            tbodyUsers.innerHTML = `<tr><td colspan="5">Chưa có khách hàng nào...</td></tr>`;
+        } else {
+            tbodyUsers.innerHTML = users.map((u, i) => `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td>${u.name}</td>
+                    <td>${u.email}</td>
+                    ...
+                </tr>
+            `).join('');
+        }
+    });
+.then(res => res.json())
+.then(data => console.log("Đã lưu lên server:", data))
+.catch(err => console.error("Lỗi:", err));
             }
         }
 
