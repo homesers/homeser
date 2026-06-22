@@ -33,7 +33,21 @@ const server = http.createServer((req, res) => {
         res.end();
         return;
     }
-
+// ================== ĐƯỜNG DẪN GỐC: TRẢ VỀ GIAO DIỆN WEB (GET /) ==================
+    if (req.url === '/' && req.method === 'GET') {
+        const fs = require('fs');
+        const path = require('path');
+        fs.readFile(path.join(__dirname, 'index.html'), 'utf8', (err, html) => {
+            if (err) {
+                res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+                res.end('Lỗi: Không tìm thấy hoặc không thể tải file index.html trên server!');
+                return;
+            }
+            res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+            res.end(html);
+        });
+        return;
+    }
     // ================== ĐƯỜNG DẪN 1: LẤY DANH SÁCH USER (GET /api/users) ==================
     if (req.url === '/api/users' && req.method === 'GET') {
         const data = readData();
