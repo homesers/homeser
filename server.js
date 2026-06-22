@@ -1,13 +1,13 @@
 const http = require('http');
-const fs = require('fs');
-const path = require('path');
 
 const PORT = process.env.PORT || 3000;
-const DATA_FILE = path.join(__dirname, 'database.json');
 
-// Tạo biến lưu trữ dữ liệu trực tiếp trên bộ nhớ RAM của Server
+// Tạo biến lưu trữ dữ liệu trực tiếp trên bộ nhớ RAM của Server (Không dùng fs ghi file để tránh lỗi Vercel)
 let database = {
-    users: [],
+    users: [
+        // Tạo sẵn tài khoản admin mặc định nếu chưa có
+        { name: "Admin Đình Hào", email: "admin@homeser.com", password: "admin", date: new Date().toLocaleString('vi-VN') }
+    ],
     orders: []
 };
 
@@ -20,93 +20,101 @@ function readData() {
 function writeData(data) {
     database = data;
 }
+
 const server = http.createServer((req, res) => {
-    // Cấu hình CORS để các máy tính khác trong mạng có thể gửi dữ liệu tới server này
+    // Cấu hình CORS để các máy tính khác hoặc frontend (Vercel/chạy local) có thể gửi dữ liệu tới server này
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
+    // Xử lý các yêu cầu OPTIONS (Preflight request trong CORS)
     if (req.method === 'OPTIONS') {
         res.writeHead(204);
         res.end();
         return;
     }
 
-    // API Lấy dữ liệu (GET)
-    if (req.url === '/api/data' && req.method === 'GET') {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(readData()));
+    // ================== ĐƯỜNG DẪN 1: LẤY DANH SÁCH USER (GET /api/users) ==================
+    if (req.url === '/api/users' && req.method === 'GET') {
+        const data = readData();
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify(data.users));
         return;
     }
 
-    // API Đăng ký tài khoản (POST)
-    if (req.url === '/api/register' && req.method === 'POST') {
+    // ================== ĐƯỜNG DẪN 2: THÊM USER MỚI / ĐĂNG KÝ (POST /api/users) ==================
+    if (req.url === '/api/users' && req.method === 'POST') {
         let body = '';
-        req.on('data', chunk => { body += chunk.toString(); });
-        req.on('end', () => {
-            const newUser = JSON.parse(body);
-            let data = readData();
-            
-            // Đảm bảo luôn có tài khoản admin mặc định
-            if (!data.users.find(u => u.email === "admin@homeser.com")) {
-                data.users.push({ name: "Admin Đình Hào", email: "admin@homeser.com", password: "admin", date: "Mặc định" });
-            }
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
 
-            if (data.users.find(u => u.email === newUser.email)) {
-                res.writeHead(400, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ message: 'Email này đã tồn tại!' }));
-            } else {
+        req.on('end', () => {
+            try {
+                const newUser = JSON.parse(body);
+                const data = readData();
+
+                // Kiểm tra xem email đã tồn tại chưa để tránh trùng lặp
+                const userExists = data.users.some(u => u.email === newUser.email);
+                if (userExists) {
+                    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+                    res.end(JSON.stringify({ success: false, message: "Email này đã được đăng ký!" }));
+                    return;
+                }
+
+                // Thêm ngày đăng ký nếu frontend chưa gửi lên
+                if (!newUser.date) {
+                    newUser.date = new Date().toLocaleString('vi-VN');
+                }
+
+                // Đẩy user mới vào mảng và lưu lại trên RAM
                 data.users.push(newUser);
                 writeData(data);
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ message: 'Đăng ký thành công!' }));
+
+                res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ success: true, message: "Đăng ký thành viên thành công!", user: newUser }));
+            } catch (error) {
+                res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ success: false, message: "Dữ liệu gửi lên không hợp lệ!" }));
             }
         });
         return;
     }
 
-    // API Đặt đơn hàng kèm địa chỉ (POST)
-    if (req.url === '/api/checkout' && req.method === 'POST') {
-        let body = '';
-        req.on('data', chunk => { body += chunk.toString(); });
-        req.on('end', () => {
-            const newOrder = JSON.parse(body);
-            let data = readData();
-            data.orders.push(newOrder);
-            writeData(data);
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ message: 'Đặt hàng thành công!' }));
-        });
+    // ================== ĐƯỜNG DẪN 3: LẤY DANH SÁCH ĐƠN HÀNG (GET /api/orders) ==================
+    if (req.url === '/api/orders' && req.method === 'GET') {
+        const data = readData();
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify(data.orders));
         return;
     }
 
-    // API Xóa sạch dữ liệu (Xóa tất cả đơn hoặc tất cả user)
-    if (req.url === '/api/clear' && req.method === 'POST') {
+    // ================== ĐƯỜNG DẪN 4: THÊM ĐƠN HÀNG MỚI (POST /api/orders) ==================
+    if (req.url === '/api/orders' && req.method === 'POST') {
         let body = '';
         req.on('data', chunk => { body += chunk.toString(); });
         req.on('end', () => {
-            const target = JSON.parse(body).target;
-            let data = readData();
-            if (target === 'orders') data.orders = [];
-            if (target === 'users') {
-                data.users = [{ name: "Admin Đình Hào", email: "admin@homeser.com", password: "admin", date: new Date().toLocaleString('vi-VN') }];
+            try {
+                const newOrder = JSON.parse(body);
+                const data = readData();
+                data.orders.push(newOrder);
+                writeData(data);
+
+                res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ success: true, message: "Đặt hàng thành công!" }));
+            } catch (error) {
+                res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ success: false, message: "Dữ liệu đơn hàng lỗi!" }));
             }
-            writeData(data);
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ message: 'Đã xóa dữ liệu trên hệ thống!' }));
         });
         return;
     }
 
-    // Đường dẫn lỗi không tồn tại
-    res.writeHead(404, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ message: 'Không tìm thấy đường dẫn!' }));
+    // Nếu người dùng truy cập bất kỳ đường dẫn nào khác ngoài các API trên
+    res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({ message: "Không tìm thấy đường dẫn!" }));
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-    console.log(`=================================================`);
-    console.log(` SERVER HOMESER ĐANG CHẠY THỰC TẾ!`);
-    console.log(` Cổng hoạt động: http://localhost:${PORT}`);
-    console.log(` Dữ liệu lưu giữ tại file: database.json`);
-    console.log(`=================================================`);
+server.listen(PORT, () => {
+    console.log(`Server đang chạy tại port ${PORT}`);
 });
