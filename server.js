@@ -10,7 +10,13 @@ function firebaseFetch(endpoint, method = 'GET', body = null) {
     return new Promise((resolve, reject) => {
         const url = `${FIREBASE_URL}${endpoint}.json`;
         const payload = body ? JSON.stringify(body) : '';
-        const options = { method: method, headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) } };
+        const options = { 
+            method: method, 
+            headers: { 
+                'Content-Type': 'application/json', 
+                'Content-Length': Buffer.byteLength(payload) 
+            } 
+        };
 
         const req = https.request(url, options, (res) => {
             let data = '';
@@ -30,7 +36,7 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
 
-    // API: LẤY DANH SÁCH USER
+    // 1. API: LẤY DANH SÁCH USER (GET /api/users)
     if (req.url === '/api/users' && req.method === 'GET') {
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
         const data = await firebaseFetch('/users');
@@ -38,7 +44,7 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    // API: ĐĂNG KÝ USER MỚI
+    // 2. API: ĐĂNG KÝ USER MỚI (POST /api/users)
     if (req.url === '/api/users' && req.method === 'POST') {
         let body = '';
         req.on('data', chunk => { body += chunk.toString(); });
@@ -73,9 +79,7 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    // ========================================================
-    // 🔐 API: ĐĂNG NHẬP NGƯỜI DÙNG (POST /api/login)
-    // ========================================================
+    // 3. API: ĐĂNG NHẬP NGƯỜI DÙNG (POST /api/login)
     if (req.url === '/api/login' && req.method === 'POST') {
         let body = '';
         req.on('data', chunk => { body += chunk.toString(); });
@@ -90,17 +94,15 @@ const server = http.createServer(async (req, res) => {
                     return res.end(JSON.stringify({ success: false, message: "Vui lòng nhập đầy đủ Email và Mật khẩu!" }));
                 }
 
-                // Chuyển email thành key an toàn để tìm kiếm trên Firebase
                 const safeEmailKey = email.replace(/\./g, '_');
                 const user = await firebaseFetch(`/users/${safeEmailKey}`);
 
-                // KIỂM TRA ĐÚNG CHUẨN TỪ NGỮ YÊU CẦU: SAI PASSWORD HOẶC GMAIL
+                // Trả về câu thông báo lỗi chuẩn xác theo yêu cầu
                 if (!user || user.password !== password) {
                     res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
                     return res.end(JSON.stringify({ success: false, message: "Sai tài khoản Gmail hoặc Mật khẩu!" }));
                 }
 
-                // Cập nhật thời gian đăng nhập gần nhất
                 user.lastLogin = getVietnamTime();
                 await firebaseFetch(`/users/${safeEmailKey}`, 'PUT', user);
 
@@ -114,7 +116,40 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    // ĐƯỜNG DẪN KHÔNG TỒN TẠI
+    // 4. API: LẤY DANH SÁCH ĐƠN HÀNG (GET /api/orders)
+    if (req.url === '/api/orders' && req.method === 'GET') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        const data = await firebaseFetch('/orders');
+        res.end(JSON.stringify(data ? Object.values(data) : []));
+        return;
+    }
+
+    // 5. API: NHẬN ĐƠN HÀNG MỚI (POST /api/orders)
+    if (req.url === '/api/orders' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => { body += chunk.toString(); });
+        req.on('end', async () => {
+            try {
+                const newOrder = JSON.parse(body);
+                const orderId = 'DH_' + Date.now();
+                
+                newOrder.orderId = orderId;
+                newOrder.orderDate = getVietnamTime();
+                newOrder.status = "Chờ xử lý";
+
+                await firebaseFetch(`/orders/${orderId}`, 'PUT', newOrder);
+
+                res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ success: true, message: "Đặt hàng thành công!", order: newOrder }));
+            } catch (e) {
+                res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ success: false, message: "Dữ liệu đơn hàng không hợp lệ!" }));
+            }
+        });
+        return;
+    }
+
+    // LỖI ĐƯỜNG DẪN KHÔNG TỒN TẠI
     res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ message: "Đường dẫn không tồn tại!" }));
 });
