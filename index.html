@@ -43,7 +43,6 @@
     </header>
 
     <main class="container mx-auto px-4 py-8 min-h-[calc(100vh-180px)]">
-        
         <section id="module-home" class="module-section block text-center py-12">
             <h2 class="text-5xl font-black tracking-tight leading-none mb-6">Trải Nghiệm <span class="text-blue-500">Mua Sắm & Ẩm Thực</span> Tại Gia</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto pt-6">
@@ -82,7 +81,7 @@
             <div class="bg-slate-800/80 rounded-2xl border border-slate-700 overflow-hidden">
                 <table class="w-full text-left text-slate-300">
                     <thead class="bg-slate-900 text-blue-400 text-sm uppercase font-bold">
-                        <tr><th class="p-4">STT</th><th class="p-4">Họ và Tên</th><th class="p-4">Email</th><th class="p-4">Mật khẩu</th><th class="p-4">Ngày đăng ký</th></tr>
+                        <tr><th class="p-4">STT</th><th class="p-4">Họ và Tên</th><th class="p-4">Email</th><th class="p-4">Địa chỉ (Mới)</th><th class="p-4">Mật khẩu</th><th class="p-4">Ngày đăng ký</th></tr>
                     </thead>
                     <tbody id="admin-user-list" class="divide-y divide-slate-700/50"></tbody>
                 </table>
@@ -101,7 +100,7 @@
 
             <form id="form-login" class="space-y-4" onsubmit="handleLogin(event)">
                 <div>
-                    <label class="block text-sm font-bold text-slate-400 mb-1">Email</label>
+                    <label class="block text-sm font-bold text-slate-400 mb-1">Email (@gmail.com)</label>
                     <input type="email" id="login-email" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
                 </div>
                 <div>
@@ -120,8 +119,12 @@
                     <input type="text" id="reg-name" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-slate-400 mb-1">Email</label>
+                    <label class="block text-sm font-bold text-slate-400 mb-1">Email (Bắt buộc dùng @gmail.com)</label>
                     <input type="email" id="reg-email" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-400 mb-1">Địa chỉ nhận hàng</label>
+                    <input type="text" id="reg-address" required placeholder="Số nhà, Phường, Quận..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-slate-400 mb-1">Mật khẩu</label>
@@ -137,15 +140,12 @@
 
     <div id="cart-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-[100] flex justify-center items-center">
         <div class="bg-slate-800 w-full max-w-2xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-slate-700 m-4">
-            
             <div class="flex justify-between items-center p-5 border-b border-slate-700 bg-slate-800/90">
                 <h2 class="text-2xl font-bold text-white"><i class="fa-solid fa-basket-shopping text-blue-500 mr-2"></i> Giỏ hàng của bạn</h2>
                 <button onclick="toggleCart()" class="text-slate-400 hover:text-red-500 transition text-2xl w-10 h-10 flex justify-center items-center rounded-full hover:bg-slate-700">&times;</button>
             </div>
-
             <div class="flex-1 overflow-y-auto p-5 space-y-6 custom-scrollbar">
                 <div id="cart-items-container" class="space-y-4"></div>
-
                 <div class="bg-slate-900 p-5 rounded-xl border border-slate-700 shadow-inner">
                     <div class="flex justify-between text-slate-400 mb-2 font-medium"><span>Tạm tính:</span> <span id="cart-subtotal">0đ</span></div>
                     <div class="flex justify-between text-slate-400 mb-2 font-medium"><span>Phí giao hàng:</span> <span class="text-green-400">Miễn phí</span></div>
@@ -153,7 +153,6 @@
                         <span>Tổng thanh toán:</span> <span id="cart-total" class="text-blue-400">0đ</span>
                     </div>
                 </div>
-
                 <div class="bg-slate-700/40 p-5 rounded-xl border border-slate-600">
                     <h3 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-location-dot text-red-400 mr-2"></i> Thông tin nhận hàng</h3>
                     <form id="checkout-form" onsubmit="processCheckout(event)" class="space-y-4">
@@ -172,37 +171,17 @@
     </div>
 
     <script>
-        const SERVER_URL = "https://homeser-m3h8.vercel.app";
+        const SERVER_URL = "https://homeser-m3h8.vercel.app"; // Link API Server của bạn
 
-        // === CƠ SỞ DỮ LIỆU SẢN PHẨM ===
         const shopDatabase = [
-            { name: "Kính Apple Vision Pro", price: "85.000.000", desc: "Kính thực tế hỗn hợp cao cấp từ Apple.", icon: "fa-vr-cardboard" },
-            { name: "Meta Quest 3", price: "12.500.000", desc: "Kính thực tế ảo thế hệ mới, mượt mà.", icon: "fa-glasses" },
-            { name: "Samsung Galaxy Z Fold", price: "35.000.000", desc: "Điện thoại màn hình gập cao cấp.", icon: "fa-mobile-screen" },
-            { name: "Google Pixel Fold", price: "38.000.000", desc: "Điện thoại gập của Google với camera AI.", icon: "fa-mobile" },
-            { name: "Samsung Galaxy Ring", price: "9.900.000", desc: "Nhẫn thông minh theo dõi sức khỏe.", icon: "fa-ring" },
-            { name: "Oura Ring Gen 4", price: "11.500.000", desc: "Nhẫn theo dõi giấc ngủ chuẩn xác nhất.", icon: "fa-ring" },
-            { name: "Shokz OpenFit", price: "4.500.000", desc: "Tai nghe thiết kế mở, an toàn khi vận động.", icon: "fa-headphones" },
-            { name: "Bose Ultra Open Earbuds", price: "7.900.000", desc: "Tai nghe mở với âm thanh vòm không gian.", icon: "fa-ear-listen" },
-            { name: "Roborock S8 MaxV Ultra", price: "24.000.000", desc: "Robot hút bụi lau nhà thông minh AI.", icon: "fa-robot" },
-            { name: "Ecovacs Deebot X5 Pro", price: "22.500.000", desc: "Robot dọn dẹp cao cấp với camera AI.", icon: "fa-broom" },
-            { name: "Màn hình di động kép OLED", price: "15.000.000", desc: "Gắn kèm laptop tăng hiệu suất làm việc.", icon: "fa-display" },
-            { name: "DJI Mic 2", price: "8.500.000", desc: "Micro thu âm không dây lọc ồn AI.", icon: "fa-microphone" },
-            { name: "Rode Wireless PRO", price: "10.500.000", desc: "Micro chuyên nghiệp, ghi âm 32-bit float.", icon: "fa-microphone-lines" }
+            { name: "Kính Apple Vision Pro", price: "85.000.000", desc: "Kính thực tế hỗn hợp cao cấp.", icon: "fa-vr-cardboard" },
+            { name: "Meta Quest 3", price: "12.500.000", desc: "Kính thực tế ảo thế hệ mới.", icon: "fa-glasses" },
+            { name: "Samsung Galaxy Z Fold", price: "35.000.000", desc: "Điện thoại màn hình gập.", icon: "fa-mobile-screen" },
+            { name: "Google Pixel Fold", price: "38.000.000", desc: "Điện thoại gập của Google.", icon: "fa-mobile" }
         ];
 
-        const foodDatabase = [
-            "Bánh mì nem khoai", "Cà phê trứng Giảng", "Kem bơ Đà Lạt", "Sữa chua trân châu Hạ Long", 
-            "Bánh đồng xu phô mai", "Bánh mì muối ớt", "Bánh tráng phơi sương Trảng Bàng", "Trà mãng cầu xiêm", 
-            "Milo dầm trân châu đường đen", "Chè khoai dẻo Đài Loan", "Bánh tráng chấm sốt tắc", 
-            "Gỏi đu đủ đâm Thái Lan (Ty Thy)", "Kem trứng nướng", "Trà sữa vách ngăn (ly đôi)", 
-            "Bánh sừng bò bản dẹt (Flat Croissant)", "Trà sữa trân châu ô long nướng", "Bún quậy Phú Quốc", 
-            "Nem nướng Nha Trang", "Cà phê bơ cay", "Lẩu xiên que tự chọn", "Bánh tráng nướng Đà Lạt", 
-            "Xôi khúc nóng", "Bánh mì kẹp kem", "Súp cua óc heo Bắc Thảo", "Khô mực hấp nước dừa", 
-            "Trà dâu Đông Du", "Trà sữa đất nung Vân Nam", "Cà phê cốt dừa Cộng"
-        ];
+        const foodDatabase = ["Bánh mì nem khoai", "Cà phê trứng Giảng", "Kem bơ Đà Lạt", "Sữa chua trân châu Hạ Long"];
 
-        // === LOGIC GIỎ HÀNG ===
         let cart = [];
 
         function toggleCart() {
@@ -215,76 +194,56 @@
             }
         }
 
-        function formatCurrency(number) {
-            return number.toLocaleString('vi-VN') + 'đ';
-        }
+        function formatCurrency(number) { return number.toLocaleString('vi-VN') + 'đ'; }
 
-        // Đẩy đồ Shop vào giỏ
         function addShopToCart(name, priceStr, icon) {
             const numericPrice = parseInt(priceStr.replace(/\./g, ''));
             addToCartLogic(name, numericPrice, icon, null);
         }
 
-        // Đẩy đồ Food vào giỏ (Xử lý Size và Giá động)
         function addFoodToCart(name, index) {
             const size = document.getElementById(`food-size-${index}`).value;
-            let price = 35000; // Giá cơ bản
+            let price = 35000;
             if (size === 'M') price += 10000;
             if (size === 'L') price += 20000;
-            
             addToCartLogic(name, price, 'fa-utensils', size);
         }
 
         function addToCartLogic(name, price, icon, size) {
             const existingItem = cart.find(item => item.name === name && item.size === size);
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({ name, price, icon, size, quantity: 1 });
-            }
+            if (existingItem) existingItem.quantity += 1;
+            else cart.push({ name, price, icon, size, quantity: 1 });
             updateCartUI();
-            // Hiệu ứng thông báo nhỏ
-            alert(`✅ Đã thêm: ${name} ${size ? '(Size: '+size+')' : ''} vào giỏ hàng!`);
+            alert(`✅ Đã thêm: ${name} vào giỏ hàng!`);
         }
 
         function removeFromCart(index) {
-            if (confirm(`Bạn có chắc muốn bỏ ${cart[index].name} khỏi giỏ hàng?`)) {
-                cart.splice(index, 1);
-                updateCartUI();
-            }
+            cart.splice(index, 1);
+            updateCartUI();
         }
 
         function updateCartUI() {
             const container = document.getElementById('cart-items-container');
-            let total = 0;
-            let totalItems = 0;
+            let total = 0, totalItems = 0;
             
             if (cart.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center text-slate-400 py-8">
-                        <i class="fa-solid fa-box-open text-4xl mb-3 opacity-50"></i>
-                        <p>Giỏ hàng đang trống. Hãy thêm vài món nhé!</p>
-                    </div>`;
+                container.innerHTML = `<div class="text-center text-slate-400 py-8"><p>Giỏ hàng đang trống.</p></div>`;
             } else {
                 container.innerHTML = cart.map((item, index) => {
                     total += item.price * item.quantity;
                     totalItems += item.quantity;
-                    const sizeBadge = item.size ? `<span class="bg-green-600/20 text-green-400 text-xs px-2 py-1 rounded ml-2 font-bold">Size ${item.size}</span>` : '';
-                    
                     return `
                     <div class="flex justify-between items-center bg-slate-900 p-4 rounded-xl border border-slate-700">
                         <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-2xl text-blue-400">
-                                <i class="fa-solid ${item.icon}"></i>
-                            </div>
+                            <div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-blue-400"><i class="fa-solid ${item.icon}"></i></div>
                             <div>
-                                <h4 class="text-white font-bold">${item.name} ${sizeBadge}</h4>
+                                <h4 class="text-white font-bold">${item.name}</h4>
                                 <p class="text-slate-400 text-sm">${formatCurrency(item.price)} x ${item.quantity}</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-4">
                             <span class="text-white font-bold">${formatCurrency(item.price * item.quantity)}</span>
-                            <button onclick="removeFromCart(${index})" class="text-slate-500 hover:text-red-500 hover:bg-red-500/20 p-2 rounded-lg transition"><i class="fa-solid fa-trash-can"></i></button>
+                            <button onclick="removeFromCart(${index})" class="text-slate-500 hover:text-red-500"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
                     </div>`;
                 }).join('');
@@ -295,83 +254,50 @@
             document.getElementById('cart-total').innerText = formatCurrency(total);
         }
 
-        // Xử lý Gửi Đơn Hàng
         function processCheckout(e) {
-            e.preventDefault(); // Chặn reload trang
-            
-            if (cart.length === 0) {
-                alert("Bạn chưa chọn món nào cả!"); 
-                return;
-            }
-            
-            const name = document.getElementById('cust-name').value;
-            const phone = document.getElementById('cust-phone').value;
-            const address = document.getElementById('cust-address').value;
-            const totalStr = document.getElementById('cart-total').innerText;
-
-            // Hiển thị thông báo chốt đơn lộng lẫy
-            alert(`🎉 ĐẶT HÀNG THÀNH CÔNG!\n\nCảm ơn ${name} đã tin tưởng HomeSer.\nChúng tôi sẽ liên hệ vào số ${phone} và giao hàng đến địa chỉ:\n📍 ${address}\n\nTổng thanh toán: ${totalStr}`);
-            
-            // Dọn sạch giỏ và form sau khi mua
+            e.preventDefault();
+            if (cart.length === 0) return alert("Bạn chưa chọn món nào cả!"); 
+            alert("🎉 ĐẶT HÀNG THÀNH CÔNG!");
             cart = [];
             document.getElementById('checkout-form').reset();
             updateCartUI();
             toggleCart();
         }
 
-        // === HIỂN THỊ GIAO DIỆN SẢN PHẨM ĐÃ TÍCH HỢP NÚT GIỎ HÀNG ===
         function renderProducts() {
-            // Render Shop
             const shopHtml = shopDatabase.map(item => `
-                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700 hover:border-orange-500 transition-all flex flex-col justify-between group">
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700 flex flex-col justify-between">
                     <div>
                         <div class="text-orange-400 text-3xl mb-3"><i class="fa-solid ${item.icon}"></i></div>
                         <h4 class="font-bold text-lg mb-1">${item.name}</h4>
-                        <p class="text-xs text-slate-400 mb-3">${item.desc}</p>
                     </div>
                     <div>
                         <p class="text-orange-400 font-bold mb-3">${item.price} đ</p>
-                        <button onclick="addShopToCart('${item.name}', '${item.price}', '${item.icon}')" class="w-full py-2 bg-slate-700 hover:bg-orange-500 text-white text-sm font-bold rounded-lg transition group-hover:shadow-lg group-hover:shadow-orange-500/30">Thêm vào giỏ</button>
+                        <button onclick="addShopToCart('${item.name}', '${item.price}', '${item.icon}')" class="w-full py-2 bg-slate-700 text-white rounded-lg">Thêm vào giỏ</button>
                     </div>
                 </div>
             `).join('');
             document.getElementById("shop-container").innerHTML = shopHtml;
 
-            // Render Food 
             const foodHtml = foodDatabase.map((name, index) => `
-                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700 hover:border-green-500 transition-all flex flex-col justify-between group">
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700 flex flex-col justify-between">
+                    <div><h4 class="font-bold text-lg mb-3">${name}</h4></div>
                     <div>
-                        <div class="text-green-400 text-3xl mb-3"><i class="fa-solid fa-utensils"></i></div>
-                        <h4 class="font-bold text-lg mb-3">${name}</h4>
-                    </div>
-                    <div>
-                        <select id="food-size-${index}" class="w-full bg-slate-900 text-sm text-slate-300 border border-slate-700 rounded-lg p-2 mb-3 outline-none focus:border-green-500">
+                        <select id="food-size-${index}" class="w-full bg-slate-900 text-slate-300 rounded-lg p-2 mb-3 outline-none">
                             <option value="S">Size S (35.000đ)</option>
                             <option value="M">Size M (+ 10.000đ)</option>
                             <option value="L">Size L (+ 20.000đ)</option>
                         </select>
-                        <button onclick="addFoodToCart('${name}', ${index})" class="w-full py-2 bg-slate-700 hover:bg-green-600 text-white text-sm font-bold rounded-lg transition group-hover:shadow-lg group-hover:shadow-green-500/30">Thêm vào giỏ</button>
+                        <button onclick="addFoodToCart('${name}', ${index})" class="w-full py-2 bg-slate-700 text-white rounded-lg">Thêm vào giỏ</button>
                     </div>
                 </div>
             `).join('');
             document.getElementById("food-container").innerHTML = foodHtml;
         }
 
-        // === CÁC LOGIC CŨ CỦA BẠN GIỮ NGUYÊN BÊN DƯỚI ===
         function switchModule(moduleName) {
             document.querySelectorAll('.module-section').forEach(sec => sec.classList.add('hidden'));
-            const targetSec = document.getElementById(`module-${moduleName}`);
-            if (targetSec) targetSec.classList.remove('hidden');
-
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-blue-600', 'text-white');
-                btn.classList.add('text-slate-400');
-            });
-            const activeBtn = document.getElementById(`btn-nav-${moduleName}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('text-slate-400');
-                activeBtn.classList.add('bg-blue-600', 'text-white');
-            }
+            document.getElementById(`module-${moduleName}`).classList.remove('hidden');
             if (moduleName === 'admin') renderAdminPanel();
         }
 
@@ -380,30 +306,21 @@
             const currentUser = JSON.parse(localStorage.getItem("homeser_current_user"));
 
             if (currentUser) {
-                let adminBtn = currentUser.email === 'admin@homeser.com' 
-                    ? `<button onclick="switchModule('admin')" class="bg-red-500/20 text-red-400 px-4 py-2 rounded-xl text-sm font-bold border border-red-500/30 hover:bg-red-500 hover:text-white transition"><i class="fa-solid fa-gavel"></i> Khu vực Admin</button>` 
-                    : ``;
+                let adminBtn = currentUser.email === 'admin@homeser.com' ? `<button onclick="switchModule('admin')" class="bg-red-500/20 text-red-400 px-4 py-2 rounded-xl text-sm font-bold">Khu vực Admin</button>` : ``;
                 authSection.innerHTML = `
                     ${adminBtn}
-                    <div class="flex items-center space-x-2 bg-slate-800 px-4 py-2 rounded-xl border border-slate-700">
-                        <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
-                        <span class="text-sm font-bold text-white">${currentUser.name}</span>
-                    </div>
-                    <button onclick="logout()" class="p-2.5 bg-slate-800 border border-slate-700 text-slate-400 hover:text-red-500 hover:border-red-500 rounded-xl transition" title="Đăng xuất"><i class="fa-solid fa-right-from-bracket"></i></button>
+                    <div class="flex items-center space-x-2 bg-slate-800 px-4 py-2 rounded-xl text-white font-bold">${currentUser.name}</div>
+                    <button onclick="logout()" class="p-2.5 bg-slate-800 text-red-500 rounded-xl"><i class="fa-solid fa-right-from-bracket"></i></button>
                 `;
             } else {
-                authSection.innerHTML = `
-                    <button onclick="openAuthModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-bold transition flex items-center space-x-2"><i class="fa-solid fa-user"></i> <span>Đăng nhập</span></button>
-                `;
+                authSection.innerHTML = `<button onclick="openAuthModal()" class="bg-blue-600 text-white px-5 py-2 rounded-xl text-sm font-bold">Đăng nhập</button>`;
             }
         }
 
         function logout() {
-            if(confirm("Bạn có chắc chắn muốn đăng xuất?")) {
-                localStorage.removeItem("homeser_current_user");
-                switchModule('home');
-                checkLoginStatus();
-            }
+            localStorage.removeItem("homeser_current_user");
+            switchModule('home');
+            checkLoginStatus();
         }
 
         function openAuthModal() { document.getElementById("auth-modal").classList.remove('hidden'); }
@@ -412,21 +329,21 @@
         function toggleAuthTab(tab) {
             document.getElementById("form-login").classList.toggle('hidden', tab !== 'login');
             document.getElementById("form-register").classList.toggle('hidden', tab !== 'register');
-            document.getElementById("tab-login").className = tab === 'login' ? "text-xl font-bold text-blue-500 pb-2 border-b-2 border-blue-500" : "text-xl font-bold text-slate-500 hover:text-white pb-2";
-            document.getElementById("tab-register").className = tab === 'register' ? "text-xl font-bold text-blue-500 pb-2 border-b-2 border-blue-500" : "text-xl font-bold text-slate-500 hover:text-white pb-2";
         }
 
-        function togglePasswordVisibility(inputId, iconElement) {
+        function togglePasswordVisibility(inputId, icon) {
             const input = document.getElementById(inputId);
-            if (input.type === "password") {
-                input.type = "text";
-                iconElement.classList.remove("fa-eye");
-                iconElement.classList.add("fa-eye-slash", "text-blue-400");
-            } else {
-                input.type = "password";
-                iconElement.classList.add("fa-eye");
-                iconElement.classList.remove("fa-eye-slash", "text-blue-400");
-            }
+            input.type = input.type === "password" ? "text" : "password";
+        }
+
+        // ==========================================
+        // 🚨 CHỨC NĂNG KIỂM TRA LOGIC EMAIL @GMAIL.COM 
+        // ==========================================
+        function validateGmail(email) {
+            // Cho phép tài khoản admin
+            if(email === "admin@homeser.com") return true; 
+            // Bắt buộc kết thúc bằng @gmail.com
+            return email.toLowerCase().endsWith("@gmail.com"); 
         }
 
         function handleLogin(e) {
@@ -434,47 +351,47 @@
             const email = document.getElementById("login-email").value;
             const pass = document.getElementById("login-pass").value;
 
+            if (!validateGmail(email)) {
+                return alert("❌ Hệ thống chỉ chấp nhận đăng nhập bằng tài khoản @gmail.com!");
+            }
+
             fetch(`${SERVER_URL}/api/users`)
                 .then(res => res.json())
                 .then(users => {
                     const foundUser = users.find(u => u.email === email && u.password === pass);
                     if (foundUser) {
                         localStorage.setItem("homeser_current_user", JSON.stringify(foundUser));
-                        closeAuthModal();
-                        checkLoginStatus();
-                        alert("Đăng nhập thành công!");
-                    } else {
-                        alert("Sai email hoặc mật khẩu!");
-                    }
+                        closeAuthModal(); checkLoginStatus(); alert("Đăng nhập thành công!");
+                    } else alert("Sai email hoặc mật khẩu!");
                 })
                 .catch(err => alert("Lỗi kết nối Server!"));
         }
 
         function handleRegister(e) {
             e.preventDefault();
+            const email = document.getElementById("reg-email").value;
+
+            if (!validateGmail(email)) {
+                return alert("❌ Vui lòng sử dụng địa chỉ email @gmail.com để đăng ký!");
+            }
+
             const newUser = {
                 name: document.getElementById("reg-name").value,
-                email: document.getElementById("reg-email").value,
-                password: document.getElementById("reg-pass").value
+                email: email,
+                password: document.getElementById("reg-pass").value,
+                address: document.getElementById("reg-address").value // <-- THÊM ĐỊA CHỈ Ở ĐÂY
             };
 
             fetch(`${SERVER_URL}/api/users`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newUser)
-            })
-            .then(res => res.json())
-            .then(data => {
+            }).then(res => res.json()).then(data => {
                 if (data.success) {
                     alert("Đăng ký thành công! Hãy tiến hành đăng nhập.");
                     toggleAuthTab('login');
-                    document.getElementById("login-email").value = newUser.email;
-                    document.getElementById("login-pass").value = newUser.password;
-                } else {
-                    alert(data.message); 
-                }
-            })
-            .catch(err => alert("Lỗi kết nối Server!"));
+                } else alert(data.message); 
+            }).catch(err => alert("Lỗi kết nối Server!"));
         }
 
         function renderAdminPanel() {
@@ -483,22 +400,108 @@
                 .then(res => res.json())
                 .then(users => {
                     tbodyUsers.innerHTML = users.map((u, i) => `
-                        <tr class="hover:bg-slate-700/30 transition border-b border-slate-700/50">
-                            <td class="p-4 text-slate-400 font-mono">${i + 1}</td>
-                            <td class="p-4 font-bold ${u.email === 'admin@homeser.com' ? 'text-red-400' : 'text-white'}">${u.name}</td>
-                            <td class="p-4 text-blue-300 font-mono">${u.email}</td>
-                            <td class="p-4 font-mono text-slate-400">${u.password}</td>
+                        <tr class="border-b border-slate-700/50">
+                            <td class="p-4 text-slate-400">${i + 1}</td>
+                            <td class="p-4 font-bold text-white">${u.name}</td>
+                            <td class="p-4 text-blue-300">${u.email}</td>
+                            <td class="p-4 text-green-400">${u.address || 'Chưa cung cấp'}</td>
+                            <td class="p-4 text-slate-400">${u.password}</td>
                             <td class="p-4 text-sm text-slate-400">${u.date || 'Không xác định'}</td>
                         </tr>
                     `).join('');
                 });
         }
 
-        // Init web
-        window.onload = () => {
-            renderProducts();
-            checkLoginStatus();
-        };
+        window.onload = () => { renderProducts(); checkLoginStatus(); };
     </script>
 </body>
 </html>
+Bước 2: Cập nhật lại Backend (server.js) để lưu Địa chỉ
+Bạn mở file server.js trên Github, xóa hết đi và dán đè đoạn code này vào. Đoạn code này đã được cấu hình để Backend nhận address từ Frontend và lưu chung vào bảng dữ liệu:
+
+JavaScript
+const http = require('http');
+const https = require('https');
+
+const PORT = process.env.PORT || 3000;
+const FIREBASE_URL = "https://homeser-93db3-default-rtdb.asia-southeast1.firebasedatabase.app";
+
+function getVietnamTime() { return new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }); }
+
+function firebaseFetch(endpoint, method = 'GET', body = null) {
+    return new Promise((resolve, reject) => {
+        const url = `${FIREBASE_URL}${endpoint}.json`;
+        const payload = body ? JSON.stringify(body) : '';
+        const options = { method: method, headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) } };
+
+        const req = https.request(url, options, (res) => {
+            let data = '';
+            res.on('data', (chunk) => { data += chunk; });
+            res.on('end', () => { try { resolve(JSON.parse(data)); } catch (e) { resolve(data); } });
+        });
+        req.on('error', (err) => { resolve(null); });
+        if (body) req.write(payload);
+        req.end();
+    });
+}
+
+const server = http.createServer(async (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
+
+    // XỬ LÝ LẤY DANH SÁCH USER
+    if (req.url === '/api/users' && req.method === 'GET') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        const data = await firebaseFetch('/users');
+        res.end(JSON.stringify(data ? Object.values(data) : []));
+        return;
+    }
+
+    // XỬ LÝ ĐĂNG KÝ USER MỚI (Lưu Địa chỉ & Chặn email rác)
+    if (req.url === '/api/users' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => { body += chunk.toString(); });
+        req.on('end', async () => {
+            try {
+                const newUser = JSON.parse(body);
+
+                // KIỂM TRA ĐUÔI @GMAIL TẠI SERVER LUÔN CHO CHẮC CHẮN
+                if (!newUser.email.toLowerCase().endsWith("@gmail.com")) {
+                    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+                    return res.end(JSON.stringify({ success: false, message: "Hệ thống chỉ chấp nhận email @gmail.com!" }));
+                }
+
+                const currentData = await firebaseFetch('/users');
+                const users = currentData ? Object.values(currentData) : [];
+
+                if (users.some(u => u.email === newUser.email)) {
+                    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+                    return res.end(JSON.stringify({ success: false, message: "Email này đã được đăng ký!" }));
+                }
+
+                // Gắn thêm các dữ liệu thời gian 
+                newUser.date = getVietnamTime();
+                newUser.lastLogin = "Chưa đăng nhập";
+                
+                // Lưu lên Firebase (Bao gồm cả address từ Frontend gửi sang)
+                const safeEmailKey = newUser.email.replace(/\./g, '_');
+                await firebaseFetch(`/users/${safeEmailKey}`, 'PUT', newUser);
+
+                res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ success: true, message: "Đăng ký thành công!", user: newUser }));
+            } catch (e) {
+                res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ success: false, message: "Dữ liệu đăng ký không đúng!" }));
+            }
+        });
+        return;
+    }
+
+    res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({ message: "Đường dẫn không tồn tại!" }));
+});
+
+server.listen(PORT);
