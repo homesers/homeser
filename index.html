@@ -188,6 +188,14 @@
             const modal = document.getElementById('cart-modal');
             if (modal.classList.contains('hidden')) {
                 modal.classList.remove('hidden');
+                
+                // TỰ ĐỘNG ĐIỀN THÔNG TIN NẾU KHÁCH ĐÃ ĐĂNG NHẬP
+                const currentUser = JSON.parse(localStorage.getItem("homeser_current_user"));
+                if (currentUser) {
+                    if (currentUser.name) document.getElementById('cust-name').value = currentUser.name;
+                    if (currentUser.address) document.getElementById('cust-address').value = currentUser.address;
+                }
+                
                 updateCartUI();
             } else {
                 modal.classList.add('hidden');
@@ -237,7 +245,7 @@
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-blue-400"><i class="fa-solid ${item.icon}"></i></div>
                             <div>
-                                <h4 class="text-white font-bold">${item.name}</h4>
+                                <h4 class="text-white font-bold">${item.name} ${item.size ? `(${item.size})` : ''}</h4>
                                 <p class="text-slate-400 text-sm">${formatCurrency(item.price)} x ${item.quantity}</p>
                             </div>
                         </div>
@@ -254,14 +262,53 @@
             document.getElementById('cart-total').innerText = formatCurrency(total);
         }
 
-        function processCheckout(e) {
+        // ==========================================
+        // 📥 HÀM XỬ LÝ ĐẶT HÀNG GỬI LÊN VERCEL & FIREBASE
+        // ==========================================
+        async function processCheckout(e) {
             e.preventDefault();
-            if (cart.length === 0) return alert("Bạn chưa chọn món nào cả!"); 
-            alert("🎉 ĐẶT HÀNG THÀNH CÔNG!");
-            cart = [];
-            document.getElementById('checkout-form').reset();
-            updateCartUI();
-            toggleCart();
+            
+            if (cart.length === 0) {
+                return alert("Giỏ hàng của bạn đang trống! Vui lòng thêm món trước khi đặt hàng."); 
+            }
+
+            // Lấy thông tin user đăng nhập để biết tài khoản nào đặt hành
+            const currentUser = JSON.parse(localStorage.getItem("homeser_current_user"));
+            const userEmail = currentUser ? currentUser.email : "Khách vãng lai";
+
+            // Đóng gói toàn bộ thông tin giỏ hàng và khách hàng
+            const orderData = {
+                customerName: document.getElementById('cust-name').value,
+                customerPhone: document.getElementById('cust-phone').value,
+                customerAddress: document.getElementById('cust-address').value,
+                orderedByAccount: userEmail,
+                items: cart,
+                totalPrice: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+            };
+
+            try {
+                // Gửi thông tin sang server.js
+                const response = await fetch(`${SERVER_URL}/api/orders`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert("🎉 ĐẶT HÀNG THÀNH CÔNG! Đơn hàng của bạn đã được gửi đến hệ thống.");
+                    cart = []; // Làm trống giỏ hàng
+                    document.getElementById('checkout-form').reset();
+                    updateCartUI();
+                    toggleCart();
+                } else {
+                    alert("❌ Lỗi từ hệ thống: " + result.message);
+                }
+            } catch (err) {
+                alert("❌ Lỗi kết nối đến Server, vui lòng thử lại!");
+                console.error(err);
+            }
         }
 
         function renderProducts() {
@@ -336,13 +383,8 @@
             input.type = input.type === "password" ? "text" : "password";
         }
 
-        // ==========================================
-        // 🚨 CHỨC NĂNG KIỂM TRA LOGIC EMAIL @GMAIL.COM 
-        // ==========================================
         function validateGmail(email) {
-            // Cho phép tài khoản admin
             if(email === "admin@homeser.com") return true; 
-            // Bắt buộc kết thúc bằng @gmail.com
             return email.toLowerCase().endsWith("@gmail.com"); 
         }
 
@@ -379,7 +421,7 @@
                 name: document.getElementById("reg-name").value,
                 email: email,
                 password: document.getElementById("reg-pass").value,
-                address: document.getElementById("reg-address").value // <-- THÊM ĐỊA CHỈ Ở ĐÂY
+                address: document.getElementById("reg-address").value
             };
 
             fetch(`${SERVER_URL}/api/users`, {
