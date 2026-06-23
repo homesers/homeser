@@ -3,301 +3,471 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HomeSer - Trải Nghiệm Mua Sắm & Ẩm Thực</title>
+    <title>HomeSer - Kho Công Nghệ & Siêu Thị Ẩm Thực</title>
+    <!-- Tailwind CSS và Font Awesome Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        html, body { scroll-behavior: smooth; height: 100%; }
-        .dark-glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        html, body { scroll-behavior: smooth; height: 100%; background-color: #0b0f19; }
+        .dark-glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); }
+        .tech-card { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .tech-card:hover { transform: translateY(-5px); border-color: #3b82f6; box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.2); }
+        .food-card { background: linear-gradient(145deg, #1e293b, #111827); border: 1px solid #1f2937; transition: all 0.3s ease; }
+        .food-card:hover { transform: translateY(-3px); border-color: #f59e0b; box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.15); }
+        ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 9999px; }
+        .modal-blur { backdrop-filter: blur(8px); background-color: rgba(0, 0, 0, 0.75); }
     </style>
 </head>
-<body class="bg-[#0f172a] text-[#f8fafc] font-sans antialiased relative min-h-screen">
+<body class="text-[#f8fafc] font-sans antialiased relative min-h-screen flex flex-col justify-between">
 
+    <!-- CONTAINER CHỨA THÔNG BÁO NỔI (TOAST NOTIFICATION) -->
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
 
+    <!-- HEADER / NAVIGATION -->
     <header class="dark-glass text-white shadow-xl p-4 sticky top-0 z-40 border-b border-slate-800">
         <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchModule('home')">
-                <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-lg flex items-center justify-center">
-                    <i class="fa-solid fa-house-laptop text-xl"></i>
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="scrollToSection('hero')">
+                <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-lg flex items-center justify-center shadow-blue-600/30">
+                    <i class="fa-solid fa-layer-group text-xl"></i>
                 </div>
                 <h1 class="text-xl font-black tracking-tight"><span class="text-blue-500">Home</span><span>Ser</span></h1>
             </div>
             
-            <nav class="hidden md:flex bg-slate-900/60 p-1 rounded-full border border-slate-700/50">
-                <button onclick="switchModule('home')" id="btn-nav-home" class="px-5 py-2 rounded-full text-sm font-bold bg-blue-600 text-white transition">Home</button>
-                <button onclick="switchModule('shop')" id="btn-nav-shop" class="px-5 py-2 rounded-full text-sm font-bold text-slate-400 hover:text-white transition">Shop</button>
-                <button onclick="switchModule('food')" id="btn-nav-food" class="px-5 py-2 rounded-full text-sm font-bold text-slate-400 hover:text-white transition">Food</button>
-                <button onclick="switchModule('contact')" id="btn-nav-contact" class="px-5 py-2 rounded-full text-sm font-bold text-slate-400 hover:text-white transition">Liên hệ</button>
+            <nav class="hidden md:flex bg-slate-950 p-1 rounded-full border border-slate-800">
+                <button onclick="scrollToSection('hero')" class="px-5 py-2 rounded-full text-sm font-bold text-slate-300 hover:text-white transition">Tổng Quan</button>
+                <button onclick="scrollToSection('arsenal-section')" class="px-5 py-2 rounded-full text-sm font-bold text-slate-300 hover:text-blue-400 transition flex items-center gap-1"><i class="fa-solid fa-shield-halved text-xs"></i> Khu Vũ Khí</button>
+                <button onclick="scrollToSection('food-section')" class="px-5 py-2 rounded-full text-sm font-bold text-slate-300 hover:text-amber-400 transition flex items-center gap-1"><i class="fa-solid fa-utensils text-xs"></i> Khu Ẩm Thực</button>
+                <button onclick="scrollToSection('contact-section')" class="px-5 py-2 rounded-full text-sm font-bold text-slate-300 hover:text-white transition">Liên Hệ</button>
             </nav>
 
             <div class="flex items-center space-x-4">
-                <button onclick="toggleCart()" class="relative p-2.5 bg-slate-800 rounded-full hover:bg-slate-700 transition">
-                    <i class="fa-solid fa-cart-shopping text-lg"></i>
-                    <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
+                <button onclick="openAuthModal()" id="auth-section" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold px-5 py-2 rounded-xl text-sm transition shadow-md">
+                    <i class="fa-solid fa-user mr-2"></i>Tài khoản
                 </button>
-                <div id="auth-section">
-                    <button onclick="openAuthModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-xl text-sm transition shadow-lg shadow-blue-600/20">
-                        <i class="fa-solid fa-user mr-2"></i>Tài khoản
-                    </button>
-                </div>
             </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-16 text-center">
-        <h2 class="text-4xl md:text-5xl font-black mb-4 tracking-tight">Trải Nghiệm <span class="text-blue-500">Mua Sắm & Ẩm Thực</span> Tại Gia</h2>
-        <p class="text-slate-400 max-w-xl mx-auto text-lg mb-8">Hệ thống cung cấp dịch vụ tiện ích thông minh hàng đầu cho ngôi nhà của bạn.</p>
-        <div class="flex justify-center gap-4">
-            <button onclick="switchModule('shop')" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-6 py-3 rounded-xl font-bold transition">Ghé Cửa Hàng</button>
-            <button onclick="switchModule('food')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition shadow-lg shadow-blue-600/20">Đặt Đồ Ăn Ngay</button>
+    <!-- HERO BANNER -->
+    <section id="hero" class="container mx-auto px-4 py-12 text-center border-b border-slate-800/50">
+        <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs uppercase tracking-widest font-black px-4 py-1.5 rounded-full inline-block mb-4">Hệ Thống Phân Khu Mới Độc Quyền</span>
+        <h2 class="text-4xl md:text-6xl font-black mb-4 tracking-tight leading-tight">Khám Phá Kỷ Nguyên <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-amber-400">Công Nghệ & Ẩm Thực Thực Tế</span></h2>
+        <p class="text-slate-400 max-w-2xl mx-auto text-base md:text-lg mb-8">Bấm trực tiếp vào từng món hàng để xem chi tiết ảnh chụp thực tế và thông tin giới thiệu đầy đủ.</p>
+        <div class="flex flex-wrap justify-center gap-4">
+            <button onclick="scrollToSection('arsenal-section')" class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-3.5 rounded-xl font-bold transition shadow-lg shadow-blue-500/20 flex items-center gap-2"><i class="fa-solid fa-crosshairs"></i> Kho Vũ Khí Nightwing</button>
+            <button onclick="scrollToSection('food-section')" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-3.5 rounded-xl font-bold transition shadow-lg shadow-amber-500/20 flex items-center gap-2"><i class="fa-solid fa-bowl-food"></i> Siêu Thị 50 Món Ăn</button>
         </div>
-    </main>
+    </section>
 
-    <div id="auth-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl shadow-2xl p-6 relative transform scale-95 transition-all duration-300 overflow-hidden">
-            
-            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl transition">
+    <!-- ======================================================== -->
+    <!-- 🛡️ PHÂN KHU 1: KHO VŨ KHÍ & TRANG BỊ NIGHTWING ARSENAL -->
+    <!-- ======================================================== -->
+    <section id="arsenal-section" class="container mx-auto px-4 py-16 border-b border-slate-800/50">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+            <div>
+                <div class="flex items-center gap-2 text-blue-500 font-bold uppercase tracking-wider text-xs mb-2">
+                    <span class="w-2 h-2 rounded-full bg-blue-500"></span> Phân khu số 01
+                </div>
+                <h3 class="text-3xl font-black tracking-tight"><i class="fa-solid fa-bolt text-blue-500 mr-2"></i>NIGHTWING'S ARSENAL TECH</h3>
+                <p class="text-slate-400 mt-2 max-w-xl text-sm">Trang bị tối tân siêu nhẹ, tích hợp trực tiếp vào bộ đồ giúp tối ưu hóa khả năng linh hoạt chuẩn Olympic.</p>
+            </div>
+            <div class="mt-4 md:mt-0 bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-400 font-medium">
+                Tổng số thiết bị: <span class="text-blue-400 font-bold">9 Linh Kiện</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="arsenal-grid">
+            <!-- Dữ liệu được chèn tự động từ Javascript -->
+        </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- 🍜 PHÂN KHU 2: MENU ẨM THỰC ĐA DẠNG 50 MÓN ĂN TƯƠI SỐNG -->
+    <!-- ======================================================== -->
+    <section id="food-section" class="container mx-auto px-4 py-16">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+            <div>
+                <div class="flex items-center gap-2 text-amber-500 font-bold uppercase tracking-wider text-xs mb-2">
+                    <span class="w-2 h-2 rounded-full bg-amber-500"></span> Phân khu số 02
+                </div>
+                <h3 class="text-3xl font-black tracking-tight"><i class="fa-solid fa-fire-burner text-amber-500 mr-2"></i>SIÊU THỊ ẨM THỰC BA SIZE (S / M / L)</h3>
+                <p class="text-slate-400 mt-2 max-w-xl text-sm">Danh sách thực đơn phong phú 50 món ăn chuẩn vị, tùy chọn linh hoạt kích cỡ theo nhu cầu của bạn.</p>
+            </div>
+            <div class="mt-4 md:mt-0 bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-400 font-medium">
+                Hệ thống thực đơn: <span class="text-amber-400 font-bold">50 Món Toàn Diện</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="food-grid">
+            <!-- Dữ liệu 50 món ăn được chèn tự động từ Javascript để tối ưu tải trang -->
+        </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- 🪟 MODAL CHI TIẾT SẢN PHẨM / MÓN ĂN KHU BẤM VÀO -->
+    <!-- ======================================================== -->
+    <div id="detail-modal" class="fixed inset-0 z-50 modal-blur flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden relative transform scale-95 transition-all duration-300 flex flex-col md:flex-row">
+            <button onclick="closeDetailModal()" class="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/80 w-8 h-8 rounded-full flex items-center justify-center z-10 transition">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-
-            <div class="flex justify-center border-b border-slate-800 mb-6">
-                <button type="button" id="tab-login-btn" onclick="switchAuthTab('login')" class="w-1/2 pb-3 text-center text-base font-bold transition-all duration-300 border-b-2 border-blue-500 text-blue-500">
-                    Đăng Nhập
-                </button>
-                <button type="button" id="tab-register-btn" onclick="switchAuthTab('register')" class="w-1/2 pb-3 text-center text-base font-bold transition-all duration-300 border-b-2 border-transparent text-slate-400 hover:text-white">
-                    Đăng Ký
-                </button>
+            <div class="w-full md:w-1/2 h-48 md:h-auto relative bg-slate-950">
+                <img id="modal-img" src="" alt="Hình ảnh sản phẩm" class="w-full h-full object-cover">
             </div>
-
-            <form id="form-login" onsubmit="executeLogin(event)" class="space-y-4">
+            <div class="w-full md:w-1/2 p-6 flex flex-col justify-between">
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Địa chỉ Email (@gmail.com)</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500"><i class="fa-solid fa-envelope"></i></span>
-                        <input type="email" id="login-email" required placeholder="example@gmail.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition">
-                    </div>
+                    <span id="modal-tag" class="text-[10px] uppercase font-black tracking-widest px-2.5 py-1 rounded-md bg-blue-500/20 text-blue-400 inline-block mb-3">Tag</span>
+                    <h4 id="modal-title" class="text-2xl font-black tracking-tight mb-3 text-white">Tên sản phẩm</h4>
+                    <p id="modal-desc" class="text-slate-400 text-sm leading-relaxed mb-4">Mô tả giới thiệu chi tiết...</p>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Mật khẩu</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500"><i class="fa-solid fa-lock"></i></span>
-                        <input type="password" id="login-password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-10 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition">
-                        <button type="button" onclick="togglePasswordVisibility('login-password')" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500 hover:text-slate-300"><i class="fa-solid fa-eye"></i></button>
-                    </div>
+                <div id="modal-pricing-zone" class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                    <!-- Khu vực hiển thị giá size hoặc thông số đặc biệt -->
                 </div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm transition mt-2 shadow-lg shadow-blue-600/20">
-                    Đăng Nhập <i class="fa-solid fa-arrow-right ml-2"></i>
-                </button>
-            </form>
-
-            <form id="form-register" onsubmit="executeRegister(event)" class="space-y-4 hidden">
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Họ và tên</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500"><i class="fa-solid fa-user"></i></span>
-                        <input type="text" id="reg-name" required placeholder="Nguyễn Văn A" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Địa chỉ Email (@gmail.com)</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500"><i class="fa-solid fa-envelope"></i></span>
-                        <input type="email" id="reg-email" required placeholder="username@gmail.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Địa chỉ nhận hàng</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500"><i class="fa-solid fa-location-dot"></i></span>
-                        <input type="text" id="reg-address" required placeholder="Số 123 Đường ABC, TP.HCM" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Mật khẩu</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500"><i class="fa-solid fa-lock"></i></span>
-                        <input type="password" id="reg-password" required placeholder="Tối thiểu 6 ký tự" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-10 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition">
-                        <button type="button" onclick="togglePasswordVisibility('reg-password')" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500 hover:text-slate-300"><i class="fa-solid fa-eye"></i></button>
-                    </div>
-                </div>
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition mt-2 shadow-lg shadow-emerald-600/20">
-                    Tạo Tài Khoản Mới <i class="fa-solid fa-user-plus ml-2"></i>
-                </button>
-            </form>
-
+            </div>
         </div>
     </div>
 
+    <!-- MODAL ĐĂNG NHẬP / ĐĂNG KÝ -->
+    <div id="auth-modal" class="fixed inset-0 bg-black/80 z-50 modal-blur flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl shadow-2xl p-6 relative transform scale-95 transition-all duration-300">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl transition"><i class="fa-solid fa-xmark"></i></button>
+            <div class="flex justify-center border-b border-slate-800 mb-6">
+                <button type="button" id="tab-login-btn" onclick="switchAuthTab('login')" class="w-1/2 pb-3 text-center text-sm font-black border-b-2 border-blue-500 text-blue-500 transition-all duration-300">ĐĂNG NHẬP</button>
+                <button type="button" id="tab-register-btn" onclick="switchAuthTab('register')" class="w-1/2 pb-3 text-center text-sm font-black border-b-2 border-transparent text-slate-500 hover:text-white transition-all duration-300">ĐĂNG KÝ</button>
+            </div>
+            <form id="form-login" onsubmit="executeLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Email</label>
+                    <input type="email" id="login-email" required placeholder="name@gmail.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Mật khẩu</label>
+                    <input type="password" id="login-password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-blue-600/20">ĐĂNG NHẬP</button>
+            </form>
+            <form id="form-register" onsubmit="executeRegister(event)" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Họ và tên</label>
+                    <input type="text" id="reg-name" required placeholder="Nguyễn Văn A" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Email (@gmail.com)</label>
+                    <input type="email" id="reg-email" required placeholder="name@gmail.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Địa chỉ nhận hàng</label>
+                    <input type="text" id="reg-address" required placeholder="Địa chỉ đầy đủ của bạn" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Mật khẩu</label>
+                    <input type="password" id="reg-password" required placeholder="Tối thiểu 6 kí tự" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
+                </div>
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20">ĐĂNG KÝ NGAY</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 📞 PHẦN THÔNG TIN LIÊN HỆ ĐỘC QUYỀN (FOOTER CONTACT) -->
+    <!-- ======================================================== -->
+    <footer id="contact-section" class="bg-slate-950 border-t border-slate-800 py-12 text-slate-400 text-sm mt-auto">
+        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 items-center text-center md:text-left">
+            <div>
+                <h5 class="text-white font-black text-lg tracking-tight mb-2"><span class="text-blue-500">Home</span>Ser System</h5>
+                <p class="text-xs text-slate-500">Hệ thống phân phối tiện ích công nghệ và thực đơn ăn uống lưu động cao cấp hàng đầu khu vực.</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-inner flex items-center justify-center space-x-4 max-w-sm mx-auto w-full">
+                <div class="bg-blue-500/10 text-blue-400 p-3 rounded-xl text-xl"><i class="fa-solid fa-id-card-clip"></i></div>
+                <div class="text-left">
+                    <div class="text-xs text-slate-500 uppercase tracking-wider font-bold">Chủ sở hữu hệ thống</div>
+                    <div class="text-base font-black text-white tracking-tight">Nguyễn Đình Hào</div>
+                </div>
+            </div>
+            <div class="flex flex-col items-center md:items-end space-y-2">
+                <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">Đường dây nóng hỗ trợ 24/7</div>
+                <a href="tel:0768152277" class="text-xl font-black text-blue-400 hover:text-blue-300 transition flex items-center gap-2 bg-slate-900 px-4 py-2 rounded-xl border border-slate-800">
+                    <i class="fa-solid fa-phone animate-bounce text-sm text-emerald-400"></i> 0768152277
+                </a>
+            </div>
+        </div>
+        <div class="container mx-auto px-4 text-center mt-8 pt-6 border-t border-slate-900 text-xs text-slate-600">
+            &copy; 2026 HomeSer Ecosystem. Bản quyền giao diện thuộc về Nguyễn Đình Hào.
+        </div>
+    </footer>
+
+    <!-- ======================================================== -->
+    <!-- ⚙️ TOÀN BỘ LOGIC JAVASCRIPT XỬ LÝ DỮ LIỆU ĐỘNG -->
+    <!-- ======================================================== -->
     <script>
-        // Cấu hình URL API Backend chạy trên Vercel của bạn
         const API_BASE_URL = "https://homeser-m3h8-ed2yjzyc8-home-ser.vercel.app/api";
 
-        // --- 1. QUẢN LÝ GIAO DIỆN MODAL ---
-        function openAuthModal() {
-            const modal = document.getElementById('auth-modal');
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            modal.children[0].classList.remove('scale-95');
-            switchAuthTab('login'); // Mặc định mở tab đăng nhập
+        // MẢNG DỮ LIỆU SẢN PHẨM KHU VŨ KHÍ NIGHTWING ARSENAL (HÌNH ẢNH THỰC TẾ)
+        const arsenalData = [
+            { id: 'tech_1', name: 'Escrima Sticks', category: 'Vũ khí chủ lực', desc: 'Cặp gậy đoản côn hộ thân đặc trưng chế tạo từ hợp kim polymer siêu bền, tích hợp công năng phát xung điện phóng tê liệt cao thế khi chạm mục tiêu.', img: 'https://images.unsplash.com/photo-1595181144441-fe6d8faea808?auto=format&fit=crop&w=600&q=80', detail: 'Sát thương phóng điện: 50,000V. Chế độ: Thu gọn/Mở rộng.' },
+            { id: 'tech_2', name: 'Grapple-Sticks', category: 'Thiết bị cơ động', desc: 'Nâng cấp kết nối thông minh cho phép cặp đoản côn ghép nối thành một cây trường côn Bo-Staff hoàn chỉnh, tích hợp súng bắn dây móc kéo chịu lực siêu tải.', img: 'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=600&q=80', detail: 'Tầm xa dây móc: 45 mét. Tải trọng dây tối đa: 350kg.' },
+            { id: 'tech_3', name: 'Wing Dings', category: 'Vũ khí tầm xa', desc: 'Phi tiêu định hình kiểu dáng chim cắt đặc chế. Thiết kế khí động học chuẩn xác giúp đạt gia tốc xoáy cực đại khi ném, có thể cài đặt nổ hoặc phát sóng xung kích.', img: 'https://images.unsplash.com/photo-1534224039826-c7a0dea0e66a?auto=format&fit=crop&w=600&q=80', detail: 'Cơ chế: Cảm biến tiệm cận, kích nổ vi mạch từ xa.' },
+            { id: 'tech_4', name: 'Tri-Weave Kevlar Jumpsuit', category: 'Trang phục giáp bảo vệ', desc: 'Áo giáp liền thân dệt sợi Kevlar ba lớp siêu nhẹ. Kháng hoàn toàn sát thương từ các loại đạn súng ngắn cỡ nhỏ, dao găm sắc bén bạo kích mà vẫn tối ưu nhào lộn.', img: 'https://images.unsplash.com/photo-1508962914676-134849a727f0?auto=format&fit=crop&w=600&q=80', detail: 'Chất liệu: Kevlar lỏng + Sợi Carbon Nano tăng cường cấu trúc.' },
+            { id: 'tech_5', name: 'Insulated Grid', category: 'Hệ thống chống sốc', desc: 'Mạng lưới vi mạch nối đất phân bổ chìm bên trong lớp lót áo giáp, giúp cô lập hoàn toàn cơ thể khỏi các đòn tấn công sốc điện năng cao hoặc ma sát nhiệt lớn.', img: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80', detail: 'Giới hạn chịu tải nhiệt: 850°C. Cách điện tuyệt đối.' },
+            { id: 'tech_6', name: 'Biometric Mask', category: 'Thiết bị trinh sát', desc: 'Mặt nạ Domino công nghệ sinh trắc học ôm sát gương mặt. Tích hợp màn hình kính ngắm HUD siêu nhỏ, camera quét ảnh nhiệt hồng ngoại và liên kết dữ liệu thời gian thực.', img: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=600&q=80', detail: 'Kết nối mạng: Đồng bộ trực tiếp siêu máy tính Batcomputer.' },
+            { id: 'tech_7', name: 'Holographic Forearm Computer', category: 'Thiết bị điều khiển', desc: 'Máy tính đeo tay phát trình chiếu ảnh holographic không gian trực quan. Hỗ trợ bẻ khóa tường lửa, phân tích hiện trường kỹ thuật số cấp tốc tại hiện trường.', img: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80', detail: 'Hệ điều hành: Mã hóa lượng tử độc quyền chống định vị.' },
+            { id: 'tech_8', name: 'Sonic & EMP Emitters', category: 'Thiết bị áp chế', desc: 'Bộ phát sóng âm tần số cao gây choáng váng diện rộng kết hợp xung điện từ EMP cực đại, làm vô hiệu hóa lập tức mạng lưới camera và hệ thống an ninh khu vực.', img: 'https://images.unsplash.com/photo-1544256718-3bcf237f3974?auto=format&fit=crop&w=600&q=80', detail: 'Bán kính tác động EMP: 15 mét xung quanh vị trí kích hoạt.' },
+            { id: 'tech_9', name: 'Smoke & Gas Pellets', category: 'Thiết bị tẩu thoát', desc: 'Viên nén tạo khói ngụy trang và khí gây mê tức thì. Giải pháp hoàn hảo để cắt đuôi lính bắn tỉa hoặc kiến tạo cơ hội tẩu thoát an toàn khi bị bao vây.', img: 'https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&w=600&q=80', detail: 'Thời gian phủ khói dày đặc: Chỉ trong vòng 0.8 giây.' }
+        ];
+
+        // DANH SÁCH CHUẨN ĐẦY ĐỦ 50 MÓN ĂN FRONTEND KHÔNG BỎ SÓT BẤT KỲ MÓN NÀO
+        const foodNames = [
+            "Bánh tráng trộn", "Mì gói trộn tóp mỡ", "Trứng ngâm tương", "Bánh mì nướng muối ớt", "Xoài lắc",
+            "Bột chiên", "Chè chuối chưng", "Bắp xào bơ hành", "Khoai lang lắc phô mai", "Sữa tươi trân châu đường đen",
+            "Trứng cuộn Hàn Quốc", "Ba chỉ heo nướng mật ong", "Đậu hũ sốt cà chua", "Canh trứng cà chua", "Gà rán sốt tỏi cay",
+            "Nấm kim châm xào bơ tỏi", "Bánh tráng nướng chảo", "Milo dầm đá", "Chân gà sả tắc", "Gỏi tai heo dưa leo",
+            "Thạch rau câu dừa", "Trà chanh sả", "Bánh tai yến", "Cơm chiên tỏi trứng", "Bánh khoai mỡ chiên",
+            "Ức gà áp chảo sốt tiêu", "Hàu nướng chén bạc", "Chuối nếp nướng", "Bông cải xanh xào tỏi", "Canh rong biển thịt băm",
+            "Kimchi cải thảo", "Rau muống xào tỏi", "Bánh khoai tây nghiền chiên xù", "Sườn non ram mặn ngọt", "Tôm ram thịt ba rọi",
+            "Chả lụa kho tiêu", "Salad ức gà sốt mè rang", "Bánh mì bơ tỏi nướng", "Cá điêu hồng chiên xù", "Thịt băm chưng trứng muối",
+            "Súp ngô thịt gà xé", "Nghêu hấp sả ớt", "Trứng chiên hàu nướng", "Khô mực chiên nước mắm", "Tokbokki phô mai (làm từ bánh tráng)",
+            "Chuối sấy giòn bằng nồi chiên không dầu", "Đậu phộng rang tỏi ớt", "Bánh flan hấp bằng nồi cơm điện", "Kem chuối cốt dừa tự làm", "Trà tắc mật ong đá"
+        ];
+
+        // Bộ từ khóa hình ảnh luân phiên để ảnh Unsplash tải ra nhìn thực tế, hấp dẫn hơn
+        const imgKeywords = ["street-food", "vietnamese-dish", "snack", "asia-food", "local-snack", "dessert", "drink"];
+
+        // Tạo mảng đối tượng 50 món ăn hoàn chỉnh
+        const foodData = foodNames.map((name, index) => {
+            const keyword = imgKeywords[index % imgKeywords.length];
+            return {
+                id: `food_${index + 1}`,
+                name: name,
+                category: "Món ngon truyền thống",
+                desc: `Món ăn ${name} thơm ngon hảo hạng được chế biến nóng hổi ngay tại bếp HomeSer, đảm bảo vệ sinh an toàn thực phẩm tuyệt đối và hương vị đậm đà khó cưỡng.`,
+                img: `https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=500&q=80&sig=${index}`,
+                prices: {
+                    S: (15000 + (index % 5) * 5000),
+                    M: (25000 + (index % 5) * 5000),
+                    L: (35000 + (index % 5) * 5000)
+                }
+            };
+        });
+
+        // --- KHỞI TẠO VÀ HIỂN THỊ DỮ LIỆU ---
+        window.addEventListener('DOMContentLoaded', () => {
+            renderArsenal();
+            renderFood();
+            checkUserSession();
+        });
+
+        // Đổ dữ liệu khu vũ khí
+        function renderArsenal() {
+            const grid = document.getElementById('arsenal-grid');
+            grid.innerHTML = arsenalData.map(item => `
+                <div class="tech-card rounded-2xl overflow-hidden cursor-pointer" onclick="openDetail('arsenal', '${item.id}')">
+                    <div class="h-48 overflow-hidden bg-slate-950 relative">
+                        <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover opacity-90 hover:opacity-100 transition duration-500">
+                        <span class="absolute bottom-3 left-3 bg-blue-600/90 text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider">${item.category}</span>
+                    </div>
+                    <div class="p-5">
+                        <h4 class="text-xl font-bold mb-2 text-white flex items-center justify-between">
+                            <span>${item.name}</span>
+                            <i class="fa-solid fa-angle-right text-sm text-slate-500"></i>
+                        </h4>
+                        <p class="text-slate-400 text-xs line-clamp-2 leading-relaxed">${item.desc}</p>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function closeAuthModal() {
-            const modal = document.getElementById('auth-modal');
+        // Đổ dữ liệu 50 món ăn
+        function renderFood() {
+            const grid = document.getElementById('food-grid');
+            grid.innerHTML = foodData.map(item => `
+                <div class="food-card rounded-xl overflow-hidden cursor-pointer" onclick="openDetail('food', '${item.id}')">
+                    <div class="h-36 overflow-hidden bg-slate-950 relative">
+                        <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover opacity-85">
+                        <span class="absolute top-2 right-2 bg-amber-500 text-slate-950 text-[9px] font-black px-2 py-0.5 rounded-md uppercase">Hot Menu</span>
+                    </div>
+                    <div class="p-3.5">
+                        <h4 class="text-sm font-black text-slate-100 truncate mb-1.5">${item.name}</h4>
+                        <div class="flex items-center justify-between text-[11px] text-slate-400 bg-slate-950/60 p-2 rounded-lg border border-slate-800">
+                            <div>Size S: <span class="text-amber-400 font-bold">${item.prices.S.toLocaleString()}đ</span></div>
+                            <div class="text-slate-600">|</div>
+                            <div>Size L: <span class="text-orange-400 font-bold">${item.prices.L.toLocaleString()}đ</span></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- MỞ MODAL XEM CHI TIẾT SẢN PHẨM KHU BẤM VÀO ---
+        function openDetail(type, id) {
+            const modal = document.getElementById('detail-modal');
+            const img = document.getElementById('modal-img');
+            const tag = document.getElementById('modal-tag');
+            const title = document.getElementById('modal-title');
+            const desc = document.getElementById('modal-desc');
+            const pricingZone = document.getElementById('modal-pricing-zone');
+
+            if (type === 'arsenal') {
+                const item = arsenalData.find(x => x.id === id);
+                if (!item) return;
+                img.src = item.img;
+                tag.textContent = item.category;
+                tag.className = "text-[10px] uppercase font-black tracking-widest px-2.5 py-1 rounded-md bg-blue-500/20 text-blue-400 inline-block mb-3";
+                title.textContent = item.name;
+                desc.textContent = item.desc;
+                pricingZone.innerHTML = `
+                    <div class="text-xs font-bold text-blue-400 mb-1 uppercase tracking-wider"><i class="fa-solid fa-gears mr-1"></i> Thông số kỹ thuật</div>
+                    <div class="text-xs text-slate-300 leading-relaxed font-mono">${item.detail}</div>
+                `;
+            } else {
+                const item = foodData.find(x => x.id === id);
+                if (!item) return;
+                img.src = item.img;
+                tag.textContent = item.category;
+                tag.className = "text-[10px] uppercase font-black tracking-widest px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-400 inline-block mb-3";
+                title.textContent = item.name;
+                desc.textContent = item.desc;
+                pricingZone.innerHTML = `
+                    <div class="text-xs font-bold text-amber-400 mb-2 uppercase tracking-wider"><i class="fa-solid fa-tags mr-1"></i> Bảng giá kích cỡ món ăn</div>
+                    <div class="space-y-1.5 text-xs text-slate-300">
+                        <div class="flex justify-between"><span>Kích cỡ Nhỏ (Size S):</span><span class="font-bold text-white">${item.prices.S.toLocaleString()} VNĐ</span></div>
+                        <div class="flex justify-between"><span>Kích cỡ Vừa (Size M):</span><span class="font-bold text-white">${item.prices.M.toLocaleString()} VNĐ</span></div>
+                        <div class="flex justify-between"><span>Kích cỡ Lớn (Size L):</span><span class="font-bold text-white">${item.prices.L.toLocaleString()} VNĐ</span></div>
+                    </div>
+                `;
+            }
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.remove('scale-95');
+        }
+
+        function closeDetailModal() {
+            const modal = document.getElementById('detail-modal');
             modal.classList.add('opacity-0', 'pointer-events-none');
             modal.children[0].classList.add('scale-95');
         }
 
-        function togglePasswordVisibility(inputId) {
-            const input = document.getElementById(inputId);
-            input.type = input.type === 'password' ? 'text' : 'password';
+        // --- CÁC HÀM TIỆN ÍCH CUỘN TRANG ---
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // --- 2. HIỆU ỨNG HIGHLIGHT PHÂN CHIA VÙNG ĐĂNG NHẬP / ĐĂNG KÝ RÕ RÀNG ---
-        function switchAuthTab(type) {
-            const loginBtn = document.getElementById('tab-login-btn');
-            const registerBtn = document.getElementById('tab-register-btn');
-            const formLogin = document.getElementById('form-login');
-            const formRegister = document.getElementById('form-register');
-
-            if (type === 'login') {
-                // Đổi trạng thái nút Highlight Tab
-                loginBtn.className = "w-1/2 pb-3 text-center text-base font-bold transition-all duration-300 border-b-2 border-blue-500 text-blue-500";
-                registerBtn.className = "w-1/2 pb-3 text-center text-base font-bold transition-all duration-300 border-b-2 border-transparent text-slate-400 hover:text-white";
-                // Ẩn/Hiện form
-                formLogin.classList.remove('hidden');
-                formRegister.classList.add('hidden');
-            } else {
-                // Đổi trạng thái nút Highlight Tab
-                registerBtn.className = "w-1/2 pb-3 text-center text-base font-bold transition-all duration-300 border-b-2 border-blue-500 text-blue-500";
-                loginBtn.className = "w-1/2 pb-3 text-center text-base font-bold transition-all duration-300 border-b-2 border-transparent text-slate-400 hover:text-white";
-                // Ẩn/Hiện form
-                formRegister.classList.remove('hidden');
-                formLogin.classList.add('hidden');
-            }
-        }
-
-        // --- 3. HÀM TẠO THÔNG BÁO HIỆN ĐẠI (TOAST NOTIFICATION) THAY THẾ ALERT MẶC ĐỊNH ---
+        // --- QUẢN LÝ THÔNG BÁO TOAST ---
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             if (!container) return;
-
             const toast = document.createElement('div');
-            const bgClass = type === 'success' ? 'bg-emerald-500 shadow-emerald-500/10' : 'bg-rose-500 shadow-rose-500/10';
-            const icon = type === 'success' 
-                ? '<i class="fa-solid fa-circle-check text-lg"></i>' 
-                : '<i class="fa-solid fa-circle-xmark text-lg"></i>';
-
-            toast.className = `flex items-center gap-3 px-5 py-3.5 ${bgClass} text-white font-semibold rounded-xl shadow-xl transform translate-x-full transition-all duration-300 opacity-0 pointer-events-auto border border-white/10`;
-            toast.innerHTML = `<span>${icon}</span><span class="text-sm tracking-wide">${message}</span>`;
-            
+            const bgClass = type === 'success' ? 'bg-emerald-500' : 'bg-rose-500';
+            const icon = type === 'success' ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
+            toast.className = `flex items-center gap-3 px-5 py-3.5 ${bgClass} text-white font-bold rounded-xl shadow-2xl transform translate-x-full transition-all duration-300 opacity-0 pointer-events-auto border border-white/10`;
+            toast.innerHTML = `<span>${icon}</span><span class="text-sm">${message}</span>`;
             container.appendChild(toast);
-
-            // Kích hoạt hiệu ứng trượt từ phải vào màn hình
-            setTimeout(() => {
-                toast.classList.remove('translate-x-full', 'opacity-0');
-            }, 10);
-
-            // Tự động thu hồi và hủy thông báo sau 3.5 giây
+            setTimeout(() => toast.classList.remove('translate-x-full', 'opacity-0'), 10);
             setTimeout(() => {
                 toast.classList.add('translate-x-full', 'opacity-0');
                 setTimeout(() => toast.remove(), 300);
             }, 3500);
         }
 
-        // --- 4. XỬ LÝ LOGIC ĐĂNG NHẬP (GỬI LÊN SERVER BACKEND MỚI) ---
+        // --- XỬ LÝ AUTH MODAL (LOGIN / REGISTER) ---
+        function openAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.remove('scale-95');
+            switchAuthTab('login');
+        }
+        function closeAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.children[0].classList.add('scale-95');
+        }
+        function switchAuthTab(type) {
+            const loginBtn = document.getElementById('tab-login-btn');
+            const registerBtn = document.getElementById('tab-register-btn');
+            const formLogin = document.getElementById('form-login');
+            const formRegister = document.getElementById('form-register');
+            if (type === 'login') {
+                loginBtn.className = "w-1/2 pb-3 text-center text-sm font-black border-b-2 border-blue-500 text-blue-500 transition-all duration-300";
+                registerBtn.className = "w-1/2 pb-3 text-center text-sm font-black border-b-2 border-transparent text-slate-500 hover:text-white transition-all duration-300";
+                formLogin.classList.remove('hidden');
+                formRegister.classList.add('hidden');
+            } else {
+                registerBtn.className = "w-1/2 pb-3 text-center text-sm font-black border-b-2 border-blue-500 text-blue-500 transition-all duration-300";
+                loginBtn.className = "w-1/2 pb-3 text-center text-sm font-black border-b-2 border-transparent text-slate-500 hover:text-white transition-all duration-300";
+                formRegister.classList.remove('hidden');
+                formLogin.classList.add('hidden');
+            }
+        }
+
         async function executeLogin(event) {
             event.preventDefault();
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
-
             try {
                 const response = await fetch(`${API_BASE_URL}/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
-
                 const result = await response.json();
-
                 if (response.ok && result.success) {
                     showToast(result.message, 'success');
                     localStorage.setItem('user', JSON.stringify(result.user));
-                    
-                    // Cập nhật giao diện thanh Header sau khi đăng nhập thành công
-                    document.getElementById('auth-section').innerHTML = `
-                        <div class="flex items-center space-x-3 bg-slate-800/80 px-4 py-2 rounded-xl border border-slate-700">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span class="text-sm font-medium text-slate-200">Hi, ${result.user.name}</span>
-                            <button onclick="executeLogout()" class="text-slate-400 hover:text-rose-400 text-xs font-bold pl-2 border-l border-slate-700 transition">Thoát</button>
-                        </div>`;
-                    
+                    checkUserSession();
                     closeAuthModal();
                 } else {
-                    // Trả về chính xác thông báo từ server: "Sai tài khoản Gmail hoặc Mật khẩu!"
                     showToast(result.message || "Đăng nhập thất bại!", 'error');
                 }
-            } catch (error) {
-                showToast("Không thể kết nối tới máy chủ. Vui lòng thử lại sau!", 'error');
+            } catch (e) {
+                showToast("Sai tài khoản Gmail hoặc Mật khẩu!", 'error');
             }
         }
 
-        // --- 5. XỬ LÝ LOGIC ĐĂNG KÝ TÀI KHOẢN MỚI ---
         async function executeRegister(event) {
             event.preventDefault();
             const name = document.getElementById('reg-name').value;
             const email = document.getElementById('reg-email').value;
             const address = document.getElementById('reg-address').value;
             const password = document.getElementById('reg-password').value;
-
             try {
                 const response = await fetch(`${API_BASE_URL}/users`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, address, password })
                 });
-
                 const result = await response.json();
-
                 if (response.ok && result.success) {
                     showToast(result.message, 'success');
-                    // Tự động điền tài khoản vừa tạo qua khung đăng nhập để khách dùng luôn
                     document.getElementById('login-email').value = email;
                     document.getElementById('login-password').value = password;
                     switchAuthTab('login');
                 } else {
                     showToast(result.message || "Đăng ký không thành công!", 'error');
                 }
-            } catch (error) {
-                showToast("Kết nối server thất bại khi đăng ký!", 'error');
+            } catch (e) {
+                showToast("Kết nối server thất bại!", 'error');
             }
         }
 
-        // --- 6. LOGIC ĐĂNG XUẤT ---
         function executeLogout() {
             localStorage.removeItem('user');
             location.reload();
         }
 
-        // --- 7. KIỂM TRA PHIÊN ĐĂNG NHẬP CŨ KHI TẢI LẠI TRANG ---
-        window.addEventListener('DOMContentLoaded', () => {
+        function checkUserSession() {
             const savedUser = localStorage.getItem('user');
             if (savedUser) {
                 const user = JSON.parse(savedUser);
-                document.getElementById('auth-section').innerHTML = `
-                    <div class="flex items-center space-x-3 bg-slate-800/80 px-4 py-2 rounded-xl border border-slate-700">
+                document.getElementById('auth-section').outerHTML = `
+                    <div class="flex items-center space-x-3 bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-800" id="auth-section">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="text-sm font-medium text-slate-200">Hi, ${user.name}</span>
-                        <button onclick="executeLogout()" class="text-slate-400 hover:text-rose-400 text-xs font-bold pl-2 border-l border-slate-700 transition">Thoát</button>
+                        <span class="text-xs font-bold text-slate-300">Hi, ${user.name}</span>
+                        <button onclick="executeLogout()" class="text-slate-500 hover:text-rose-400 text-[11px] font-black pl-2 border-l border-slate-800 transition">THOÁT</button>
                     </div>`;
             }
-        });
-
-        // Hàm giả lập các tính năng chuyển trang/giỏ hàng khác
-        function switchModule(moduleName) { console.log("Chuyển sang module: " + moduleName); }
-        function toggleCart() { console.log("Mở giỏ hàng"); }
+        }
     </script>
 </body>
 </html>
