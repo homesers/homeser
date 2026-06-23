@@ -1,8 +1,3 @@
-Chuẩn luôn Hào ơi! Mình đã lấy file server.js hiện tại của bạn và chèn thêm 2 API xử lý đơn hàng (/api/orders) vào đúng vị trí (ngay phía dưới API đăng ký /api/users và trước thông báo lỗi 404).
-
-Bạn chỉ cần copy toàn bộ đoạn mã bên dưới rồi dán đè sạch vào file server.js trên GitHub của bạn là xong nhé:
-
-JavaScript
 const http = require('http');
 const https = require('https');
 
@@ -35,7 +30,7 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
 
-    // XỬ LÝ LẤY DANH SÁCH USER
+    // API: LẤY DANH SÁCH USER
     if (req.url === '/api/users' && req.method === 'GET') {
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
         const data = await firebaseFetch('/users');
@@ -43,88 +38,83 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    // XỬ LÝ ĐĂNG KÝ USER MỚI (Lưu Địa chỉ & Chặn email rác)
+    // API: ĐĂNG KÝ USER MỚI
     if (req.url === '/api/users' && req.method === 'POST') {
         let body = '';
         req.on('data', chunk => { body += chunk.toString(); });
         req.on('end', async () => {
             try {
                 const newUser = JSON.parse(body);
-
-                // KIỂM TRA ĐUÔI @GMAIL TẠI SERVER LUÔN CHO CHẮC CHẮN
-                if (!newUser.email.toLowerCase().endsWith("@gmail.com")) {
+                if (!newUser.email || !newUser.email.toLowerCase().endsWith("@gmail.com")) {
                     res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
                     return res.end(JSON.stringify({ success: false, message: "Hệ thống chỉ chấp nhận email @gmail.com!" }));
                 }
 
-                const currentData = await firebaseFetch('/users');
-                const users = currentData ? Object.values(currentData) : [];
+                const safeEmailKey = newUser.email.toLowerCase().replace(/\./g, '_');
+                const existingUser = await firebaseFetch(`/users/${safeEmailKey}`);
 
-                if (users.some(u => u.email === newUser.email)) {
+                if (existingUser) {
                     res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
                     return res.end(JSON.stringify({ success: false, message: "Email này đã được đăng ký!" }));
                 }
 
-                // Gắn thêm các dữ liệu thời gian 
                 newUser.date = getVietnamTime();
                 newUser.lastLogin = "Chưa đăng nhập";
                 
-                // Lưu lên Firebase (Bao gồm cả address từ Frontend gửi sang)
-                const safeEmailKey = newUser.email.replace(/\./g, '_');
                 await firebaseFetch(`/users/${safeEmailKey}`, 'PUT', newUser);
 
                 res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
                 res.end(JSON.stringify({ success: true, message: "Đăng ký thành công!", user: newUser }));
             } catch (e) {
                 res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ success: false, message: "Dữ liệu đăng ký không đúng!" }));
+                res.end(JSON.stringify({ success: false, message: "Dữ liệu đăng ký không hợp lệ!" }));
             }
         });
         return;
     }
 
     // ========================================================
-    // 📦 API 1: LẤY DANH SÁCH ĐƠN HÀNG (GET /api/orders)
+    // 🔐 API: ĐĂNG NHẬP NGƯỜI DÙNG (POST /api/login)
     // ========================================================
-    if (req.url === '/api/orders' && req.method === 'GET') {
-        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-        const data = await firebaseFetch('/orders');
-        res.end(JSON.stringify(data ? Object.values(data) : []));
-        return;
-    }
-
-    // ========================================================
-    // 📥 API 2: NHẬN ĐƠN HÀNG MỚI TỪ KHÁCH (POST /api/orders)
-    // ========================================================
-    if (req.url === '/api/orders' && req.method === 'POST') {
+    if (req.url === '/api/login' && req.method === 'POST') {
         let body = '';
         req.on('data', chunk => { body += chunk.toString(); });
         req.on('end', async () => {
             try {
-                const newOrder = JSON.parse(body);
+                const loginData = JSON.parse(body);
+                const email = loginData.email ? loginData.email.toLowerCase().trim() : '';
+                const password = loginData.password;
 
-                // Tạo mã đơn hàng tự động theo thời gian chạy (Ví dụ: DH_1718293812)
-                const orderId = 'DH_' + Date.now();
-                
-                // Bổ sung các trường thông tin quản lý cho đơn hàng
-                newOrder.orderId = orderId;
-                newOrder.orderDate = getVietnamTime();
-                newOrder.status = "Chờ xử lý"; // Trạng thái ban đầu
+                if (!email || !password) {
+                    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+                    return res.end(JSON.stringify({ success: false, message: "Vui lòng nhập đầy đủ Email và Mật khẩu!" }));
+                }
 
-                // Tiến hành ghi trực tiếp dữ liệu vào nhánh /orders/MÃ_ĐƠN_HÀNG trên Firebase
-                await firebaseFetch(`/orders/${orderId}`, 'PUT', newOrder);
+                // Chuyển email thành key an toàn để tìm kiếm trên Firebase
+                const safeEmailKey = email.replace(/\./g, '_');
+                const user = await firebaseFetch(`/users/${safeEmailKey}`);
 
-                res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ success: true, message: "Đặt hàng thành công!", order: newOrder }));
+                // KIỂM TRA ĐÚNG CHUẨN TỪ NGỮ YÊU CẦU: SAI PASSWORD HOẶC GMAIL
+                if (!user || user.password !== password) {
+                    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+                    return res.end(JSON.stringify({ success: false, message: "Sai tài khoản Gmail hoặc Mật khẩu!" }));
+                }
+
+                // Cập nhật thời gian đăng nhập gần nhất
+                user.lastLogin = getVietnamTime();
+                await firebaseFetch(`/users/${safeEmailKey}`, 'PUT', user);
+
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ success: true, message: "Đăng nhập thành công!", user: user }));
             } catch (e) {
-                res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ success: false, message: "Dữ liệu đơn hàng không hợp lệ!" }));
+                res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ success: false, message: "Lỗi xử lý hệ thống!" }));
             }
         });
         return;
     }
 
-    // LỖI ĐƯỜNG DẪN KHÔNG TỒN TẠI
+    // ĐƯỜNG DẪN KHÔNG TỒN TẠI
     res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ message: "Đường dẫn không tồn tại!" }));
 });
