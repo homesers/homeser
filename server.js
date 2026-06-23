@@ -1,17 +1,17 @@
+JavaScript
 const http = require('http');
 const https = require('https');
 
 const PORT = process.env.PORT || 3000;
 
-// Link Firebase Realtime Database chính xác của Hào:
+// Link Firebase Realtime Database của Hào:
 const FIREBASE_URL = "https://homeser-93db3-default-rtdb.asia-southeast1.firebasedatabase.app";
 
-// Hàm lấy thời gian thực chuẩn GMT+7 (Việt Nam)
 function getVietnamTime() {
     return new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
 }
 
-// Hàm hỗ trợ gọi dữ liệu từ Firebase bằng thư viện https lõi (Cực kỳ ổn định trên Vercel)
+// Hàm kết nối Firebase qua HTTPS
 function firebaseFetch(endpoint, method = 'GET', body = null) {
     return new Promise((resolve, reject) => {
         const url = `${FIREBASE_URL}${endpoint}.json`;
@@ -24,43 +24,29 @@ function firebaseFetch(endpoint, method = 'GET', body = null) {
             let data = '';
             res.on('data', (chunk) => { data += chunk; });
             res.on('end', () => {
-                try {
-                    resolve(JSON.parse(data));
-                } catch (e) {
-                    resolve(data);
-                }
+                try { resolve(JSON.parse(data)); } catch (e) { resolve(data); }
             });
         });
 
         req.on('error', (err) => { reject(err); });
-
-        if (body) {
-            req.write(JSON.stringify(body));
-        }
+        if (body) req.write(JSON.stringify(body));
         req.end();
     });
 }
 
 const server = http.createServer(async (req, res) => {
-    // Cấu hình CORS để Frontend kết nối mượt mà không bị chặn chặn trình duyệt
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
     if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
 
-    // ================== API USERS (DANH SÁCH TÀI KHOẢN) ==================
+    // ================== API USERS ==================
     if (req.url === '/api/users' && req.method === 'GET') {
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-        try {
-            const data = await firebaseFetch('/users');
-            const userList = data ? Object.values(data) : [
-                { name: "Admin Đình Hào", email: "admin@homeser.com", password: "admin", date: getVietnamTime(), lastLogin: "Chưa đăng nhập" }
-            ];
-            res.end(JSON.stringify(userList));
-        } catch (error) {
-            res.end(JSON.stringify([{ name: "Admin Đình Hào", email: "admin@homeser.com", password: "admin", date: getVietnamTime(), lastLogin: "Lỗi kết nối DB" }]));
-        }
+        const data = await firebaseFetch('/users');
+        const userList = data ? Object.values(data) : [];
+        res.end(JSON.stringify(userList));
         return;
     }
 
@@ -80,7 +66,6 @@ const server = http.createServer(async (req, res) => {
 
                 newUser.date = getVietnamTime();
                 newUser.lastLogin = "Chưa đăng nhập";
-                
                 const safeEmailKey = newUser.email.replace(/\./g, '_');
                 await firebaseFetch(`/users/${safeEmailKey}`, 'PUT', newUser);
 
@@ -88,13 +73,13 @@ const server = http.createServer(async (req, res) => {
                 res.end(JSON.stringify({ success: true, message: "Đăng ký thành công!", user: newUser }));
             } catch (e) {
                 res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ success: false, message: "Dữ liệu không hợp lệ!" }));
+                res.end(JSON.stringify({ success: false, message: "Dữ liệu lỗi!" }));
             }
         });
         return;
     }
 
-    // ================== API LOGIN (ĐĂNG NHẬP & CẬP NHẬT GMT+7) ==================
+    // ================== API LOGIN (CHỨA ACC ADMIN MẶC ĐỊNH) ==================
     if (req.url === '/api/login' && req.method === 'POST') {
         let body = '';
         req.on('data', chunk => { body += chunk.toString(); });
@@ -103,21 +88,18 @@ const server = http.createServer(async (req, res) => {
                 const credentials = JSON.parse(body);
                 const safeEmailKey = credentials.email.replace(/\./g, '_');
                 
-                // Lấy thông tin user từ Firebase bằng Safe Key
-                const user = await firebaseFetch(`/users/${safeEmailKey}`);
-
-                // Trường hợp nếu là tài khoản Admin mặc định chưa có trên Firebase, tự động tạo luôn
-                if (credentials.email === "admin@homeser.com" && credentials.password === "admin" && !user) {
+                // Kiểm tra acc Admin mặc định nếu Firebase chưa có dữ liệu
+                if (credentials.email === "admin@homeser.com" && credentials.password === "admin") {
                     const adminUser = { name: "Admin Đình Hào", email: "admin@homeser.com", password: "admin", date: getVietnamTime(), lastLogin: getVietnamTime() };
                     await firebaseFetch(`/users/${safeEmailKey}`, 'PUT', adminUser);
                     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
                     return res.end(JSON.stringify({ success: true, user: adminUser }));
                 }
 
+                const user = await firebaseFetch(`/users/${safeEmailKey}`);
                 if (user && user.password === credentials.password) {
                     user.lastLogin = getVietnamTime();
                     await firebaseFetch(`/users/${safeEmailKey}`, 'PUT', user);
-
                     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
                     res.end(JSON.stringify({ success: true, user: user }));
                 } else {
@@ -126,22 +108,17 @@ const server = http.createServer(async (req, res) => {
                 }
             } catch (e) {
                 res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ success: false, message: "Lỗi xử lý dữ liệu đăng nhập!" }));
+                res.end(JSON.stringify({ success: false, message: "Lỗi xử lý!" }));
             }
         });
         return;
     }
 
-    // ================== API ORDERS (ĐƠN HÀNG KÈM ĐỊA CHỈ) ==================
+    // ================== API ORDERS ==================
     if (req.url === '/api/orders' && req.method === 'GET') {
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-        try {
-            const data = await firebaseFetch('/orders');
-            const orderList = data ? Object.values(data) : [];
-            res.end(JSON.stringify(orderList));
-        } catch (error) {
-            res.end(JSON.stringify([]));
-        }
+        const data = await firebaseFetch('/orders');
+        res.end(JSON.stringify(data ? Object.values(data) : []));
         return;
     }
 
@@ -152,23 +129,20 @@ const server = http.createServer(async (req, res) => {
             try {
                 const newOrder = JSON.parse(body);
                 newOrder.date = getVietnamTime();
-                
                 const orderId = 'order_' + Date.now();
                 await firebaseFetch(`/orders/${orderId}`, 'PUT', newOrder);
-
                 res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
                 res.end(JSON.stringify({ success: true, message: "Đặt hàng thành công!" }));
             } catch (e) {
                 res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ success: false, message: "Dữ liệu đơn hàng lỗi!" }));
+                res.end(JSON.stringify({ success: false, message: "Lỗi đơn hàng!" }));
             }
         });
         return;
     }
 
-    // Endpoint không tồn tại
     res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
-    res.end(JSON.stringify({ message: "API endpoint không tồn tại!" }));
+    res.end(JSON.stringify({ message: "Không tìm thấy!" }));
 });
 
-server.listen(PORT, () => { console.log(`Server chạy tại port ${PORT}`); });
+server.listen(PORT);
