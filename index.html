@@ -3,222 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HomeSer - Kho Công Nghệ & Siêu Thị Ẩm Thực</title>
-    <!-- Tailwind CSS và Font Awesome Icons -->
+    <title>Menu Tổng Hợp & Gian Hàng Công Nghệ - Nguyễn Đình Hào</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        html, body { scroll-behavior: smooth; height: 100%; background-color: #0b0f19; }
-        .dark-glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); }
-        .tech-card { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .tech-card:hover { transform: translateY(-5px); border-color: #3b82f6; box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.2); }
-        .food-card { background: linear-gradient(145deg, #1e293b, #111827); border: 1px solid #1f2937; transition: all 0.3s ease; }
-        .food-card:hover { transform: translateY(-3px); border-color: #f59e0b; box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.15); }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 9999px; }
-        .modal-blur { backdrop-filter: blur(8px); background-color: rgba(0, 0, 0, 0.75); }
+        body { font-family: 'Inter', sans-serif; }
+        .modal { transition: opacity 0.25s ease; }
     </style>
 </head>
-<body class="text-[#f8fafc] font-sans antialiased relative min-h-screen flex flex-col justify-between">
+<body class="bg-slate-50 text-slate-800">
 
-    <!-- CONTAINER CHỨA THÔNG BÁO NỔI (TOAST NOTIFICATION) -->
-    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
-
-    <!-- HEADER / NAVIGATION -->
-    <header class="dark-glass text-white shadow-xl p-4 sticky top-0 z-40 border-b border-slate-800">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="scrollToSection('hero')">
-                <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-lg flex items-center justify-center shadow-blue-600/30">
-                    <i class="fa-solid fa-layer-group text-xl"></i>
-                </div>
-                <h1 class="text-xl font-black tracking-tight"><span class="text-blue-500">Home</span><span>Ser</span></h1>
-            </div>
-            
-            <nav class="hidden md:flex bg-slate-950 p-1 rounded-full border border-slate-800">
-                <button onclick="scrollToSection('hero')" class="px-5 py-2 rounded-full text-sm font-bold text-slate-300 hover:text-white transition">Tổng Quan</button>
-                <button onclick="scrollToSection('arsenal-section')" class="px-5 py-2 rounded-full text-sm font-bold text-slate-300 hover:text-blue-400 transition flex items-center gap-1"><i class="fa-solid fa-shield-halved text-xs"></i> Khu Vũ Khí</button>
-                <button onclick="scrollToSection('food-section')" class="px-5 py-2 rounded-full text-sm font-bold text-slate-300 hover:text-amber-400 transition flex items-center gap-1"><i class="fa-solid fa-utensils text-xs"></i> Khu Ẩm Thực</button>
-                <button onclick="scrollToSection('contact-section')" class="px-5 py-2 rounded-full text-sm font-bold text-slate-300 hover:text-white transition">Liên Hệ</button>
+    <!-- HEADER & NAVIGATION -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <h1 class="text-2xl font-bold text-indigo-600 tracking-tight">HÀO PREMIUM STORE</h1>
+            <nav class="flex gap-4">
+                <a href="#khu-vuc-am-thuc" class="px-4 py-2 rounded-full text-sm font-medium bg-orange-50 text-orange-600 hover:bg-orange-100 transition">🍔 Khu Vực Ẩm Thực</a>
+                <a href="#khu-vuc-cong-nghe" class="px-4 py-2 rounded-full text-sm font-medium bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition">💻 Cửa Hàng Công Nghệ</a>
             </nav>
-
-            <div class="flex items-center space-x-4">
-                <button onclick="openAuthModal()" id="auth-section" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold px-5 py-2 rounded-xl text-sm transition shadow-md">
-                    <i class="fa-solid fa-user mr-2"></i>Tài khoản
-                </button>
-            </div>
         </div>
     </header>
 
-    <!-- HERO BANNER -->
-    <section id="hero" class="container mx-auto px-4 py-12 text-center border-b border-slate-800/50">
-        <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs uppercase tracking-widest font-black px-4 py-1.5 rounded-full inline-block mb-4">Hệ Thống Phân Khu Mới Độc Quyền</span>
-        <h2 class="text-4xl md:text-6xl font-black mb-4 tracking-tight leading-tight">Khám Phá Kỷ Nguyên <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-amber-400">Công Nghệ & Ẩm Thực Thực Tế</span></h2>
-        <p class="text-slate-400 max-w-2xl mx-auto text-base md:text-lg mb-8">Bấm trực tiếp vào từng món hàng để xem chi tiết ảnh chụp thực tế và thông tin giới thiệu đầy đủ.</p>
-        <div class="flex flex-wrap justify-center gap-4">
-            <button onclick="scrollToSection('arsenal-section')" class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-3.5 rounded-xl font-bold transition shadow-lg shadow-blue-500/20 flex items-center gap-2"><i class="fa-solid fa-crosshairs"></i> Kho Vũ Khí Nightwing</button>
-            <button onclick="scrollToSection('food-section')" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-3.5 rounded-xl font-bold transition shadow-lg shadow-amber-500/20 flex items-center gap-2"><i class="fa-solid fa-bowl-food"></i> Siêu Thị 50 Món Ăn</button>
-        </div>
-    </section>
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-16">
 
-    <!-- ======================================================== -->
-    <!-- 🛡️ PHÂN KHU 1: KHO VŨ KHÍ & TRANG BỊ NIGHTWING ARSENAL -->
-    <!-- ======================================================== -->
-    <section id="arsenal-section" class="container mx-auto px-4 py-16 border-b border-slate-800/50">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
-            <div>
-                <div class="flex items-center gap-2 text-blue-500 font-bold uppercase tracking-wider text-xs mb-2">
-                    <span class="w-2 h-2 rounded-full bg-blue-500"></span> Phân khu số 01
-                </div>
-                <h3 class="text-3xl font-black tracking-tight"><i class="fa-solid fa-bolt text-blue-500 mr-2"></i>NIGHTWING'S ARSENAL TECH</h3>
-                <p class="text-slate-400 mt-2 max-w-xl text-sm">Trang bị tối tân siêu nhẹ, tích hợp trực tiếp vào bộ đồ giúp tối ưu hóa khả năng linh hoạt chuẩn Olympic.</p>
+        <!-- REGION 1: ẨM THỰC -->
+        <section id="khu-vuc-am-thuc" class="scroll-mt-20">
+            <div class="border-b border-slate-200 pb-5 mb-8">
+                <h2 class="text-3xl font-extrabold text-slate-900">🍔 KHU VỰC ẨM THỰC ĐƯỜNG PHỐ</h2>
+                <p class="text-slate-500 mt-2">Danh sách món ăn vặt và cơm nhà thơm ngon, đầy đủ các kích cỡ Size S - M - L.</p>
             </div>
-            <div class="mt-4 md:mt-0 bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-400 font-medium">
-                Tổng số thiết bị: <span class="text-blue-400 font-bold">9 Linh Kiện</span>
+            
+            <!-- Food Grid Layout -->
+            <div id="food-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Tự động đổ dữ liệu bằng Javascript -->
             </div>
-        </div>
+        </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="arsenal-grid">
-            <!-- Dữ liệu được chèn tự động từ Javascript -->
-        </div>
-    </section>
+        <!-- REGION 2: CÔNG NGHỆ -->
+        <section id="khu-vuc-cong-nghe" class="scroll-mt-20">
+            <div class="border-b border-slate-200 pb-5 mb-8">
+                <h2 class="text-3xl font-extrabold text-slate-900">💻 GIAN HÀNG CÔNG NGHỆ CAO CẤP</h2>
+                <p class="text-slate-500 mt-2">Trải nghiệm thiết bị thông minh ngoài đời thực. Bấm vào từng sản phẩm để xem thông tin chi tiết.</p>
+            </div>
 
-    <!-- ======================================================== -->
-    <!-- 🍜 PHÂN KHU 2: MENU ẨM THỰC ĐA DẠNG 50 MÓN ĂN TƯƠI SỐNG -->
-    <!-- ======================================================== -->
-    <section id="food-section" class="container mx-auto px-4 py-16">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
-            <div>
-                <div class="flex items-center gap-2 text-amber-500 font-bold uppercase tracking-wider text-xs mb-2">
-                    <span class="w-2 h-2 rounded-full bg-amber-500"></span> Phân khu số 02
-                </div>
-                <h3 class="text-3xl font-black tracking-tight"><i class="fa-solid fa-fire-burner text-amber-500 mr-2"></i>SIÊU THỊ ẨM THỰC BA SIZE (S / M / L)</h3>
-                <p class="text-slate-400 mt-2 max-w-xl text-sm">Danh sách thực đơn phong phú 50 món ăn chuẩn vị, tùy chọn linh hoạt kích cỡ theo nhu cầu của bạn.</p>
+            <!-- Tech Grid Layout -->
+            <div id="tech-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Tự động đổ dữ liệu bằng Javascript -->
             </div>
-            <div class="mt-4 md:mt-0 bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-400 font-medium">
-                Hệ thống thực đơn: <span class="text-amber-400 font-bold">50 Món Toàn Diện</span>
-            </div>
-        </div>
+        </section>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="food-grid">
-            <!-- Dữ liệu 50 món ăn được chèn tự động từ Javascript để tối ưu tải trang -->
-        </div>
-    </section>
+    </main>
 
-    <!-- ======================================================== -->
-    <!-- 🪟 MODAL CHI TIẾT SẢN PHẨM / MÓN ĂN KHU BẤM VÀO -->
-    <!-- ======================================================== -->
-    <div id="detail-modal" class="fixed inset-0 z-50 modal-blur flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden relative transform scale-95 transition-all duration-300 flex flex-col md:flex-row">
-            <button onclick="closeDetailModal()" class="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/80 w-8 h-8 rounded-full flex items-center justify-center z-10 transition">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div class="w-full md:w-1/2 h-48 md:h-auto relative bg-slate-950">
-                <img id="modal-img" src="" alt="Hình ảnh sản phẩm" class="w-full h-full object-cover">
+    <!-- CONTACT FOOTER -->
+    <footer class="bg-slate-900 text-white mt-20 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-4">
+            <h3 class="text-xl font-bold tracking-wider text-indigo-400">THÔNG TIN LIÊN HỆ ĐẶT HÀNG</h3>
+            <p class="text-2xl font-extrabold text-white">👤 Đại diện: Nguyễn Đình Hào</p>
+            <p class="text-xl text-emerald-400 font-semibold">📞 Điện thoại / Zalo: 0768 152 277</p>
+            <div class="pt-6 border-t border-slate-800 text-sm text-slate-500">
+                &copy; 2026 Hào Premium Store. Tất cả các hình ảnh có thể tự thay thế bằng liên kết Google Images của bạn.
             </div>
-            <div class="w-full md:w-1/2 p-6 flex flex-col justify-between">
-                <div>
-                    <span id="modal-tag" class="text-[10px] uppercase font-black tracking-widest px-2.5 py-1 rounded-md bg-blue-500/20 text-blue-400 inline-block mb-3">Tag</span>
-                    <h4 id="modal-title" class="text-2xl font-black tracking-tight mb-3 text-white">Tên sản phẩm</h4>
-                    <p id="modal-desc" class="text-slate-400 text-sm leading-relaxed mb-4">Mô tả giới thiệu chi tiết...</p>
-                </div>
-                <div id="modal-pricing-zone" class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                    <!-- Khu vực hiển thị giá size hoặc thông số đặc biệt -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL ĐĂNG NHẬP / ĐĂNG KÝ -->
-    <div id="auth-modal" class="fixed inset-0 bg-black/80 z-50 modal-blur flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl shadow-2xl p-6 relative transform scale-95 transition-all duration-300">
-            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl transition"><i class="fa-solid fa-xmark"></i></button>
-            <div class="flex justify-center border-b border-slate-800 mb-6">
-                <button type="button" id="tab-login-btn" onclick="switchAuthTab('login')" class="w-1/2 pb-3 text-center text-sm font-black border-b-2 border-blue-500 text-blue-500 transition-all duration-300">ĐĂNG NHẬP</button>
-                <button type="button" id="tab-register-btn" onclick="switchAuthTab('register')" class="w-1/2 pb-3 text-center text-sm font-black border-b-2 border-transparent text-slate-500 hover:text-white transition-all duration-300">ĐĂNG KÝ</button>
-            </div>
-            <form id="form-login" onsubmit="executeLogin(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Email</label>
-                    <input type="email" id="login-email" required placeholder="name@gmail.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Mật khẩu</label>
-                    <input type="password" id="login-password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
-                </div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-blue-600/20">ĐĂNG NHẬP</button>
-            </form>
-            <form id="form-register" onsubmit="executeRegister(event)" class="space-y-4 hidden">
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Họ và tên</label>
-                    <input type="text" id="reg-name" required placeholder="Nguyễn Văn A" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Email (@gmail.com)</label>
-                    <input type="email" id="reg-email" required placeholder="name@gmail.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Địa chỉ nhận hàng</label>
-                    <input type="text" id="reg-address" required placeholder="Địa chỉ đầy đủ của bạn" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Mật khẩu</label>
-                    <input type="password" id="reg-password" required placeholder="Tối thiểu 6 kí tự" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
-                </div>
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20">ĐĂNG KÝ NGAY</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- ======================================================== -->
-    <!-- 📞 PHẦN THÔNG TIN LIÊN HỆ ĐỘC QUYỀN (FOOTER CONTACT) -->
-    <!-- ======================================================== -->
-    <footer id="contact-section" class="bg-slate-950 border-t border-slate-800 py-12 text-slate-400 text-sm mt-auto">
-        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 items-center text-center md:text-left">
-            <div>
-                <h5 class="text-white font-black text-lg tracking-tight mb-2"><span class="text-blue-500">Home</span>Ser System</h5>
-                <p class="text-xs text-slate-500">Hệ thống phân phối tiện ích công nghệ và thực đơn ăn uống lưu động cao cấp hàng đầu khu vực.</p>
-            </div>
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-inner flex items-center justify-center space-x-4 max-w-sm mx-auto w-full">
-                <div class="bg-blue-500/10 text-blue-400 p-3 rounded-xl text-xl"><i class="fa-solid fa-id-card-clip"></i></div>
-                <div class="text-left">
-                    <div class="text-xs text-slate-500 uppercase tracking-wider font-bold">Chủ sở hữu hệ thống</div>
-                    <div class="text-base font-black text-white tracking-tight">Nguyễn Đình Hào</div>
-                </div>
-            </div>
-            <div class="flex flex-col items-center md:items-end space-y-2">
-                <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">Đường dây nóng hỗ trợ 24/7</div>
-                <a href="tel:0768152277" class="text-xl font-black text-blue-400 hover:text-blue-300 transition flex items-center gap-2 bg-slate-900 px-4 py-2 rounded-xl border border-slate-800">
-                    <i class="fa-solid fa-phone animate-bounce text-sm text-emerald-400"></i> 0768152277
-                </a>
-            </div>
-        </div>
-        <div class="container mx-auto px-4 text-center mt-8 pt-6 border-t border-slate-900 text-xs text-slate-600">
-            &copy; 2026 HomeSer Ecosystem. Bản quyền giao diện thuộc về Nguyễn Đình Hào.
         </div>
     </footer>
 
-    <!-- ======================================================== -->
-    <!-- ⚙️ TOÀN BỘ LOGIC JAVASCRIPT XỬ LÝ DỮ LIỆU ĐỘNG -->
-    <!-- ======================================================== -->
+    <!-- INTERACTIVE DETAIL MODAL (POPUP CÔNG NGHỆ) -->
+    <div id="tech-modal" class="modal opacity-0 pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl transform transition-all scale-95 duration-300">
+            <div class="relative h-64 bg-slate-100">
+                <img id="modal-img" src="" alt="" class="w-full h-full object-cover">
+                <button onclick="closeModal()" class="absolute top-4 right-4 bg-black/50 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/80 transition">&times;</button>
+            </div>
+            <div class="p-6 space-y-4">
+                <span class="px-2.5 py-1 text-xs font-semibold text-indigo-700 bg-indigo-50 rounded-md uppercase tracking-wider">Hàng Cao Cấp</span>
+                <h3 id="modal-title" class="text-2xl font-bold text-slate-900"></h3>
+                <p id="modal-desc" class="text-slate-600 text-sm leading-relaxed"></p>
+                <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <span class="text-xs text-slate-400">Tình trạng: Chính hãng mới 100%</span>
+                    <a href="tel:0768152277" class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-medium text-sm hover:bg-indigo-700 transition shadow-md shadow-indigo-200">Liên hệ mua hàng</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT DATA & LOGIC -->
     <script>
-        const API_BASE_URL = "https://homeser-m3h8-ed2yjzyc8-home-ser.vercel.app/api";
-
-        // MẢNG DỮ LIỆU SẢN PHẨM KHU VŨ KHÍ NIGHTWING ARSENAL (HÌNH ẢNH THỰC TẾ)
-        const arsenalData = [
-            { id: 'tech_1', name: 'Escrima Sticks', category: 'Vũ khí chủ lực', desc: 'Cặp gậy đoản côn hộ thân đặc trưng chế tạo từ hợp kim polymer siêu bền, tích hợp công năng phát xung điện phóng tê liệt cao thế khi chạm mục tiêu.', img: 'https://images.unsplash.com/photo-1595181144441-fe6d8faea808?auto=format&fit=crop&w=600&q=80', detail: 'Sát thương phóng điện: 50,000V. Chế độ: Thu gọn/Mở rộng.' },
-            { id: 'tech_2', name: 'Grapple-Sticks', category: 'Thiết bị cơ động', desc: 'Nâng cấp kết nối thông minh cho phép cặp đoản côn ghép nối thành một cây trường côn Bo-Staff hoàn chỉnh, tích hợp súng bắn dây móc kéo chịu lực siêu tải.', img: 'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=600&q=80', detail: 'Tầm xa dây móc: 45 mét. Tải trọng dây tối đa: 350kg.' },
-            { id: 'tech_3', name: 'Wing Dings', category: 'Vũ khí tầm xa', desc: 'Phi tiêu định hình kiểu dáng chim cắt đặc chế. Thiết kế khí động học chuẩn xác giúp đạt gia tốc xoáy cực đại khi ném, có thể cài đặt nổ hoặc phát sóng xung kích.', img: 'https://images.unsplash.com/photo-1534224039826-c7a0dea0e66a?auto=format&fit=crop&w=600&q=80', detail: 'Cơ chế: Cảm biến tiệm cận, kích nổ vi mạch từ xa.' },
-            { id: 'tech_4', name: 'Tri-Weave Kevlar Jumpsuit', category: 'Trang phục giáp bảo vệ', desc: 'Áo giáp liền thân dệt sợi Kevlar ba lớp siêu nhẹ. Kháng hoàn toàn sát thương từ các loại đạn súng ngắn cỡ nhỏ, dao găm sắc bén bạo kích mà vẫn tối ưu nhào lộn.', img: 'https://images.unsplash.com/photo-1508962914676-134849a727f0?auto=format&fit=crop&w=600&q=80', detail: 'Chất liệu: Kevlar lỏng + Sợi Carbon Nano tăng cường cấu trúc.' },
-            { id: 'tech_5', name: 'Insulated Grid', category: 'Hệ thống chống sốc', desc: 'Mạng lưới vi mạch nối đất phân bổ chìm bên trong lớp lót áo giáp, giúp cô lập hoàn toàn cơ thể khỏi các đòn tấn công sốc điện năng cao hoặc ma sát nhiệt lớn.', img: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80', detail: 'Giới hạn chịu tải nhiệt: 850°C. Cách điện tuyệt đối.' },
-            { id: 'tech_6', name: 'Biometric Mask', category: 'Thiết bị trinh sát', desc: 'Mặt nạ Domino công nghệ sinh trắc học ôm sát gương mặt. Tích hợp màn hình kính ngắm HUD siêu nhỏ, camera quét ảnh nhiệt hồng ngoại và liên kết dữ liệu thời gian thực.', img: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=600&q=80', detail: 'Kết nối mạng: Đồng bộ trực tiếp siêu máy tính Batcomputer.' },
-            { id: 'tech_7', name: 'Holographic Forearm Computer', category: 'Thiết bị điều khiển', desc: 'Máy tính đeo tay phát trình chiếu ảnh holographic không gian trực quan. Hỗ trợ bẻ khóa tường lửa, phân tích hiện trường kỹ thuật số cấp tốc tại hiện trường.', img: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80', detail: 'Hệ điều hành: Mã hóa lượng tử độc quyền chống định vị.' },
-            { id: 'tech_8', name: 'Sonic & EMP Emitters', category: 'Thiết bị áp chế', desc: 'Bộ phát sóng âm tần số cao gây choáng váng diện rộng kết hợp xung điện từ EMP cực đại, làm vô hiệu hóa lập tức mạng lưới camera và hệ thống an ninh khu vực.', img: 'https://images.unsplash.com/photo-1544256718-3bcf237f3974?auto=format&fit=crop&w=600&q=80', detail: 'Bán kính tác động EMP: 15 mét xung quanh vị trí kích hoạt.' },
-            { id: 'tech_9', name: 'Smoke & Gas Pellets', category: 'Thiết bị tẩu thoát', desc: 'Viên nén tạo khói ngụy trang và khí gây mê tức thì. Giải pháp hoàn hảo để cắt đuôi lính bắn tỉa hoặc kiến tạo cơ hội tẩu thoát an toàn khi bị bao vây.', img: 'https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&w=600&q=80', detail: 'Thời gian phủ khói dày đặc: Chỉ trong vòng 0.8 giây.' }
-        ];
-
-        // DANH SÁCH CHUẨN ĐẦY ĐỦ 50 MÓN ĂN FRONTEND KHÔNG BỎ SÓT BẤT KỲ MÓN NÀO
-        const foodNames = [
+        // --- DANH SÁCH MÓN ĂN (50 MÓN) ---
+        const foodItems = [
             "Bánh tráng trộn", "Mì gói trộn tóp mỡ", "Trứng ngâm tương", "Bánh mì nướng muối ớt", "Xoài lắc",
             "Bột chiên", "Chè chuối chưng", "Bắp xào bơ hành", "Khoai lang lắc phô mai", "Sữa tươi trân châu đường đen",
             "Trứng cuộn Hàn Quốc", "Ba chỉ heo nướng mật ong", "Đậu hũ sốt cà chua", "Canh trứng cà chua", "Gà rán sốt tỏi cay",
@@ -231,243 +104,152 @@
             "Chuối sấy giòn bằng nồi chiên không dầu", "Đậu phộng rang tỏi ớt", "Bánh flan hấp bằng nồi cơm điện", "Kem chuối cốt dừa tự làm", "Trà tắc mật ong đá"
         ];
 
-        // Bộ từ khóa hình ảnh luân phiên để ảnh Unsplash tải ra nhìn thực tế, hấp dẫn hơn
-        const imgKeywords = ["street-food", "vietnamese-dish", "snack", "asia-food", "local-snack", "dessert", "drink"];
+        // --- DANH SÁCH ĐỒ CÔNG NGHỆ (50 MÓN) ---
+        const techItems = [
+            { name: "Kính thực tế hỗn hợp Apple Vision Pro", desc: "Mở ra kỷ nguyên máy tính không gian số với độ phân giải siêu cao và thao tác cử chỉ mượt mà." },
+            { name: "Kính thực tế ảo Meta Quest 3", desc: "Trải nghiệm thế giới thực tế ảo và thực tế tăng cường đỉnh cao gọn nhẹ, không dây phức tạp." },
+            { name: "Điện thoại màn hình gập Samsung Galaxy Z Fold", desc: "Đỉnh cao đa nhiệm với màn hình gập mở linh hoạt, hỗ trợ bút S-Pen tiện lợi." },
+            { name: "Điện thoại màn hình gập Google Pixel Fold", desc: "Màn hình gập mỏng nhẹ kết hợp cùng hệ điều hành thuần Google siêu mượt và camera xuất sắc." },
+            { name: "Điện thoại màn hình gập Huawei Mate XT (gập 3)", desc: "Siêu phẩm đột phá công nghệ với cơ chế gập 3 độc đáo mở rộng không gian hiển thị tối đa." },
+            { name: "Nhẫn thông minh Samsung Galaxy Ring", desc: "Theo dõi sức khỏe tinh tế, đo giấc ngủ và nhịp tim liên tục ngay trên ngón tay của bạn." },
+            { name: "Nhẫn thông minh Oura Ring Gen 4", desc: "Thiết bị đeo thời trang cao cấp chuyên sâu phân tích phục hồi cơ thể và chu kỳ sinh học." },
+            { name: "Tai nghe thiết kế mở Shokz OpenFit", desc: "Thiết kế truyền âm xương giúp bạn vừa thưởng thức âm nhạc vừa nhận biết môi trường xung quanh." },
+            { name: "Tai nghe kẹp tai Bose Ultra Open Earbuds", desc: "Thiết kế dạng kẹp vành tai độc lạ mang lại sự thoải mái tuyệt đối suốt cả ngày dài." },
+            { name: "Robot hút bụi lau nhà Roborock S8 MaxV Ultra", desc: "Trạm sạc toàn năng tự giặt giẻ nước nóng, lực hút siêu khủng dọn sạch mọi ngóc ngách." },
+            { name: "Robot hút bụi Ecovacs Deebot X5 Pro", desc: "Hệ thống AI nhận diện vật cản thông minh và khả năng lau xoáy làm sạch vết bẩn cứng đầu." },
+            { name: "Màn hình di động kép OLED cho laptop", desc: "Mở rộng không gian làm việc gấp đôi với tấm nền OLED rực rỡ, thích hợp di chuyển linh hoạt." },
+            { name: "Micro không dây lọc ồn AI DJI Mic 2", desc: "Âm thanh thu âm trong trẻo, chip AI khử tạp âm môi trường hoàn hảo cho Vlogger." },
+            { name: "Micro không dây Rode Wireless PRO", desc: "Tiêu chuẩn âm thanh chuyên nghiệp dành cho các nhà làm phim với khả năng ghi âm float 32-bit." },
+            { name: "Thiết bị chơi game cầm tay ASUS ROG Ally X", desc: "Cỗ máy chiến game PC cầm tay cấu hình khủng nhất hiện nay, màn hình tần số quét cao." },
+            { name: "Thiết bị chơi game cầm tay Lenovo Legion Go", desc: "Màn hình kích thước lớn sắc nét đi kèm tay cầm có thể tháo rời linh hoạt như Nintendo Switch." },
+            { name: "Vòng đeo tay thông minh Xiaomi Band 9", desc: "Thời lượng pin cực trâu, màn hình AMOLED sáng rõ cùng vô vàn chế độ luyện tập thể thao." },
+            { name: "Đồng hô thông minh Apple Watch Ultra 2", desc: "Vỏ titan bền bỉ chuẩn quân đội, định vị GPS tần số kép chuyên dụng cho dân thám hiểm." },
+            { name: "Đồng hồ thông minh Garmin Fenix 8", desc: "Vị vua của đồng hồ thể thao chuyên sâu, tích hợp bản đồ ngoại tuyến và pin năng lượng mặt trời." },
+            { name: "Loa Bluetooth di động JBL Boombox 3", desc: "Quái vật tiệc tùng với âm bass bùng nổ, thời gian chơi nhạc lên tới 24 giờ liên tục." },
+            { name: "Loa thông minh tích hợp màn hình Amazon Echo Show 8", desc: "Trợ lý ảo Alexa điều khiển nhà thông minh trực quan qua màn hình cảm ứng HD." },
+            { name: "Đèn thông minh đổi màu Philips Hue", desc: "Hệ thống chiếu sáng cao cấp đồng bộ theo nhạc và phim ảnh với 16 triệu màu sắc." },
+            { name: "Sạc dự phòng không dây chuẩn Qi2 Anker MagGo", desc: "Hỗ trợ chuẩn sạc nam châm Qi2 mới nhất, sạc nhanh không dây siêu tiện lợi an toàn." },
+            { name: "Máy đọc sách Amazon Kindle Paperwhite 5", desc: "Màn hình e-ink thân thiện với mắt, chống nước tốt giúp bạn tận hưởng sách mọi lúc mọi nơi." },
+            { name: "Chuột công thái học Logitech MX Master 3S", desc: "Thiết kế bảo vệ cổ tay, con lăn MagSpeed siêu nhanh giúp tăng năng suất làm việc tối đa." },
+            { name: "Bàn phím cơ không dây Keychron K2 Pro", desc: "Cảm giác gõ phím tuyệt vời, dễ dàng custom linh hoạt tương thích hoàn hảo cả Mac và Windows." },
+            { name: "Thiết bị stream Elgato Stream Deck MK.2", desc: "Bàn phím điều khiển macro với các phím LCD trực quan, trợ thủ đắc lực của các Streamer." },
+            { name: "Gimbal chống rung cho điện thoại DJI Osmo Mobile 6", desc: "Chống rung 3 trục mượt mà tích hợp gậy kéo dài giúp quay các góc quay điện ảnh bằng điện thoại." },
+            { name: "Máy quay hành trình GoPro Hero 13 Black", desc: "Camera hành động ghi hình siêu ổn định HyperSmooth, quay video chất lượng 5.3K sắc nét." },
+            { name: "Máy ảnh bỏ túi kiêm gimbal DJI Osmo Pocket 3", desc: "Cảm biến 1 inch ấn tượng cùng màn hình xoay độc đáo, lấy nét cực nhanh trong lòng bàn tay." },
+            { name: "Trạm sạc dự phòng di động đa năng EcoFlow Delta 2", desc: "Nguồn điện dự phòng dung lượng lớn, cung cấp năng lượng ổn định cho các buổi cắm trại dã ngoại." },
+            { name: "Ổ khóa thông minh vân tay Aqara Smart Lock U100", desc: "Mở khóa siêu tốc bằng vân tay, mã số, Apple HomeKey bảo mật an toàn tuyệt đối cho ngôi nhà." },
+            { name: "Máy chiếu di động bỏ túi Samsung The Freestyle Gen 2", desc: "Tự động lấy nét và cân chỉnh khung hình, mang rạp chiếu phim màn hình lớn đi bất cứ đâu." },
+            { name: "Robot thú cưng AI Loona", desc: "Chú robot thông minh đáng yêu biết biểu cảm, tương tác và bảo vệ ngôi nhà như thú cưng thực thụ." },
+            { name: "Gối thông minh chống ngáy Motion Pillow", desc: "Tự động phát hiện tiếng ngáy và bơm phồng túi khí nhẹ nhàng điều chỉnh tư thế đầu của bạn." },
+            { name: "Cân sức khỏe điện tử thông minh Anker Eufy P2 Pro", desc: "Phân tích chi tiết 16 chỉ số cơ thể như tỷ lệ mỡ, cơ xương và đồng bộ trực tiếp qua ứng dụng." },
+            { name: "Bút thông minh ghi chú số hóa Livescribe Symphony", desc: "Tự động chuyển đổi toàn bộ nét chữ viết tay trên giấy thành văn bản số trên điện thoại ngay lập tức." },
+            { name: "Ví thông minh chống thất lạc tích hợp Apple Find My", desc: "Thiết kế mỏng nhẹ sang trọng, dễ dàng định vị tìm kiếm qua ứng dụng radar của iPhone." },
+            { name: "Thiết bị định vị thông minh Apple AirTag", desc: "Hệ sinh thái Find My giúp bạn dễ dàng tìm lại chìa khóa, balo hay đồ dùng thất lạc một cách chính xác." },
+            { name: "Thẻ định vị thông minh Samsung Galaxy SmartTag2", desc: "Định vị khoảng cách xa bằng mạng lưới thiết bị Samsung Galaxy, thiết kế lỗ móc khóa tiện lợi." },
+            { name: "Bàn chải điện thông minh Oral-B iO Series 10", desc: "Công nghệ từ tính êm ái kết hợp AI hướng dẫn chải răng sạch sâu chuẩn nha khoa." },
+            { name: "Máy triệt lông bằng ánh sáng tại nhà Philips Lumea 9000", desc: "Công nghệ IPL loại bỏ lông an toàn, hiệu quả lâu dài ngay tại không gian nhà của bạn." },
+            { name: "Máy sấy tóc siêu tốc kiểm soát nhiệt Dyson Supersonic", desc: "Luồng khí mạnh mẽ sấy khô siêu tốc mà không làm hư tổn tóc nhờ cảm biến kiểm soát nhiệt." },
+            { name: "Máy lọc không khí cá nhân đeo cổ LG PuriCare", desc: "Mang lại luồng không khí trong lành, lọc sạch bụi mịn di động bảo vệ hệ hô hấp mọi lúc mọi nơi." },
+            { name: "Gương thông minh tích hợp màn hình cảm ứng viền LED", desc: "Gương phòng tắm thông minh hiển thị thời tiết, tin tức và điều chỉnh ánh sáng trang điểm hoàn hảo." },
+            { name: "Hộp cơm cắm điện hâm nóng tự động kiểm soát qua app", desc: "Hẹn giờ nấu và hâm nóng bữa trưa thông minh từ xa qua ứng dụng điện thoại tiện lợi." },
+            { name: "Cốc giữ nhiệt tự sưởi ấm điều chỉnh nhiệt độ Ember Mug 2", desc: "Giữ cho ly cà phê hoặc trà của bạn luôn ở mức nhiệt độ lý tưởng nhất suốt cả ngày." },
+            { name: "Máy pha cà phê viên nén tự động Nespresso Vertuo Pop", desc: "Thưởng thức ly cà phê đậm vị phong cách Ý chỉ với một nút bấm nhanh chóng." },
+            { name: "Thiết bị trồng cây trong nhà thủy canh thông minh Click & Grow", desc: "Tự động cung cấp nước và ánh sáng tối ưu giúp bạn dễ dàng trồng rau sạch trong căn hộ." },
+            { name: "Máy tăm nước cầm tay sóng siêu âm Panasonic EW1511", desc: "Tia nước sóng siêu âm mạnh mẽ đánh bật mọi mảng bám cứng đầu trong kẽ răng một cách êm dịu." }
+        ];
 
-        // Tạo mảng đối tượng 50 món ăn hoàn chỉnh
-        const foodData = foodNames.map((name, index) => {
-            const keyword = imgKeywords[index % imgKeywords.length];
-            return {
-                id: `food_${index + 1}`,
-                name: name,
-                category: "Món ngon truyền thống",
-                desc: `Món ăn ${name} thơm ngon hảo hạng được chế biến nóng hổi ngay tại bếp HomeSer, đảm bảo vệ sinh an toàn thực phẩm tuyệt đối và hương vị đậm đà khó cưỡng.`,
-                img: `https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=500&q=80&sig=${index}`,
-                prices: {
-                    S: (15000 + (index % 5) * 5000),
-                    M: (25000 + (index % 5) * 5000),
-                    L: (35000 + (index % 5) * 5000)
-                }
-            };
-        });
-
-        // --- KHỞI TẠO VÀ HIỂN THỊ DỮ LIỆU ---
-        window.addEventListener('DOMContentLoaded', () => {
-            renderArsenal();
-            renderFood();
-            checkUserSession();
-        });
-
-        // Đổ dữ liệu khu vũ khí
-        function renderArsenal() {
-            const grid = document.getElementById('arsenal-grid');
-            grid.innerHTML = arsenalData.map(item => `
-                <div class="tech-card rounded-2xl overflow-hidden cursor-pointer" onclick="openDetail('arsenal', '${item.id}')">
-                    <div class="h-48 overflow-hidden bg-slate-950 relative">
-                        <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover opacity-90 hover:opacity-100 transition duration-500">
-                        <span class="absolute bottom-3 left-3 bg-blue-600/90 text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider">${item.category}</span>
+        // --- RENDER DANH SÁCH ẨM THỰC ---
+        const foodGrid = document.getElementById('food-grid');
+        foodItems.forEach((food, index) => {
+            // Thay thế URL này bằng ảnh thực tế từ link Google Images của bạn nếu cần
+            const fallbackImg = `https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&auto=format&fit=crop&q=60`;
+            
+            foodGrid.innerHTML += `
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition duration-300 border border-slate-100 flex flex-col">
+                    <div class="h-48 w-full bg-slate-100 overflow-hidden relative">
+                        <img src="${fallbackImg}" alt="${food}" class="w-full h-full object-cover hover:scale-105 transition duration-500" loading="lazy">
+                        <span class="absolute top-3 left-3 bg-orange-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">Món Ăn</span>
                     </div>
-                    <div class="p-5">
-                        <h4 class="text-xl font-bold mb-2 text-white flex items-center justify-between">
-                            <span>${item.name}</span>
-                            <i class="fa-solid fa-angle-right text-sm text-slate-500"></i>
-                        </h4>
-                        <p class="text-slate-400 text-xs line-clamp-2 leading-relaxed">${item.desc}</p>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Đổ dữ liệu 50 món ăn
-        function renderFood() {
-            const grid = document.getElementById('food-grid');
-            grid.innerHTML = foodData.map(item => `
-                <div class="food-card rounded-xl overflow-hidden cursor-pointer" onclick="openDetail('food', '${item.id}')">
-                    <div class="h-36 overflow-hidden bg-slate-950 relative">
-                        <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover opacity-85">
-                        <span class="absolute top-2 right-2 bg-amber-500 text-slate-950 text-[9px] font-black px-2 py-0.5 rounded-md uppercase">Hot Menu</span>
-                    </div>
-                    <div class="p-3.5">
-                        <h4 class="text-sm font-black text-slate-100 truncate mb-1.5">${item.name}</h4>
-                        <div class="flex items-center justify-between text-[11px] text-slate-400 bg-slate-950/60 p-2 rounded-lg border border-slate-800">
-                            <div>Size S: <span class="text-amber-400 font-bold">${item.prices.S.toLocaleString()}đ</span></div>
-                            <div class="text-slate-600">|</div>
-                            <div>Size L: <span class="text-orange-400 font-bold">${item.prices.L.toLocaleString()}đ</span></div>
+                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <h3 class="font-bold text-slate-800 text-base line-clamp-2">${food}</h3>
+                        <div>
+                            <p class="text-xs text-slate-400 font-medium mb-2 uppercase tracking-wider">Chọn Kích Cỡ (Size):</p>
+                            <div class="grid grid-cols-3 gap-2">
+                                <label class="cursor-pointer text-center py-1.5 rounded-lg border border-slate-200 text-xs font-semibold hover:bg-orange-50 hover:border-orange-200 block text-slate-600 transition">
+                                    <input type="radio" name="size-${index}" class="hidden peer" checked>
+                                    <span class="peer-checked:text-orange-600">Size S</span>
+                                </label>
+                                <label class="cursor-pointer text-center py-1.5 rounded-lg border border-slate-200 text-xs font-semibold hover:bg-orange-50 hover:border-orange-200 block text-slate-600 transition">
+                                    <input type="radio" name="size-${index}" class="hidden peer">
+                                    <span class="peer-checked:text-orange-600">Size M</span>
+                                </label>
+                                <label class="cursor-pointer text-center py-1.5 rounded-lg border border-slate-200 text-xs font-semibold hover:bg-orange-50 hover:border-orange-200 block text-slate-600 transition">
+                                    <input type="radio" name="size-${index}" class="hidden peer">
+                                    <span class="peer-checked:text-orange-600">Size L</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
-            `).join('');
-        }
+            `;
+        });
 
-        // --- MỞ MODAL XEM CHI TIẾT SẢN PHẨM KHU BẤM VÀO ---
-        function openDetail(type, id) {
-            const modal = document.getElementById('detail-modal');
-            const img = document.getElementById('modal-img');
-            const tag = document.getElementById('modal-tag');
-            const title = document.getElementById('modal-title');
-            const desc = document.getElementById('modal-desc');
-            const pricingZone = document.getElementById('modal-pricing-zone');
+        // --- RENDER DANH SÁCH CÔNG NGHỆ ---
+        const techGrid = document.getElementById('tech-grid');
+        techItems.forEach((tech, index) => {
+            // Thay thế URL này bằng ảnh thực tế từ link Google Images của bạn nếu cần
+            const fallbackTechImg = `https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&auto=format&fit=crop&q=60`;
+            
+            // Chuyển ký tự đặc biệt để an toàn khi truyền vào hàm Javascript
+            const safeTitle = tech.name.replace(/'/g, "\\'");
+            const safeDesc = tech.desc.replace(/'/g, "\\'");
 
-            if (type === 'arsenal') {
-                const item = arsenalData.find(x => x.id === id);
-                if (!item) return;
-                img.src = item.img;
-                tag.textContent = item.category;
-                tag.className = "text-[10px] uppercase font-black tracking-widest px-2.5 py-1 rounded-md bg-blue-500/20 text-blue-400 inline-block mb-3";
-                title.textContent = item.name;
-                desc.textContent = item.desc;
-                pricingZone.innerHTML = `
-                    <div class="text-xs font-bold text-blue-400 mb-1 uppercase tracking-wider"><i class="fa-solid fa-gears mr-1"></i> Thông số kỹ thuật</div>
-                    <div class="text-xs text-slate-300 leading-relaxed font-mono">${item.detail}</div>
-                `;
-            } else {
-                const item = foodData.find(x => x.id === id);
-                if (!item) return;
-                img.src = item.img;
-                tag.textContent = item.category;
-                tag.className = "text-[10px] uppercase font-black tracking-widest px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-400 inline-block mb-3";
-                title.textContent = item.name;
-                desc.textContent = item.desc;
-                pricingZone.innerHTML = `
-                    <div class="text-xs font-bold text-amber-400 mb-2 uppercase tracking-wider"><i class="fa-solid fa-tags mr-1"></i> Bảng giá kích cỡ món ăn</div>
-                    <div class="space-y-1.5 text-xs text-slate-300">
-                        <div class="flex justify-between"><span>Kích cỡ Nhỏ (Size S):</span><span class="font-bold text-white">${item.prices.S.toLocaleString()} VNĐ</span></div>
-                        <div class="flex justify-between"><span>Kích cỡ Vừa (Size M):</span><span class="font-bold text-white">${item.prices.M.toLocaleString()} VNĐ</span></div>
-                        <div class="flex justify-between"><span>Kích cỡ Lớn (Size L):</span><span class="font-bold text-white">${item.prices.L.toLocaleString()} VNĐ</span></div>
+            techGrid.innerHTML += `
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <div class="h-48 w-full bg-slate-100 overflow-hidden relative">
+                            <img src="${fallbackTechImg}" alt="${tech.name}" class="w-full h-full object-cover" loading="lazy">
+                            <span class="absolute top-3 left-3 bg-indigo-600 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">Hi-Tech</span>
+                        </div>
+                        <div class="p-5 space-y-2">
+                            <h3 class="font-bold text-slate-800 text-base line-clamp-1">${tech.name}</h3>
+                            <p class="text-sm text-slate-500 line-clamp-2">${tech.desc}</p>
+                        </div>
                     </div>
-                `;
-            }
+                    <div class="p-5 pt-0">
+                        <button onclick="openModal('${safeTitle}', '${safeDesc}', '${fallbackTechImg}')" class="w-full text-center py-2.5 bg-slate-100 text-slate-700 text-sm font-semibold rounded-xl hover:bg-indigo-600 hover:text-white transition duration-200">
+                            🔍 Xem Chi Tiết
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+
+        // --- CÁC HÀM ĐIỀU KHIỂN POPUP MODAL ---
+        const modal = document.getElementById('tech-modal');
+        const modalContainer = modal.querySelector('.transform');
+
+        function openModal(title, desc, imgSrc) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerText = desc;
+            document.getElementById('modal-img').src = imgSrc;
+            document.getElementById('modal-img').alt = title;
 
             modal.classList.remove('opacity-0', 'pointer-events-none');
-            modal.children[0].classList.remove('scale-95');
+            modalContainer.classList.remove('scale-95');
+            modalContainer.classList.add('scale-100');
         }
 
-        function closeDetailModal() {
-            const modal = document.getElementById('detail-modal');
+        function closeModal() {
             modal.classList.add('opacity-0', 'pointer-events-none');
-            modal.children[0].classList.add('scale-95');
+            modalContainer.classList.remove('scale-100');
+            modalContainer.classList.add('scale-95');
         }
 
-        // --- CÁC HÀM TIỆN ÍCH CUỘN TRANG ---
-        function scrollToSection(id) {
-            const el = document.getElementById(id);
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // --- QUẢN LÝ THÔNG BÁO TOAST ---
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            if (!container) return;
-            const toast = document.createElement('div');
-            const bgClass = type === 'success' ? 'bg-emerald-500' : 'bg-rose-500';
-            const icon = type === 'success' ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
-            toast.className = `flex items-center gap-3 px-5 py-3.5 ${bgClass} text-white font-bold rounded-xl shadow-2xl transform translate-x-full transition-all duration-300 opacity-0 pointer-events-auto border border-white/10`;
-            toast.innerHTML = `<span>${icon}</span><span class="text-sm">${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.remove('translate-x-full', 'opacity-0'), 10);
-            setTimeout(() => {
-                toast.classList.add('translate-x-full', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
-        }
-
-        // --- XỬ LÝ AUTH MODAL (LOGIN / REGISTER) ---
-        function openAuthModal() {
-            const modal = document.getElementById('auth-modal');
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            modal.children[0].classList.remove('scale-95');
-            switchAuthTab('login');
-        }
-        function closeAuthModal() {
-            const modal = document.getElementById('auth-modal');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-            modal.children[0].classList.add('scale-95');
-        }
-        function switchAuthTab(type) {
-            const loginBtn = document.getElementById('tab-login-btn');
-            const registerBtn = document.getElementById('tab-register-btn');
-            const formLogin = document.getElementById('form-login');
-            const formRegister = document.getElementById('form-register');
-            if (type === 'login') {
-                loginBtn.className = "w-1/2 pb-3 text-center text-sm font-black border-b-2 border-blue-500 text-blue-500 transition-all duration-300";
-                registerBtn.className = "w-1/2 pb-3 text-center text-sm font-black border-b-2 border-transparent text-slate-500 hover:text-white transition-all duration-300";
-                formLogin.classList.remove('hidden');
-                formRegister.classList.add('hidden');
-            } else {
-                registerBtn.className = "w-1/2 pb-3 text-center text-sm font-black border-b-2 border-blue-500 text-blue-500 transition-all duration-300";
-                loginBtn.className = "w-1/2 pb-3 text-center text-sm font-black border-b-2 border-transparent text-slate-500 hover:text-white transition-all duration-300";
-                formRegister.classList.remove('hidden');
-                formLogin.classList.add('hidden');
-            }
-        }
-
-        async function executeLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            try {
-                const response = await fetch(`${API_BASE_URL}/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                const result = await response.json();
-                if (response.ok && result.success) {
-                    showToast(result.message, 'success');
-                    localStorage.setItem('user', JSON.stringify(result.user));
-                    checkUserSession();
-                    closeAuthModal();
-                } else {
-                    showToast(result.message || "Đăng nhập thất bại!", 'error');
-                }
-            } catch (e) {
-                showToast("Sai tài khoản Gmail hoặc Mật khẩu!", 'error');
-            }
-        }
-
-        async function executeRegister(event) {
-            event.preventDefault();
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value;
-            const address = document.getElementById('reg-address').value;
-            const password = document.getElementById('reg-password').value;
-            try {
-                const response = await fetch(`${API_BASE_URL}/users`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, address, password })
-                });
-                const result = await response.json();
-                if (response.ok && result.success) {
-                    showToast(result.message, 'success');
-                    document.getElementById('login-email').value = email;
-                    document.getElementById('login-password').value = password;
-                    switchAuthTab('login');
-                } else {
-                    showToast(result.message || "Đăng ký không thành công!", 'error');
-                }
-            } catch (e) {
-                showToast("Kết nối server thất bại!", 'error');
-            }
-        }
-
-        function executeLogout() {
-            localStorage.removeItem('user');
-            location.reload();
-        }
-
-        function checkUserSession() {
-            const savedUser = localStorage.getItem('user');
-            if (savedUser) {
-                const user = JSON.parse(savedUser);
-                document.getElementById('auth-section').outerHTML = `
-                    <div class="flex items-center space-x-3 bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-800" id="auth-section">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="text-xs font-bold text-slate-300">Hi, ${user.name}</span>
-                        <button onclick="executeLogout()" class="text-slate-500 hover:text-rose-400 text-[11px] font-black pl-2 border-l border-slate-800 transition">THOÁT</button>
-                    </div>`;
-            }
-        }
+        // Bấm ra ngoài vùng Modal để đóng nhanh
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeModal();
+        });
     </script>
 </body>
 </html>
