@@ -1,8 +1,9 @@
 const http = require('http');
+const https = require('https');
 
 const PORT = process.env.PORT || 3000;
 
-// Đường link Firebase của Hào đã được điền chính xác ở đây:
+// Link Firebase Realtime Database chính xác của Hào:
 const FIREBASE_URL = "https://homeser-93db3-default-rtdb.asia-southeast1.firebasedatabase.app";
 
 // Hàm lấy thời gian thực chuẩn GMT+7 (Việt Nam)
@@ -10,17 +11,38 @@ function getVietnamTime() {
     return new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
 }
 
-// Hàm hỗ trợ gọi dữ liệu từ Firebase bằng fetch
-async function firebaseFetch(endpoint, method = 'GET', body = null) {
-    const url = `${FIREBASE_URL}${endpoint}.json`;
-    const options = { method, headers: { 'Content-Type': 'application/json' } };
-    if (body) options.body = JSON.stringify(body);
-    const res = await fetch(url, options);
-    return res.json();
+// Hàm hỗ trợ gọi dữ liệu từ Firebase bằng thư viện https lõi (Cực kỳ ổn định trên Vercel)
+function firebaseFetch(endpoint, method = 'GET', body = null) {
+    return new Promise((resolve, reject) => {
+        const url = `${FIREBASE_URL}${endpoint}.json`;
+        const options = {
+            method: method,
+            headers: { 'Content-Type': 'application/json' }
+        };
+
+        const req = https.request(url, options, (res) => {
+            let data = '';
+            res.on('data', (chunk) => { data += chunk; });
+            res.on('end', () => {
+                try {
+                    resolve(JSON.parse(data));
+                } catch (e) {
+                    resolve(data);
+                }
+            });
+        });
+
+        req.on('error', (err) => { reject(err); });
+
+        if (body) {
+            req.write(JSON.stringify(body));
+        }
+        req.end();
+    });
 }
 
 const server = http.createServer(async (req, res) => {
-    // Cấu hình CORS để Frontend nhận dữ liệu không bị chặn
+    // Cấu hình CORS để Frontend kết nối mượt mà không bị chặn chặn trình duyệt
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -30,11 +52,15 @@ const server = http.createServer(async (req, res) => {
     // ================== API USERS (DANH SÁCH TÀI KHOẢN) ==================
     if (req.url === '/api/users' && req.method === 'GET') {
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-        const data = await firebaseFetch('/users');
-        const userList = data ? Object.values(data) : [
-            { name: "Admin Đình Hào", email: "admin@homeser.com", password: "admin", date: getVietnamTime(), lastLogin: "Chưa đăng nhập" }
-        ];
-        res.end(JSON.stringify(userList));
+        try {
+            const data = await firebaseFetch('/users');
+            const userList = data ? Object.values(data) : [
+                { name: "Admin Đình Hào", email: "admin@homeser.com", password: "admin", date: getVietnamTime(), lastLogin: "Chưa đăng nhập" }
+            ];
+            res.end(JSON.stringify(userList));
+        } catch (error) {
+            res.end(JSON.stringify([{ name: "Admin Đình Hào", email: "admin@homeser.com", password: "admin", date: getVietnamTime(), lastLogin: "Lỗi kết nối DB" }]));
+        }
         return;
     }
 
@@ -76,7 +102,17 @@ const server = http.createServer(async (req, res) => {
             try {
                 const credentials = JSON.parse(body);
                 const safeEmailKey = credentials.email.replace(/\./g, '_');
+                
+                // Lấy thông tin user từ Firebase bằng Safe Key
                 const user = await firebaseFetch(`/users/${safeEmailKey}`);
+
+                // Trường hợp nếu là tài khoản Admin mặc định chưa có trên Firebase, tự động tạo luôn
+                if (credentials.email === "admin@homeser.com" && credentials.password === "admin" && !user) {
+                    const adminUser = { name: "Admin Đình Hào", email: "admin@homeser.com", password: "admin", date: getVietnamTime(), lastLogin: getVietnamTime() };
+                    await firebaseFetch(`/users/${safeEmailKey}`, 'PUT', adminUser);
+                    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                    return res.end(JSON.stringify({ success: true, user: adminUser }));
+                }
 
                 if (user && user.password === credentials.password) {
                     user.lastLogin = getVietnamTime();
@@ -90,7 +126,7 @@ const server = http.createServer(async (req, res) => {
                 }
             } catch (e) {
                 res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ success: false, message: "Lỗi dữ liệu!" }));
+                res.end(JSON.stringify({ success: false, message: "Lỗi xử lý dữ liệu đăng nhập!" }));
             }
         });
         return;
@@ -99,9 +135,13 @@ const server = http.createServer(async (req, res) => {
     // ================== API ORDERS (ĐƠN HÀNG KÈM ĐỊA CHỈ) ==================
     if (req.url === '/api/orders' && req.method === 'GET') {
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-        const data = await firebaseFetch('/orders');
-        const orderList = data ? Object.values(data) : [];
-        res.end(JSON.stringify(orderList));
+        try {
+            const data = await firebaseFetch('/orders');
+            const orderList = data ? Object.values(data) : [];
+            res.end(JSON.stringify(orderList));
+        } catch (error) {
+            res.end(JSON.stringify([]));
+        }
         return;
     }
 
@@ -126,25 +166,9 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    // Nếu không khớp API nào, trả về thông báo lỗi đường dẫn API
+    // Endpoint không tồn tại
     res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ message: "API endpoint không tồn tại!" }));
 });
 
 server.listen(PORT, () => { console.log(`Server chạy tại port ${PORT}`); });
-Bước 2: Tạo thêm một file cấu hình tên là vercel.json
-Để Vercel hiểu rằng: "Khi vào trang chủ thì hiện thị file index.html, còn khi gọi link /api/... thì mới kích hoạt file server.js", bạn hãy tạo thêm 1 file mới trong thư mục dự án trên GitHub nhé:
-
-Tại thư mục chính của dự án trên GitHub, bấm nút Add file -> chọn Create new file.
-
-Đặt tên file là: vercel.json
-
-Copy toàn bộ nội dung cấu hình siêu ngắn này dán vào:
-
-JSON
-{
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "server.js" },
-    { "source": "/(.*)", "destination": "index.html" }
-  ]
-}
