@@ -33,12 +33,11 @@
             </nav>
 
             <div class="flex items-center space-x-4">
-                <button onclick="alert('Tính năng giỏ hàng đang phát triển!')" class="relative p-2.5 bg-slate-800 rounded-full hover:bg-slate-700 transition">
+                <button onclick="toggleCart()" class="relative p-2.5 bg-slate-800 rounded-full hover:bg-slate-700 transition">
                     <i class="fa-solid fa-cart-shopping text-lg"></i>
                     <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
                 </button>
-                <div id="auth-section" class="flex items-center space-x-2">
-                    </div>
+                <div id="auth-section" class="flex items-center space-x-2"></div>
             </div>
         </div>
     </header>
@@ -136,10 +135,46 @@
         </div>
     </div>
 
+    <div id="cart-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-[100] flex justify-center items-center">
+        <div class="bg-slate-800 w-full max-w-2xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-slate-700 m-4">
+            
+            <div class="flex justify-between items-center p-5 border-b border-slate-700 bg-slate-800/90">
+                <h2 class="text-2xl font-bold text-white"><i class="fa-solid fa-basket-shopping text-blue-500 mr-2"></i> Giỏ hàng của bạn</h2>
+                <button onclick="toggleCart()" class="text-slate-400 hover:text-red-500 transition text-2xl w-10 h-10 flex justify-center items-center rounded-full hover:bg-slate-700">&times;</button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-5 space-y-6 custom-scrollbar">
+                <div id="cart-items-container" class="space-y-4"></div>
+
+                <div class="bg-slate-900 p-5 rounded-xl border border-slate-700 shadow-inner">
+                    <div class="flex justify-between text-slate-400 mb-2 font-medium"><span>Tạm tính:</span> <span id="cart-subtotal">0đ</span></div>
+                    <div class="flex justify-between text-slate-400 mb-2 font-medium"><span>Phí giao hàng:</span> <span class="text-green-400">Miễn phí</span></div>
+                    <div class="flex justify-between text-white text-xl font-bold border-t border-slate-700 pt-3 mt-3">
+                        <span>Tổng thanh toán:</span> <span id="cart-total" class="text-blue-400">0đ</span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-700/40 p-5 rounded-xl border border-slate-600">
+                    <h3 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-location-dot text-red-400 mr-2"></i> Thông tin nhận hàng</h3>
+                    <form id="checkout-form" onsubmit="processCheckout(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="cust-name" placeholder="Họ và tên" required class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition">
+                            <input type="tel" id="cust-phone" placeholder="Số điện thoại" required class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition">
+                        </div>
+                        <div>
+                            <textarea id="cust-address" placeholder="Địa chỉ chi tiết (Ví dụ: Số nhà, đường, Phường/Xã...)" required rows="2" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition shadow-lg shadow-blue-600/30 text-lg">Xác nhận Đặt Hàng <i class="fa-solid fa-check ml-2"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const SERVER_URL = "https://homeser-m3h8.vercel.app";
 
-        // === CƠ SỞ DỮ LIỆU SẢN PHẨM & MÓN ĂN ===
+        // === CƠ SỞ DỮ LIỆU SẢN PHẨM ===
         const shopDatabase = [
             { name: "Kính Apple Vision Pro", price: "85.000.000", desc: "Kính thực tế hỗn hợp cao cấp từ Apple.", icon: "fa-vr-cardboard" },
             { name: "Meta Quest 3", price: "12.500.000", desc: "Kính thực tế ảo thế hệ mới, mượt mà.", icon: "fa-glasses" },
@@ -167,11 +202,128 @@
             "Trà dâu Đông Du", "Trà sữa đất nung Vân Nam", "Cà phê cốt dừa Cộng"
         ];
 
-        // === HIỂN THỊ GIAO DIỆN SẢN PHẨM ===
+        // === LOGIC GIỎ HÀNG ===
+        let cart = [];
+
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                updateCartUI();
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function formatCurrency(number) {
+            return number.toLocaleString('vi-VN') + 'đ';
+        }
+
+        // Đẩy đồ Shop vào giỏ
+        function addShopToCart(name, priceStr, icon) {
+            const numericPrice = parseInt(priceStr.replace(/\./g, ''));
+            addToCartLogic(name, numericPrice, icon, null);
+        }
+
+        // Đẩy đồ Food vào giỏ (Xử lý Size và Giá động)
+        function addFoodToCart(name, index) {
+            const size = document.getElementById(`food-size-${index}`).value;
+            let price = 35000; // Giá cơ bản
+            if (size === 'M') price += 10000;
+            if (size === 'L') price += 20000;
+            
+            addToCartLogic(name, price, 'fa-utensils', size);
+        }
+
+        function addToCartLogic(name, price, icon, size) {
+            const existingItem = cart.find(item => item.name === name && item.size === size);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ name, price, icon, size, quantity: 1 });
+            }
+            updateCartUI();
+            // Hiệu ứng thông báo nhỏ
+            alert(`✅ Đã thêm: ${name} ${size ? '(Size: '+size+')' : ''} vào giỏ hàng!`);
+        }
+
+        function removeFromCart(index) {
+            if (confirm(`Bạn có chắc muốn bỏ ${cart[index].name} khỏi giỏ hàng?`)) {
+                cart.splice(index, 1);
+                updateCartUI();
+            }
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            let total = 0;
+            let totalItems = 0;
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-slate-400 py-8">
+                        <i class="fa-solid fa-box-open text-4xl mb-3 opacity-50"></i>
+                        <p>Giỏ hàng đang trống. Hãy thêm vài món nhé!</p>
+                    </div>`;
+            } else {
+                container.innerHTML = cart.map((item, index) => {
+                    total += item.price * item.quantity;
+                    totalItems += item.quantity;
+                    const sizeBadge = item.size ? `<span class="bg-green-600/20 text-green-400 text-xs px-2 py-1 rounded ml-2 font-bold">Size ${item.size}</span>` : '';
+                    
+                    return `
+                    <div class="flex justify-between items-center bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-2xl text-blue-400">
+                                <i class="fa-solid ${item.icon}"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold">${item.name} ${sizeBadge}</h4>
+                                <p class="text-slate-400 text-sm">${formatCurrency(item.price)} x ${item.quantity}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-white font-bold">${formatCurrency(item.price * item.quantity)}</span>
+                            <button onclick="removeFromCart(${index})" class="text-slate-500 hover:text-red-500 hover:bg-red-500/20 p-2 rounded-lg transition"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+            
+            document.getElementById('cart-count').innerText = totalItems;
+            document.getElementById('cart-subtotal').innerText = formatCurrency(total);
+            document.getElementById('cart-total').innerText = formatCurrency(total);
+        }
+
+        // Xử lý Gửi Đơn Hàng
+        function processCheckout(e) {
+            e.preventDefault(); // Chặn reload trang
+            
+            if (cart.length === 0) {
+                alert("Bạn chưa chọn món nào cả!"); 
+                return;
+            }
+            
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const address = document.getElementById('cust-address').value;
+            const totalStr = document.getElementById('cart-total').innerText;
+
+            // Hiển thị thông báo chốt đơn lộng lẫy
+            alert(`🎉 ĐẶT HÀNG THÀNH CÔNG!\n\nCảm ơn ${name} đã tin tưởng HomeSer.\nChúng tôi sẽ liên hệ vào số ${phone} và giao hàng đến địa chỉ:\n📍 ${address}\n\nTổng thanh toán: ${totalStr}`);
+            
+            // Dọn sạch giỏ và form sau khi mua
+            cart = [];
+            document.getElementById('checkout-form').reset();
+            updateCartUI();
+            toggleCart();
+        }
+
+        // === HIỂN THỊ GIAO DIỆN SẢN PHẨM ĐÃ TÍCH HỢP NÚT GIỎ HÀNG ===
         function renderProducts() {
             // Render Shop
             const shopHtml = shopDatabase.map(item => `
-                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700 hover:border-orange-500 transition-all flex flex-col justify-between">
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700 hover:border-orange-500 transition-all flex flex-col justify-between group">
                     <div>
                         <div class="text-orange-400 text-3xl mb-3"><i class="fa-solid ${item.icon}"></i></div>
                         <h4 class="font-bold text-lg mb-1">${item.name}</h4>
@@ -179,33 +331,33 @@
                     </div>
                     <div>
                         <p class="text-orange-400 font-bold mb-3">${item.price} đ</p>
-                        <button class="w-full py-2 bg-slate-700 hover:bg-orange-500 text-white text-sm font-bold rounded-lg transition">Thêm vào giỏ</button>
+                        <button onclick="addShopToCart('${item.name}', '${item.price}', '${item.icon}')" class="w-full py-2 bg-slate-700 hover:bg-orange-500 text-white text-sm font-bold rounded-lg transition group-hover:shadow-lg group-hover:shadow-orange-500/30">Thêm vào giỏ</button>
                     </div>
                 </div>
             `).join('');
             document.getElementById("shop-container").innerHTML = shopHtml;
 
-            // Render Food (Có chọn Size)
-            const foodHtml = foodDatabase.map(name => `
-                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700 hover:border-green-500 transition-all flex flex-col justify-between">
+            // Render Food 
+            const foodHtml = foodDatabase.map((name, index) => `
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700 hover:border-green-500 transition-all flex flex-col justify-between group">
                     <div>
                         <div class="text-green-400 text-3xl mb-3"><i class="fa-solid fa-utensils"></i></div>
                         <h4 class="font-bold text-lg mb-3">${name}</h4>
                     </div>
                     <div>
-                        <select class="w-full bg-slate-900 text-sm text-slate-300 border border-slate-700 rounded-lg p-2 mb-3 outline-none focus:border-green-500">
-                            <option value="S">Size S (Cơ bản)</option>
+                        <select id="food-size-${index}" class="w-full bg-slate-900 text-sm text-slate-300 border border-slate-700 rounded-lg p-2 mb-3 outline-none focus:border-green-500">
+                            <option value="S">Size S (35.000đ)</option>
                             <option value="M">Size M (+ 10.000đ)</option>
                             <option value="L">Size L (+ 20.000đ)</option>
                         </select>
-                        <button class="w-full py-2 bg-slate-700 hover:bg-green-600 text-white text-sm font-bold rounded-lg transition">Thêm vào giỏ</button>
+                        <button onclick="addFoodToCart('${name}', ${index})" class="w-full py-2 bg-slate-700 hover:bg-green-600 text-white text-sm font-bold rounded-lg transition group-hover:shadow-lg group-hover:shadow-green-500/30">Thêm vào giỏ</button>
                     </div>
                 </div>
             `).join('');
             document.getElementById("food-container").innerHTML = foodHtml;
         }
 
-        // === CHUYỂN TAB ===
+        // === CÁC LOGIC CŨ CỦA BẠN GIỮ NGUYÊN BÊN DƯỚI ===
         function switchModule(moduleName) {
             document.querySelectorAll('.module-section').forEach(sec => sec.classList.add('hidden'));
             const targetSec = document.getElementById(`module-${moduleName}`);
@@ -220,11 +372,9 @@
                 activeBtn.classList.remove('text-slate-400');
                 activeBtn.classList.add('bg-blue-600', 'text-white');
             }
-
             if (moduleName === 'admin') renderAdminPanel();
         }
 
-        // === XỬ LÝ AUTH LOGIC TỪ SERVER ===
         function checkLoginStatus() {
             const authSection = document.getElementById("auth-section");
             const currentUser = JSON.parse(localStorage.getItem("homeser_current_user"));
@@ -256,7 +406,6 @@
             }
         }
 
-        // === MODAL ĐĂNG NHẬP / ĐĂNG KÝ ===
         function openAuthModal() { document.getElementById("auth-modal").classList.remove('hidden'); }
         function closeAuthModal() { document.getElementById("auth-modal").classList.add('hidden'); }
         
@@ -267,7 +416,6 @@
             document.getElementById("tab-register").className = tab === 'register' ? "text-xl font-bold text-blue-500 pb-2 border-b-2 border-blue-500" : "text-xl font-bold text-slate-500 hover:text-white pb-2";
         }
 
-        // Ẩn / Hiện Mật khẩu (Icon Con Mắt)
         function togglePasswordVisibility(inputId, iconElement) {
             const input = document.getElementById(inputId);
             if (input.type === "password") {
@@ -281,7 +429,6 @@
             }
         }
 
-        // Gửi lệnh Đăng nhập lên Server kiểm tra
         function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById("login-email").value;
@@ -303,7 +450,6 @@
                 .catch(err => alert("Lỗi kết nối Server!"));
         }
 
-        // Gửi lệnh Đăng ký lên Server
         function handleRegister(e) {
             e.preventDefault();
             const newUser = {
@@ -325,13 +471,12 @@
                     document.getElementById("login-email").value = newUser.email;
                     document.getElementById("login-pass").value = newUser.password;
                 } else {
-                    alert(data.message); // Báo lỗi nếu trùng email
+                    alert(data.message); 
                 }
             })
             .catch(err => alert("Lỗi kết nối Server!"));
         }
 
-        // Render bảng Admin
         function renderAdminPanel() {
             const tbodyUsers = document.getElementById("admin-user-list");
             fetch(`${SERVER_URL}/api/users`)
