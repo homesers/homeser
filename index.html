@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HomeSev – Điện tử chính hãng</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
 <style>
 /* ===== RESET & ROOT ===== */
 *{margin:0;padding:0;box-sizing:border-box}
@@ -21,12 +25,12 @@
   --radius:8px;
   --radius-lg:12px;
   --shadow:0 1px 3px rgba(0,0,0,0.08);
-  --shadow-md:0 4px 16px rgba(10,17,40,0.12);
+  --shadow-md:0 10px 25px rgba(10,11,40,0.15);
 }
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 a{text-decoration:none;color:inherit}
 button{font-family:inherit;cursor:pointer}
-input{font-family:inherit}
+input, textarea{font-family:inherit}
  
 /* ===== LOGO STYLE GLOBAL ===== */
 .brand-logo {
@@ -46,7 +50,8 @@ input{font-family:inherit}
 /* ===== OVERLAY / MODAL ===== */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:1000;align-items:center;justify-content:center}
 .overlay.active{display:flex}
-.modal{background:var(--surface);border-radius:var(--radius-lg);padding:36px 32px;width:100%;max-width:420px;position:relative;animation:slideUp 0.25s ease}
+.modal{background:var(--surface);border-radius:var(--radius-lg);padding:36px 32px;width:100%;max-width:420px;position:relative;animation:slideUp 0.25s ease;max-height:90vh;overflow-y:auto}
+.modal-lg{max-width:550px}
 @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 .modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;color:var(--text-muted);line-height:1}
 .modal-close:hover{color:var(--text)}
@@ -62,8 +67,8 @@ input{font-family:inherit}
 .modal-subtitle{font-size:14px;color:var(--text-muted);margin-bottom:24px}
 .form-group{margin-bottom:16px}
 .form-group label{display:block;font-size:13px;font-weight:500;margin-bottom:6px;color:var(--text)}
-.form-group input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;background:var(--surface);color:var(--text)}
-.form-group input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(16,185,129,0.15)}
+.form-group input, .form-group textarea{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;background:var(--surface);color:var(--text)}
+.form-group input:focus, .form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(16,185,129,0.15)}
 .input-icon{position:relative}
 .input-icon input{padding-right:40px}
 .input-icon .eye-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);font-size:16px;padding:2px}
@@ -175,32 +180,50 @@ input{font-family:inherit}
 .promo-text p{color:rgba(255,255,255,0.75);font-size:14px;line-height:1.5}
 .promo-discount{font-size:52px;font-weight:700;color:var(--accent);line-height:1}
 .promo-sublabel{font-size:13px;color:rgba(255,255,255,0.65);margin-top:4px}
+
+/* ===== GIỎ HÀNG MODAL STYLE ===== */
+.cart-items-list{margin:16px 0;max-height:240px;overflow-y:auto;border-bottom:1px solid var(--border);padding-bottom:12px}
+.cart-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed var(--border)}
+.cart-item:last-child{border-bottom:none}
+.cart-item-img{font-size:24px;background:var(--bg);width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius)}
+.cart-item-details{flex:1}
+.cart-item-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.cart-item-price{font-size:12px;color:var(--accent);font-weight:700;margin-top:2px}
+.cart-item-qty-control{display:flex;align-items:center;gap:8px;margin-top:4px}
+.qty-btn{background:var(--border);border:none;width:20px;height:20px;border-radius:4px;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.qty-btn:hover{background:var(--border-hover)}
+.cart-item-qty(font-size:13px;font-weight:500}
+.remove-item-btn{background:none;border:none;color:#dc2626;font-size:12px;cursor:pointer;margin-left:auto;padding:4px}
+.remove-item-btn:hover{text-decoration:underline}
+.cart-summary{margin-top:16px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:16px}
+.cart-summary .total-price{color:var(--accent);font-size:18px}
+.cart-actions-row{display:flex;gap:10px;margin-top:16px}
+.btn-outline-danger{flex:1;background:none;border:1px solid #ef4444;color:#ef4444;padding:10px;border-radius:var(--radius);font-weight:500;font-size:13px}
+.btn-outline-danger:hover{background:#fef2f2}
  
 /* ===== FOOTER ===== */
 footer{background:var(--primary);color:#fff;padding:48px 24px 24px;border-top:1px solid rgba(255,255,255,0.05)}
 .footer-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:32px;margin-bottom:36px}
-.footer-logo-wrapper {
-  margin-bottom: 12px;
-}
+.footer-logo-wrapper { margin-bottom: 12px; }
 .footer-desc{font-size:13px;color:rgba(255,255,255,0.45);line-height:1.65}
 .footer-col h4{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.4);margin-bottom:14px;font-weight:600}
 .footer-col a{display:block;font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:9px;cursor:pointer;transition:color 0.2s}
 .footer-col a:hover{color:#fff}
+.footer-col {
+  display: flex;
+  flex-direction: column;
+}
 .footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .footer-bottom p{font-size:12px;color:rgba(255,255,255,0.35)}
 .creator{font-size:12px;color:rgba(255,255,255,0.35);text-align:right}
 .creator span{color:rgba(255,255,255,0.6);font-weight:500}
  
 /* ===== TOAST ===== */
-.toast{position:fixed;bottom:28px;right:28px;background:var(--primary-light);color:#fff;padding:12px 20px;border-radius:var(--radius);font-size:14px;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:all 0.3s;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow-md)}
+.toast{position:fixed;bottom:28px;right:28px;background:var(--primary-light);color:#fff;padding:14px 24px;border-radius:var(--radius-lg);font-size:14px;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);display:flex;align-items:center;gap:10px;box-shadow:0 12px 30px rgba(0,0,0,0.25)}
 .toast.show{transform:translateY(0);opacity:1}
-.toast.success{background:#065f46;border-left:4px solid #10b981}
-.toast.info{background:#1e3a8a;border-left:4px solid #3b82f6}
-.toast.error{background:#7f1d1d;border-left:4px solid #ef4444}
- 
-/* ===== MISC ===== */
-.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
-.tag-info{background:#dbeafe;color:#1e40af}
+.toast.success{background:#065f46;border-left:5px solid #10b981}
+.toast.info{background:#1e3a8a;border-left:5px solid #3b82f6}
+.toast.error{background:#7f1d1d;border-left:5px solid #ef4444}
 </style>
 </head>
 <body>
@@ -237,10 +260,6 @@ footer{background:var(--primary);color:#fff;padding:48px 24px 24px;border-top:1p
     <button class="btn-social" onclick="socialLogin('Google')">
       <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
       Tiếp tục với Google
-    </button>
-    <button class="btn-social" onclick="socialLogin('Facebook')">
-      <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-      Tiếp tục với Facebook
     </button>
  
     <div class="modal-switch">Chưa có tài khoản? <a onclick="showRegister()">Đăng ký ngay</a></div>
@@ -291,12 +310,6 @@ footer{background:var(--primary);color:#fff;padding:48px 24px 24px;border-top:1p
     <span class="form-error" id="regTermsErr" style="margin-top:-10px;margin-bottom:10px">Vui lòng đồng ý điều khoản</span>
     <button class="btn-main" onclick="handleRegister()">Tạo tài khoản</button>
  
-    <div class="divider">hoặc đăng ký với</div>
-    <button class="btn-social" onclick="socialLogin('Google')">
-      <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-      Đăng ký với Google
-    </button>
- 
     <div class="modal-switch">Đã có tài khoản? <a onclick="showLogin()">Đăng nhập</a></div>
   </div>
  
@@ -313,6 +326,30 @@ footer{background:var(--primary);color:#fff;padding:48px 24px 24px;border-top:1p
     </div>
     <button class="btn-main" onclick="handleForgot()">Gửi liên kết đặt lại</button>
     <div class="modal-switch"><a onclick="showLogin()">← Quay lại đăng nhập</a></div>
+  </div>
+
+  <div class="modal modal-lg" id="cartModal" style="display:none">
+    <button class="modal-close" onclick="closeAuth()">×</button>
+    <h3 style="font-size:18px; font-weight:700; margin-bottom:4px;">🛒 Giỏ hàng của bạn</h3>
+    <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Kiểm tra danh sách và nhập thông tin giao hàng</p>
+    
+    <div class="cart-items-list" id="cartItemsList"></div>
+
+    <div class="cart-summary">
+      <span>Tổng cộng:</span>
+      <span class="total-price" id="cartTotalPrice">0₫</span>
+    </div>
+
+    <div class="form-group" style="margin-top: 16px;">
+      <label for="cartAddress" style="font-weight: 600;">📍 Địa chỉ nhận hàng</label>
+      <textarea id="cartAddress" rows="2" placeholder="Số nhà, tên đường, phường/xã, quận/huyện..."></textarea>
+      <span class="form-error" id="cartAddressErr">Vui lòng nhập địa chỉ nhận hàng để thanh toán</span>
+    </div>
+
+    <div class="cart-actions-row">
+      <button class="btn-outline-danger" onclick="clearCart()">Dọn sạch giỏ</button>
+      <button class="btn-main" style="flex:2; margin-top:0;" onclick="handleCheckout()">Xác nhận Đặt hàng</button>
+    </div>
   </div>
 </div>
  
@@ -331,7 +368,7 @@ footer{background:var(--primary);color:#fff;padding:48px 24px 24px;border-top:1p
   </nav>
   <div class="nav-actions">
     <button class="nav-btn" title="Yêu thích">♡</button>
-    <button class="nav-btn" title="Giỏ hàng" onclick="handleCartClick()">
+    <button class="nav-btn" title="Giỏ hàng" onclick="openCartModal()">
       🛒
       <span class="cart-count" id="cartCount" style="display:none">0</span>
     </button>
@@ -353,14 +390,6 @@ footer{background:var(--primary);color:#fff;padding:48px 24px 24px;border-top:1p
         <div class="dropdown-item" onclick="closeDropdown()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M21 12A9 9 0 1 1 3 12a9 9 0 0 1 18 0z"/></svg>
           Đơn hàng của tôi
-        </div>
-        <div class="dropdown-item" onclick="closeDropdown()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          Danh sách yêu thích
-        </div>
-        <div class="dropdown-item" onclick="closeDropdown()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          Cài đặt
         </div>
         <div class="dropdown-divider"></div>
         <div class="dropdown-item danger" onclick="handleLogout()">
@@ -467,7 +496,29 @@ footer{background:var(--primary);color:#fff;padding:48px 24px 24px;border-top:1p
  
 <script>
 /* ============================================================
-   DATA
+   CẤU HÌNH LIÊN KẾT ĐÁM MÂY FIREBASE
+   (Bạn chỉ cần thay thế các thông số bên dưới từ tài khoản Firebase của bạn)
+============================================================ */
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY_HERE",
+  authDomain: "YOUR_AUTH_DOMAIN_HERE",
+  projectId: "YOUR_PROJECT_ID_HERE",
+  storageBucket: "YOUR_STORAGE_BUCKET_HERE",
+  messagingSenderId: "YOUR_SENDER_ID_HERE",
+  appId: "YOUR_APP_ID_HERE"
+};
+
+// Khởi tạo Firebase và Firestore Cloud
+let db = null;
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+} catch(e) {
+  console.error("Vui lòng cấu hình chính xác Firebase Config để đồng bộ dữ liệu đám mây!");
+}
+
+/* ============================================================
+   DATA MẪU SẢN PHẨM
 ============================================================ */
 const PRODUCTS = [
   {id:1,name:"iPhone 16 Pro Max 256GB",brand:"Apple",price:34990000,old:37990000,emoji:"📱",cat:"Điện thoại",stars:5,reviews:2341,badge:"new"},
@@ -483,16 +534,18 @@ const PRODUCTS = [
 ];
  
 /* ============================================================
-   AUTH STATE (localStorage-based)
+   STATE VARIABLES & INITIALIZATION
 ============================================================ */
 let currentUser = null;
-let cartCount = 0;
+let cart = [];
 let currentCategory = null;
  
 function loadSession() {
   try {
     const s = localStorage.getItem('homesev_user');
     if (s) { currentUser = JSON.parse(s); updateUI(); }
+    const c = localStorage.getItem('homesev_cart');
+    if (c) { cart = JSON.parse(c); updateCartBadge(); }
   } catch(e) {}
 }
  
@@ -506,6 +559,26 @@ function clearSession() {
   currentUser = null;
   localStorage.removeItem('homesev_user');
   updateUI();
+}
+
+/* Ép chuẩn thời gian theo múi giờ Việt Nam GMT+7 */
+function getGMT7TimeString() {
+  return new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }) + " (GMT+7)";
+}
+
+/* HÀM ĐẨY DỮ LIỆU ĐỒNG BỘ THẲNG LÊN FIREBASE CLOUD DATABASE */
+function sendToFirebaseCloud(collectionName, payload) {
+  if (!db) {
+    console.warn("Chưa đồng bộ Firebase! Log tạm thời trên local:", payload);
+    return;
+  }
+  // Thêm mốc thời gian GMT+7 vào dữ liệu để admin dễ theo dõi
+  payload.created_at_gmt7 = getGMT7TimeString();
+  payload.timestamp = firebase.firestore.FieldValue.serverTimestamp();
+
+  db.collection(collectionName).add(payload)
+    .then(() => console.log(`[Đám Mây] Đã đồng bộ thành công dữ liệu vào bảng ${collectionName}`))
+    .catch(err => console.error("Lỗi đẩy lên đám mây Firebase:", err));
 }
  
 function updateUI() {
@@ -525,20 +598,26 @@ function updateUI() {
 }
  
 /* ============================================================
-   MODAL HELPERS
+   MODAL WINDOW & FORM CONTROLS
 ============================================================ */
-function openLogin()    { showLogin(); document.getElementById('authOverlay').classList.add('active'); }
-function openRegister() { showRegister(); document.getElementById('authOverlay').classList.add('active'); }
-function closeAuth()    { document.getElementById('authOverlay').classList.remove('active'); clearErrors(); }
-function showLogin()    { setModal('loginModal'); }
-function showRegister() { setModal('registerModal'); }
-function showForgot()   { setModal('forgotModal'); }
+function openLogin()    { showModal('loginModal'); }
+function openRegister() { showModal('registerModal'); }
+function openCartModal() { showModal('cartModal'); renderCartDetails(); }
 
-function setModal(id) {
-  ['loginModal','registerModal','forgotModal'].forEach(m=>{
+function showModal(id) {
+  document.getElementById('authOverlay').classList.add('active');
+  ['loginModal','registerModal','forgotModal','cartModal'].forEach(m=>{
     document.getElementById(m).style.display = (m === id) ? 'block' : 'none';
   });
 }
+
+function closeAuth() { 
+  document.getElementById('authOverlay').classList.remove('active'); 
+  clearErrors(); 
+}
+function showLogin()    { showModal('loginModal'); }
+function showRegister() { showModal('registerModal'); }
+function showForgot()   { showModal('forgotModal'); }
 
 function clearErrors() {
   document.querySelectorAll('.form-error').forEach(err => err.classList.remove('show'));
@@ -556,7 +635,7 @@ function togglePass(id, btn) {
 }
 
 /* ============================================================
-   LOGIC XỬ LÝ SỰ KIỆN
+   LOGIC XỬ LÝ AUTHENTICATION (ĐỒNG BỘ THẲNG VỀ CLOUD)
 ============================================================ */
 function handleLogin() {
   clearErrors();
@@ -572,9 +651,17 @@ function handleLogin() {
     return;
   }
   
-  saveSession({ name: "Nguyễn Đình Hào", email: email });
+  const mockName = "Khách Hàng Thử Nghiệm";
+  saveSession({ name: mockName, email: email });
   closeAuth();
   showToast("Đăng nhập thành công!", "success");
+  
+  // ĐẨY LÊN FIREBASE BẢNG "user_logins"
+  sendToFirebaseCloud("user_logins", {
+    action: "Đăng Nhập",
+    user_name: mockName,
+    user_email: email
+  });
 }
 
 function handleRegister() {
@@ -595,7 +682,15 @@ function handleRegister() {
   
   saveSession({ name: name, email: email });
   closeAuth();
-  showToast("Đăng ký tài khoản thành công!", "success");
+  showToast("Tạo tài khoản thành công!", "success");
+  
+  // ĐẨY LÊN FIREBASE BẢNG "user_registers"
+  sendToFirebaseCloud("user_registers", {
+    action: "Tạo tài khoản mới",
+    user_name: name,
+    user_email: email,
+    user_phone: phone
+  });
 }
 
 function handleForgot() {
@@ -610,61 +705,202 @@ function handleForgot() {
 }
 
 function socialLogin(type) {
-  saveSession({ name: "Khách hàng " + type, email: `user.${type.toLowerCase()}@homesev.vn` });
+  const name = "Khách hàng " + type;
+  const email = `user.${type.toLowerCase()}@homesev.vn`;
+  saveSession({ name: name, email: email });
   closeAuth();
   showToast(`Đăng nhập qua ${type} thành công!`, "success");
+  
+  sendToFirebaseCloud("user_logins", {
+    action: `Đăng nhập MXH ${type}`,
+    user_name: name,
+    user_email: email
+  });
 }
 
 function handleLogout() {
+  const oldUser = currentUser ? currentUser.name : "Ẩn danh";
+  const oldEmail = currentUser ? currentUser.email : "N/A";
   clearSession();
   closeDropdown();
   showToast("Đã đăng xuất tài khoản.", "info");
+
+  sendToFirebaseCloud("user_logins", {
+    action: "Đăng xuất",
+    user_name: oldUser,
+    user_email: oldEmail
+  });
 }
 
-/* Dropdown User Menu */
-function toggleDropdown() {
-  document.getElementById('userDropdown').classList.toggle('open');
-}
-function closeDropdown() {
-  document.getElementById('userDropdown').classList.remove('open');
-}
+function toggleDropdown() { document.getElementById('userDropdown').classList.toggle('open'); }
+function closeDropdown()  { document.getElementById('userDropdown').classList.remove('open'); }
 
-/* Điều hướng cuộn mượt */
 function scrollToSection(id) {
   const el = document.getElementById(id);
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-/* Hiển thị Toast thông báo */
 function showToast(message, type = "success") {
   const toast = document.getElementById('toast');
-  toast.textContent = message;
+  let icon = "⚡";
+  if(type === "success") icon = "✅";
+  if(type === "error") icon = "❌";
+  if(type === "info") icon = "ℹ️";
+  
+  toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
   toast.className = `toast show ${type}`;
-  setTimeout(() => {
-    toast.classList.remove('show');
-  }, 3000);
-}
-
-function handleCartClick() {
-  if (cartCount === 0) {
-    showToast("Giỏ hàng của bạn đang trống!", "info");
-  } else {
-    showToast(`Giỏ hàng đang có ${cartCount} sản phẩm. Đang tiến hành thanh toán...`, "success");
-  }
+  setTimeout(() => { toast.classList.remove('show'); }, 3000);
 }
 
 function openLoginIfNeeded() {
   if (currentUser) {
-    showToast("Bạn đã nhận ưu đãi Flash Sale thành công!", "success");
+    showToast("Bạn đã kích hoạt nhận ưu đãi Flash Sale thành công!", "success");
   } else {
     openLogin();
   }
 }
 
 /* ============================================================
-   TÌM KIẾM & LỌC SẢN PHẨM DỰA TRÊN DỮ LIỆU DYNAMIC
+   GIỎ HÀNG CORE LOGIC (LƯU TRỮ TRÊN ĐÁM MÂY KHI CHECKOUT)
+============================================================ */
+function updateCartBadge() {
+  const badge = document.getElementById('cartCount');
+  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+  
+  if (totalItems > 0) {
+    badge.textContent = totalItems;
+    badge.style.display = 'flex';
+  } else {
+    badge.style.display = 'none';
+  }
+  localStorage.setItem('homesev_cart', JSON.stringify(cart));
+}
+
+function addToCart(id, event) {
+  if(event) event.stopPropagation();
+  const product = PRODUCTS.find(p => p.id === id);
+  if (!product) return;
+  
+  const existingItem = cart.find(item => item.product.id === id);
+  if (existingItem) {
+    existingItem.quantity++;
+  } else {
+    cart.push({ product: product, quantity: 1 });
+  }
+  
+  updateCartBadge();
+  showToast(`Đã thêm ${product.name} vào giỏ hàng!`, "success");
+}
+
+function renderCartDetails() {
+  const listContainer = document.getElementById('cartItemsList');
+  const totalContainer = document.getElementById('cartTotalPrice');
+  listContainer.innerHTML = '';
+  
+  if (cart.length === 0) {
+    listContainer.innerHTML = `<div style="text-align:center; padding:30px 0; color:var(--text-muted); font-size:13px;">Giỏ hàng của bạn trống rỗng</div>`;
+    totalContainer.textContent = '0₫';
+    return;
+  }
+  
+  let totalPrice = 0;
+  cart.forEach(item => {
+    const itemTotal = item.product.price * item.quantity;
+    totalPrice += itemTotal;
+    
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `
+      <div class="cart-item-img">${item.product.emoji}</div>
+      <div class="cart-item-details">
+        <div class="cart-item-name">${item.product.name}</div>
+        <div class="cart-item-price">${item.product.price.toLocaleString()}₫</div>
+        <div class="cart-item-qty-control">
+          <button class="qty-btn" onclick="changeQty(${item.product.id}, -1)">-</button>
+          <span class="cart-item-qty">${item.quantity}</span>
+          <button class="qty-btn" onclick="changeQty(${item.product.id}, 1)">+</button>
+        </div>
+      </div>
+      <button class="remove-item-btn" onclick="removeSingleItem(${item.product.id})">Bỏ bớt</button>
+    `;
+    listContainer.appendChild(div);
+  });
+  
+  totalContainer.textContent = totalPrice.toLocaleString() + '₫';
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(i => i.product.id === id);
+  if (!item) return;
+  
+  item.quantity += delta;
+  if (item.quantity <= 0) {
+    cart = cart.filter(i => i.product.id !== id);
+  }
+  updateCartBadge();
+  renderCartDetails();
+}
+
+function removeSingleItem(id) {
+  const item = cart.find(i => i.product.id === id);
+  cart = cart.filter(i => i.product.id !== id);
+  updateCartBadge();
+  renderCartDetails();
+  if (item) showToast(`Đã xóa ${item.product.name} khỏi giỏ hàng.`, "info");
+}
+
+function clearCart() {
+  if (cart.length === 0) {
+    showToast("Giỏ hàng của bạn đã trống sẵn rồi!", "info");
+    return;
+  }
+  cart = [];
+  updateCartBadge();
+  renderCartDetails();
+  showToast("Đã dọn sạch toàn bộ giỏ hàng!", "info");
+}
+
+function handleCheckout() {
+  document.getElementById('cartAddressErr').classList.remove('show');
+  if (cart.length === 0) {
+    showToast("Hãy thêm sản phẩm trước khi thanh toán!", "error");
+    return;
+  }
+  
+  const address = document.getElementById('cartAddress').value.trim();
+  if (!address) {
+    document.getElementById('cartAddressErr').classList.add('show');
+    return;
+  }
+  
+  const total = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+  const itemsArray = cart.map(i => {
+    return { product_name: i.product.name, quantity: i.quantity, item_price: i.product.price };
+  });
+  const buyer = currentUser ? currentUser.name : "Khách ẩn danh";
+  const buyerEmail = currentUser ? currentUser.email : "N/A";
+  
+  // ĐẨY ĐƠN HÀNG LÊN MẠNG LƯU TRỮ CLOUD TRÊN FIREBASE (BẢNG "orders")
+  sendToFirebaseCloud("orders", {
+    customer_name: buyer,
+    customer_email: buyerEmail,
+    delivery_address: address,
+    total_amount: total,
+    purchased_items: itemsArray
+  });
+  
+  // Xóa cục bộ giỏ hàng
+  cart = [];
+  document.getElementById('cartAddress').value = '';
+  updateCartBadge();
+  closeAuth();
+  
+  // Thông báo siêu đẹp cho khách hàng
+  showToast("Đặt hàng thành công! Đơn hàng của bạn đã được lưu trữ trên mây.", "success");
+}
+
+/* ============================================================
+   TÌM KIẾM & RENDER SẢN PHẨM
 ============================================================ */
 function doSearch() {
   const query = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -719,28 +955,17 @@ function renderProducts(searchQuery = '', catFilter = null) {
             <span class="price-main">${p.price.toLocaleString()}₫</span>
             ${oldPriceHtml}
           </div>
-          <button class="add-cart-btn" onclick="addToCart(event)">Thêm vào giỏ</button>
+          <button class="add-cart-btn" onclick="addToCart(${p.id}, event)">Thêm vào giỏ</button>
         </div>
       </div>
     `;
   });
 }
 
-function addToCart(event) {
-  event.stopPropagation(); // Ngăn sự kiện click thẻ sản phẩm
-  cartCount++;
-  const badge = document.getElementById('cartCount');
-  badge.textContent = cartCount;
-  badge.style.display = 'flex';
-  showToast("Đã thêm sản phẩm vào giỏ hàng!", "success");
-}
-
-// Khởi chạy khi tài liệu tải xong
 document.addEventListener("DOMContentLoaded", () => {
   loadSession();
   renderProducts();
   
-  // Đóng dropdown khi click ra ngoài vùng user-menu
   window.addEventListener('click', (e) => {
     if (!e.target.closest('.user-menu')) {
       closeDropdown();
