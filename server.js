@@ -2,21 +2,24 @@ const http = require('http');
 const https = require('https');
 
 const PORT = process.env.PORT || 3000;
-
-// Đường link Firebase Realtime Database của Hào:
 const FIREBASE_URL = "https://homeser-93db3-default-rtdb.asia-southeast1.firebasedatabase.app";
 
 function getVietnamTime() {
     return new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
 }
 
-// Hàm fetch dữ liệu từ Firebase qua HTTPS lõi của Node.js
+// Hàm fetch Firebase sử dụng thư viện https chuẩn hóa dữ liệu đầu ra/đầu vào
 function firebaseFetch(endpoint, method = 'GET', body = null) {
     return new Promise((resolve, reject) => {
         const url = `${FIREBASE_URL}${endpoint}.json`;
+        const payload = body ? JSON.stringify(body) : '';
+        
         const options = {
             method: method,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(payload)
+            }
         };
 
         const req = https.request(url, options, (res) => {
@@ -27,8 +30,8 @@ function firebaseFetch(endpoint, method = 'GET', body = null) {
             });
         });
 
-        req.on('error', (err) => { reject(err); });
-        if (body) req.write(JSON.stringify(body));
+        req.on('error', (err) => { resolve(null); }); // Tránh sập serverless khi lỗi mạng
+        if (body) req.write(payload);
         req.end();
     });
 }
@@ -40,35 +43,38 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
 
-    // ================== API XEM DANH SÁCH USERS ==================
-    if (req.url === '/api/users' && req.method === 'GET') {
-        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-        const data = await firebaseFetch('/users');
-        res.end(JSON.stringify(data ? Object.values(data) : []));
-        return;
-    }
-
-    // ================== API ĐĂNG NHẬP (CÓ ACC ADMIN MẶC ĐỊNH) ==================
+    // ================== API LOGIN (XỬ LÝ ACC ADMIN) ==================
     if (req.url === '/api/login' && req.method === 'POST') {
         let body = '';
         req.on('data', chunk => { body += chunk.toString(); });
         req.on('end', async () => {
             try {
                 const credentials = JSON.parse(body);
-                const safeEmailKey = credentials.email.replace(/\./g, '_');
                 
-                // 🔥 ĐÂY RỒI: Kích hoạt acc Admin mặc định để vào khu vực quản lý!
+                // 🔑 KIỂM TRA ACC ADMIN: Cho phép đăng nhập thẳng vào khu vực quản lý
                 if (credentials.email === "admin@homeser.com" && credentials.password === "admin") {
-                    const adminUser = { name: "Admin Đình Hào", email: "admin@homeser.com", role: "admin", date: getVietnamTime() };
-                    // Tự động ghi nhận admin lên Firebase nếu chưa có
-                    await firebaseFetch(`/users/${safeEmailKey}`, 'PUT', adminUser);
+                    const adminUser = { 
+                        name: "Admin Đình Hào", 
+                        email: "admin@homeser.com", 
+                        role: "admin", 
+                        lastLogin: getVietnamTime() 
+                    };
+                    
+                    // Đồng bộ lưu vết lịch sử Admin lên Firebase luôn
+                    const safeKey = "admin@homeser_com".replace(/\./g, '_');
+                    await firebaseFetch(`/users/${safeKey}`, 'PUT', adminUser);
+
                     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
                     return res.end(JSON.stringify({ success: true, user: adminUser }));
                 }
 
-                // Kiểm tra tài khoản người dùng bình thường trên Firebase
+                // Xử lý tài khoản người dùng bình thường
+                const safeEmailKey = credentials.email.replace(/\./g, '_');
                 const user = await firebaseFetch(`/users/${safeEmailKey}`);
+                
                 if (user && user.password === credentials.password) {
+                    user.lastLogin = getVietnamTime();
+                    await firebaseFetch(`/users/${safeEmailKey}`, 'PUT', user);
                     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
                     res.end(JSON.stringify({ success: true, user: user }));
                 } else {
@@ -77,13 +83,50 @@ const server = http.createServer(async (req, res) => {
                 }
             } catch (e) {
                 res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ success: false, message: "Lỗi xử lý dữ liệu!" }));
+                res.end(JSON.stringify({ success: false, message: "Lỗi hệ thống xử lý dữ liệu!" }));
             }
         });
         return;
     }
 
-    // ================== API ĐƠN HÀNG (ĐỂ ADMIN NHẬN THÔNG TIN KHÁCH HÀNG) ==================
+    // ================== API USERS (DANH SÁCH USER CHO ADMIN XEM) ==================
+    if (req.url === '/api/users' && req.method === 'GET') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        const data = await firebaseFetch('/users');
+        res.end(JSON.stringify(data ? Object.values(data) : []));
+        return;
+    }
+
+    if (req.url === '/api/users' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => { body += chunk.toString(); });
+        req.on('end', async () => {
+            try {
+                const newUser = JSON.parse(body);
+                const currentData = await firebaseFetch('/users');
+                const users = currentData ? Object.values(currentData) : [];
+
+                if (users.some(u => u.email === newUser.email)) {
+                    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+                    return res.end(JSON.stringify({ success: false, message: "Email này đã được đăng ký!" }));
+                }
+
+                newUser.date = getVietnamTime();
+                newUser.lastLogin = "Chưa đăng nhập";
+                const safeEmailKey = newUser.email.replace(/\./g, '_');
+                await firebaseFetch(`/users/${safeEmailKey}`, 'PUT', newUser);
+
+                res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ success: true, message: "Đăng ký thành công!", user: newUser }));
+            } catch (e) {
+                res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ success: false, message: "Dữ liệu đăng ký không đúng!" }));
+            }
+        });
+        return;
+    }
+
+    // ================== API ORDERS (DANH SÁCH ĐƠN HÀNG CHO ADMIN) ==================
     if (req.url === '/api/orders' && req.method === 'GET') {
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
         const data = await firebaseFetch('/orders');
@@ -104,14 +147,14 @@ const server = http.createServer(async (req, res) => {
                 res.end(JSON.stringify({ success: true, message: "Đặt hàng thành công!" }));
             } catch (e) {
                 res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ success: false, message: "Lỗi đơn hàng!" }));
+                res.end(JSON.stringify({ success: false, message: "Đơn hàng bị lỗi!" }));
             }
         });
         return;
     }
 
     res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
-    res.end(JSON.stringify({ message: "Không tìm thấy đường dẫn API!" }));
+    res.end(JSON.stringify({ message: "Đường dẫn không tồn tại!" }));
 });
 
 server.listen(PORT);
