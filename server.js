@@ -1,3 +1,8 @@
+Chuẩn luôn Hào ơi! Mình đã lấy file server.js hiện tại của bạn và chèn thêm 2 API xử lý đơn hàng (/api/orders) vào đúng vị trí (ngay phía dưới API đăng ký /api/users và trước thông báo lỗi 404).
+
+Bạn chỉ cần copy toàn bộ đoạn mã bên dưới rồi dán đè sạch vào file server.js trên GitHub của bạn là xong nhé:
+
+JavaScript
 const http = require('http');
 const https = require('https');
 
@@ -78,6 +83,48 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
+    // ========================================================
+    // 📦 API 1: LẤY DANH SÁCH ĐƠN HÀNG (GET /api/orders)
+    // ========================================================
+    if (req.url === '/api/orders' && req.method === 'GET') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        const data = await firebaseFetch('/orders');
+        res.end(JSON.stringify(data ? Object.values(data) : []));
+        return;
+    }
+
+    // ========================================================
+    // 📥 API 2: NHẬN ĐƠN HÀNG MỚI TỪ KHÁCH (POST /api/orders)
+    // ========================================================
+    if (req.url === '/api/orders' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => { body += chunk.toString(); });
+        req.on('end', async () => {
+            try {
+                const newOrder = JSON.parse(body);
+
+                // Tạo mã đơn hàng tự động theo thời gian chạy (Ví dụ: DH_1718293812)
+                const orderId = 'DH_' + Date.now();
+                
+                // Bổ sung các trường thông tin quản lý cho đơn hàng
+                newOrder.orderId = orderId;
+                newOrder.orderDate = getVietnamTime();
+                newOrder.status = "Chờ xử lý"; // Trạng thái ban đầu
+
+                // Tiến hành ghi trực tiếp dữ liệu vào nhánh /orders/MÃ_ĐƠN_HÀNG trên Firebase
+                await firebaseFetch(`/orders/${orderId}`, 'PUT', newOrder);
+
+                res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ success: true, message: "Đặt hàng thành công!", order: newOrder }));
+            } catch (e) {
+                res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ success: false, message: "Dữ liệu đơn hàng không hợp lệ!" }));
+            }
+        });
+        return;
+    }
+
+    // LỖI ĐƯỜNG DẪN KHÔNG TỒN TẠI
     res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ message: "Đường dẫn không tồn tại!" }));
 });
